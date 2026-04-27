@@ -593,21 +593,6 @@ function bis_add_gratitude_meta_boxes() {
 }
 add_action('add_meta_boxes', 'bis_add_gratitude_meta_boxes');
 
-function bis_add_news_meta_boxes() {
-    add_meta_box(
-        'bis_news_image',
-        'Изображение новости',
-        'bis_news_image_metabox',
-        'bis_news',
-        'normal',
-        'high',
-        array(
-            '__block_editor_compatible_meta_box' => true,
-        )
-    );
-}
-add_action('add_meta_boxes', 'bis_add_news_meta_boxes');
-
 function bis_page_banner_metabox($post) {
     wp_nonce_field('bis_page_banner_nonce', 'bis_page_banner_nonce_field');
 
@@ -765,41 +750,6 @@ function bis_gratitude_image_metabox($post) {
                 <div class="bis-project-media__buttons">
                     <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_gratitude_image">Выбрать в медиабиблиотеке</button>
                     <button type="button" class="button bis-project-image-clear" data-target="bis_gratitude_image">Убрать фото</button>
-                </div>
-                <p class="bis-field__hint">Если поле пустое, будет использовано «Изображение записи».</p>
-            </div>
-        </div>
-    </div>
-    <?php
-}
-
-function bis_news_image_metabox($post) {
-    wp_nonce_field('bis_news_image_nonce', 'bis_news_image_nonce_field');
-
-    $news_image = get_post_meta($post->ID, 'bis_news_image', true);
-    $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'full');
-    $preview = $news_image ? $news_image : $thumbnail_url;
-    ?>
-    <div class="bis-project-box">
-        <div class="bis-project-box__header">
-            <div>
-                <h3>Изображение новости</h3>
-                <p>Можно указать ссылку или выбрать изображение из медиабиблиотеки.</p>
-            </div>
-        </div>
-
-        <div class="bis-project-media bis-project-media--banner">
-            <div class="bis-project-media__preview <?php echo $preview ? '' : 'is-empty'; ?>" data-image-preview="bis_news_image" style="background-image: url('<?php echo esc_url($preview); ?>');">
-                <?php if (!$preview) : ?>
-                    <span class="bis-project-media__placeholder">Нет изображения</span>
-                <?php endif; ?>
-            </div>
-            <div class="bis-project-media__controls">
-                <label for="bis_news_image">Изображение</label>
-                <input type="text" id="bis_news_image" name="bis_news_image" value="<?php echo esc_url($news_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_news_image">
-                <div class="bis-project-media__buttons">
-                    <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_news_image">Выбрать в медиабиблиотеке</button>
-                    <button type="button" class="button bis-project-image-clear" data-target="bis_news_image">Убрать фото</button>
                 </div>
                 <p class="bis-field__hint">Если поле пустое, будет использовано «Изображение записи».</p>
             </div>

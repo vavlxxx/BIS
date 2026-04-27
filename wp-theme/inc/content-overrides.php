@@ -1,6 +1,7 @@
 <?php
 
 remove_filter('use_block_editor_for_post_type', 'bis_disable_project_block_editor', 10);
+remove_action('save_post', 'bis_save_news_image');
 
 function bis_override_post_type_args($args, $post_type) {
     if ('bis_news' === $post_type) {
@@ -140,19 +141,6 @@ function bis_replace_custom_meta_boxes() {
         'normal',
         'high'
     );
-
-    remove_meta_box('bis_news_image', 'bis_news', 'normal');
-    add_meta_box(
-        'bis_news_image',
-        'Изображение новости',
-        'bis_render_news_metabox_override',
-        'bis_news',
-        'normal',
-        'high',
-        array(
-            '__block_editor_compatible_meta_box' => true,
-        )
-    );
 }
 add_action('add_meta_boxes', 'bis_replace_custom_meta_boxes', 20);
 
@@ -262,47 +250,6 @@ function bis_render_service_metabox_override($post) {
     <?php
 }
 
-function bis_render_news_metabox_override($post) {
-    wp_nonce_field('bis_news_override_nonce', 'bis_news_override_nonce_field');
-
-    $news_image = get_post_meta($post->ID, 'bis_news_image', true);
-    $news_image_id = (int) get_post_meta($post->ID, 'bis_news_image_id', true);
-    $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'full');
-
-    if (!$news_image && $thumbnail_url) {
-        $news_image = $thumbnail_url;
-    }
-
-    $preview = $thumbnail_url ? $thumbnail_url : $news_image;
-    ?>
-    <div class="bis-project-box">
-        <div class="bis-project-box__header">
-            <div>
-                <h3>Изображение новости</h3>
-                <p>Можно указать ссылку вручную или выбрать изображение из медиабиблиотеки. Если поле пустое, используется «Изображение записи».</p>
-            </div>
-        </div>
-
-        <div class="bis-project-media bis-project-media--banner">
-            <div class="bis-project-media__preview <?php echo $preview ? '' : 'is-empty'; ?>" data-image-preview="bis_news_image" style="background-image: url('<?php echo esc_url($preview); ?>');">
-                <?php if (!$preview) : ?>
-                    <span class="bis-project-media__placeholder">Нет изображения</span>
-                <?php endif; ?>
-            </div>
-            <div class="bis-project-media__controls">
-                <label for="bis_news_image">Изображение</label>
-                <input type="text" id="bis_news_image" name="bis_news_image" value="<?php echo esc_url($news_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_news_image" data-meta-field="bis_news_image" data-attachment-target="bis_news_image_id">
-                <input type="hidden" id="bis_news_image_id" name="bis_news_image_id" value="<?php echo esc_attr($news_image_id); ?>" data-meta-field="bis_news_image_id">
-                <div class="bis-project-media__buttons">
-                    <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_news_image" data-attachment-target="bis_news_image_id">Выбрать в медиабиблиотеке</button>
-                    <button type="button" class="button bis-project-image-clear" data-target="bis_news_image">Убрать фото</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
-}
-
 function bis_save_page_banner_override($post_id) {
     if (!isset($_POST['bis_page_banner_override_nonce_field']) || !wp_verify_nonce($_POST['bis_page_banner_override_nonce_field'], 'bis_page_banner_override_nonce')) {
         return;
@@ -377,6 +324,31 @@ function bis_resolve_or_import_attachment_id($image_url, $post_id = 0) {
     return (int) $attachment_id;
 }
 
+function bis_store_news_image_state($post_id, $news_image = '', $news_image_id = 0) {
+    $post_id = (int) $post_id;
+    $news_image = trim((string) $news_image);
+    $news_image_id = (int) $news_image_id;
+
+    if ($news_image === '' && $news_image_id === 0) {
+        $news_image = bis_get_news_placeholder_image_url();
+    }
+
+    if ($news_image !== '') {
+        update_post_meta($post_id, 'bis_news_image', $news_image);
+    } else {
+        delete_post_meta($post_id, 'bis_news_image');
+    }
+
+    if ($news_image_id > 0) {
+        update_post_meta($post_id, 'bis_news_image_id', $news_image_id);
+        set_post_thumbnail($post_id, $news_image_id);
+        return;
+    }
+
+    delete_post_meta($post_id, 'bis_news_image_id');
+    delete_post_thumbnail($post_id);
+}
+
 function bis_save_news_override($post_id) {
     if (!isset($_POST['bis_news_override_nonce_field']) || !wp_verify_nonce($_POST['bis_news_override_nonce_field'], 'bis_news_override_nonce')) {
         return;
@@ -395,9 +367,7 @@ function bis_save_news_override($post_id) {
 
     // Полная очистка
     if ($news_image === '' && $news_image_id === 0) {
-        delete_post_meta($post_id, 'bis_news_image');
-        delete_post_meta($post_id, 'bis_news_image_id');
-        delete_post_thumbnail($post_id);
+        bis_store_news_image_state($post_id);
         return;
     }
 
@@ -423,18 +393,38 @@ function bis_save_news_override($post_id) {
     }
 
     // Сохраняем fallback-мету
-    if ($news_image !== '') {
-        update_post_meta($post_id, 'bis_news_image', $news_image);
-    } else {
-        delete_post_meta($post_id, 'bis_news_image');
-    }
-
-    if ($news_image_id > 0) {
-        update_post_meta($post_id, 'bis_news_image_id', $news_image_id);
-        set_post_thumbnail($post_id, $news_image_id);
-    } else {
-        delete_post_meta($post_id, 'bis_news_image_id');
-        delete_post_thumbnail($post_id);
-    }
+    bis_store_news_image_state($post_id, $news_image, $news_image_id);
 }
 add_action('save_post', 'bis_save_news_override', 20);
+
+function bis_sync_news_featured_image_state($post_id, $post) {
+    if (!($post instanceof WP_Post) || 'bis_news' !== $post->post_type) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    if (isset($_POST['bis_news_override_nonce_field']) && wp_verify_nonce($_POST['bis_news_override_nonce_field'], 'bis_news_override_nonce')) {
+        return;
+    }
+
+    $thumbnail_id = (int) get_post_thumbnail_id($post_id);
+    if ($thumbnail_id > 0) {
+        $thumbnail_url = wp_get_attachment_url($thumbnail_id);
+        bis_store_news_image_state($post_id, $thumbnail_url ? esc_url_raw($thumbnail_url) : '', $thumbnail_id);
+        return;
+    }
+
+    bis_store_news_image_state($post_id);
+}
+add_action('save_post_bis_news', 'bis_sync_news_featured_image_state', 30, 2);

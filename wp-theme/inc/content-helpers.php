@@ -83,23 +83,17 @@ function bis_get_gratitude_image_url($post_id) {
     return bis_get_post_thumbnail_optimized_url($post_id, 'bis-card');
 }
 
+function bis_get_news_placeholder_image_url() {
+    return get_template_directory_uri() . '/assets/img/placeholder600x400.png';
+}
+
 function bis_get_news_image_url($post_id) {
     $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'bis-card');
     if ($thumb) {
         return $thumb;
     }
 
-    $legacy_id = (int) get_post_meta($post_id, 'bis_news_image_id', true);
-    if ($legacy_id > 0) {
-        return bis_get_optimized_image_url($legacy_id, 'bis-card');
-    }
-
-    $legacy_url = get_post_meta($post_id, 'bis_news_image', true);
-    if ($legacy_url) {
-        return bis_get_optimized_image_url($legacy_url, 'bis-card');
-    }
-
-    return 'https://placehold.co/600x400';
+    return bis_get_news_placeholder_image_url();
 }
 
 function bis_get_service_preview_image_url($post_id) {

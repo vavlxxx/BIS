@@ -147,9 +147,6 @@ if (!is_front_page()) {
       </ul>
       <div class="drawer-footer">
         <p class="drawer-note">Инжиниринговая команда полного цикла — проектируем, запускаем, сопровождаем.</p>
-        <div class="drawer-actions">
-          <button class="btn btn-primary callback-btn">Обратный звонок</button>
-        </div>
       </div>
     </aside>
   </div>
