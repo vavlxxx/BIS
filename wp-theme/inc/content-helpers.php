@@ -84,19 +84,19 @@ function bis_get_gratitude_image_url($post_id) {
 }
 
 function bis_get_news_image_url($post_id) {
-    $custom_id = (int) get_post_meta($post_id, 'bis_news_image_id', true);
-    if ($custom_id > 0) {
-        return bis_get_optimized_image_url($custom_id, 'bis-card');
-    }
-
-    $custom = get_post_meta($post_id, 'bis_news_image', true);
-    if ($custom) {
-        return bis_get_optimized_image_url($custom, 'bis-card');
-    }
-
     $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'bis-card');
     if ($thumb) {
         return $thumb;
+    }
+
+    $legacy_id = (int) get_post_meta($post_id, 'bis_news_image_id', true);
+    if ($legacy_id > 0) {
+        return bis_get_optimized_image_url($legacy_id, 'bis-card');
+    }
+
+    $legacy_url = get_post_meta($post_id, 'bis_news_image', true);
+    if ($legacy_url) {
+        return bis_get_optimized_image_url($legacy_url, 'bis-card');
     }
 
     return 'https://placehold.co/600x400';

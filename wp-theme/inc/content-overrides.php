@@ -268,7 +268,12 @@ function bis_render_news_metabox_override($post) {
     $news_image = get_post_meta($post->ID, 'bis_news_image', true);
     $news_image_id = (int) get_post_meta($post->ID, 'bis_news_image_id', true);
     $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'full');
-    $preview = $news_image ? $news_image : $thumbnail_url;
+
+    if (!$news_image && $thumbnail_url) {
+        $news_image = $thumbnail_url;
+    }
+
+    $preview = $thumbnail_url ? $thumbnail_url : $news_image;
     ?>
     <div class="bis-project-box">
         <div class="bis-project-box__header">
@@ -341,6 +346,37 @@ function bis_save_service_override($post_id) {
 }
 add_action('save_post', 'bis_save_service_override', 20);
 
+function bis_resolve_or_import_attachment_id($image_url, $post_id = 0) {
+    $image_url = trim((string) $image_url);
+    $post_id = (int) $post_id;
+
+    if ($image_url === '') {
+        return 0;
+    }
+
+    // 1. Уже есть attachment в медиабиблиотеке
+    $attachment_id = function_exists('bis_get_attachment_id_from_url')
+        ? (int) bis_get_attachment_id_from_url($image_url)
+        : (int) attachment_url_to_postid($image_url);
+
+    if ($attachment_id > 0) {
+        return $attachment_id;
+    }
+
+    // 2. Внешняя ссылка или URL не распознан — пробуем импортировать в медиабиблиотеку
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $attachment_id = media_sideload_image($image_url, $post_id, null, 'id');
+
+    if (is_wp_error($attachment_id)) {
+        return 0;
+    }
+
+    return (int) $attachment_id;
+}
+
 function bis_save_news_override($post_id) {
     if (!isset($_POST['bis_news_override_nonce_field']) || !wp_verify_nonce($_POST['bis_news_override_nonce_field'], 'bis_news_override_nonce')) {
         return;
@@ -357,6 +393,15 @@ function bis_save_news_override($post_id) {
     $news_image = isset($_POST['bis_news_image']) ? esc_url_raw(wp_unslash($_POST['bis_news_image'])) : '';
     $news_image_id = isset($_POST['bis_news_image_id']) ? absint(wp_unslash($_POST['bis_news_image_id'])) : 0;
 
+    // Полная очистка
+    if ($news_image === '' && $news_image_id === 0) {
+        delete_post_meta($post_id, 'bis_news_image');
+        delete_post_meta($post_id, 'bis_news_image_id');
+        delete_post_thumbnail($post_id);
+        return;
+    }
+
+    // Если ID есть, но URL пустой — восстанавливаем URL
     if ($news_image === '' && $news_image_id > 0) {
         $resolved_url = wp_get_attachment_url($news_image_id);
         if ($resolved_url) {
@@ -364,11 +409,32 @@ function bis_save_news_override($post_id) {
         }
     }
 
+    // Если URL есть, но ID нет — пробуем найти/импортировать attachment
     if ($news_image_id === 0 && $news_image !== '') {
-        $news_image_id = (int) attachment_url_to_postid($news_image);
+        $news_image_id = bis_resolve_or_import_attachment_id($news_image, $post_id);
     }
 
-    update_post_meta($post_id, 'bis_news_image', $news_image);
-    update_post_meta($post_id, 'bis_news_image_id', $news_image_id);
+    // Если после импорта получили attachment — нормализуем URL
+    if ($news_image_id > 0) {
+        $resolved_url = wp_get_attachment_url($news_image_id);
+        if ($resolved_url) {
+            $news_image = esc_url_raw($resolved_url);
+        }
+    }
+
+    // Сохраняем fallback-мету
+    if ($news_image !== '') {
+        update_post_meta($post_id, 'bis_news_image', $news_image);
+    } else {
+        delete_post_meta($post_id, 'bis_news_image');
+    }
+
+    if ($news_image_id > 0) {
+        update_post_meta($post_id, 'bis_news_image_id', $news_image_id);
+        set_post_thumbnail($post_id, $news_image_id);
+    } else {
+        delete_post_meta($post_id, 'bis_news_image_id');
+        delete_post_thumbnail($post_id);
+    }
 }
 add_action('save_post', 'bis_save_news_override', 20);

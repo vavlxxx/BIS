@@ -108,13 +108,6 @@ get_header();
                     <span><?php the_title(); ?></span>
                 </nav>
             </section>
-            <!-- <?php if (!empty($project_description)) : ?>
-                <section class="project-description">
-                    <div class="project-description__body mw-1400px">
-                        <?php echo wpautop(esc_html($project_description)); ?>
-                    </div>
-                </section>
-            <?php endif; ?> -->
             <?php if ($project_content !== '') : ?>
                 <section class="project-content">
                     <div class="project-content__body mw-1400px">
@@ -226,7 +219,7 @@ get_header();
                                 Я соглашаюсь на получение информационных рассылок и другой коммуникации от БИС.
                             </label>
                         </div>
-
+                        <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
                         <div class="project-consultation__actions full">
                             <button type="submit" class="btn btn-primary">Отправить</button>
                         </div>

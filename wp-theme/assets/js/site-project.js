@@ -93,7 +93,7 @@ function initProjectConsultationForm() {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    if (!validateFormFields(form)) {
+    if (!validateFormFields(form) || !validateHCaptcha(form)) {
       return;
     }
 
@@ -120,12 +120,15 @@ function initProjectConsultationForm() {
         if (data.success) {
           showNotification('Спасибо! Мы свяжемся с вами в ближайшее время.', 'success');
           resetFormState(form);
+          clearHCaptchaError(form);
         } else {
-          showNotification('Ошибка отправки. Попробуйте позже.', 'error');
+          resetHCaptcha(form);
+          showNotification(data.data?.message || 'Ошибка отправки. Попробуйте позже.', 'error');
         }
       })
-      .catch(() => {
-        showNotification('Ошибка отправки. Попробуйте позже.', 'error');
+      .catch((error) => {
+        resetHCaptcha(form);
+        showNotification(error?.message || 'Ошибка отправки. Попробуйте позже.', 'error');
       })
       .finally(() => {
         if (submitBtn) {
@@ -135,3 +138,4 @@ function initProjectConsultationForm() {
       });
   });
 }
+

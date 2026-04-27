@@ -103,7 +103,7 @@
           <label for="exitIntentPhone">Телефон</label>
           <input type="tel" id="exitIntentPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
         </div>
-        <?php echo bis_render_hcaptcha_widget(); ?>
+        <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
         <button type="submit" class="btn btn-primary">Отправить</button>
       </form>
     </div>

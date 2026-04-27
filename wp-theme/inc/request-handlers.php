@@ -388,24 +388,87 @@ function bis_resolve_location_by_query($query) {
 }
 
 function bis_get_request_location_value() {
+    $location_meta = bis_get_request_location_meta_input();
+
+    return isset($location_meta['bis_location_region']) ? $location_meta['bis_location_region'] : bis_get_location_placeholder();
+}
+
+function bis_get_request_location_cookie_data() {
+    if (empty($_COOKIE[bis_get_location_cookie_name()])) {
+        return array();
+    }
+
+    $cookie_value = json_decode(rawurldecode(wp_unslash($_COOKIE[bis_get_location_cookie_name()])), true);
+
+    return is_array($cookie_value) ? $cookie_value : array();
+}
+
+function bis_get_request_location_meta_input() {
+    $cookie_value = bis_get_request_location_cookie_data();
+    $placeholder = bis_get_location_placeholder();
+    $region = '';
+
     if (!empty($_POST['location_region'])) {
         $posted_value = sanitize_text_field(wp_unslash($_POST['location_region']));
         if ($posted_value !== '') {
-            return $posted_value;
+            $region = $posted_value;
         }
     }
 
-    if (!empty($_COOKIE[bis_get_location_cookie_name()])) {
-        $cookie_value = json_decode(rawurldecode(wp_unslash($_COOKIE[bis_get_location_cookie_name()])), true);
-        if (is_array($cookie_value) && !empty($cookie_value['label'])) {
-            $label = sanitize_text_field((string) $cookie_value['label']);
-            if ($label !== '') {
-                return $label;
-            }
+    if ($region === '' && !empty($cookie_value['label'])) {
+        $label = sanitize_text_field((string) $cookie_value['label']);
+        if ($label !== '') {
+            $region = $label;
         }
     }
 
-    return bis_get_location_placeholder();
+    $city = '';
+    if (!empty($_POST['location_city'])) {
+        $posted_city = sanitize_text_field(wp_unslash($_POST['location_city']));
+        if ($posted_city !== '') {
+            $city = $posted_city;
+        }
+    }
+
+    if ($city === '' && !empty($cookie_value['city'])) {
+        $saved_city = sanitize_text_field((string) $cookie_value['city']);
+        if ($saved_city !== '') {
+            $city = $saved_city;
+        }
+    }
+
+    $source = 'fallback';
+    if (!empty($_POST['location_source'])) {
+        $posted_source = sanitize_key(wp_unslash($_POST['location_source']));
+        if ($posted_source !== '') {
+            $source = $posted_source;
+        }
+    } elseif (!empty($cookie_value['source'])) {
+        $saved_source = sanitize_key((string) $cookie_value['source']);
+        if ($saved_source !== '') {
+            $source = $saved_source;
+        }
+    }
+
+    return array(
+        'bis_location_region' => $region !== '' ? $region : $placeholder,
+        'bis_location_city'   => $city !== '' ? $city : $placeholder,
+        'bis_location_source' => $source,
+    );
+}
+
+function bis_request_has_hcaptcha_token() {
+    $token = isset($_POST['h-captcha-response']) ? trim((string) wp_unslash($_POST['h-captcha-response'])) : '';
+
+    return '' !== $token;
+}
+
+function bis_maybe_verify_hcaptcha_response($required = false) {
+    if (!$required && !bis_request_has_hcaptcha_token()) {
+        return true;
+    }
+
+    return bis_verify_hcaptcha_response();
 }
 
 function bis_detect_location() {
@@ -533,13 +596,6 @@ function bis_get_request_type_label($request_type) {
     return isset($type_labels[$request_type]) ? $type_labels[$request_type] : 'Заявка с сайта';
 }
 
-function bis_get_request_notification_default_recipients() {
-    return array(
-        'office@bis-rf.ru',
-        'o.moskaleva@bis-rf.ru',
-    );
-}
-
 function bis_normalize_request_notification_recipients($value) {
     if (is_array($value)) {
         $raw_items = $value;
@@ -563,7 +619,7 @@ function bis_get_request_notification_recipients() {
     $emails = bis_normalize_request_notification_recipients($stored);
 
     if (empty($emails)) {
-        return bis_get_request_notification_default_recipients();
+        return array();
     }
 
     return $emails;
@@ -789,17 +845,15 @@ function bis_submit_general_request() {
     $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
     $service = isset($_POST['service']) ? sanitize_text_field(wp_unslash($_POST['service'])) : '';
     $request_type = isset($_POST['request_type']) ? sanitize_key(wp_unslash($_POST['request_type'])) : 'contact';
-    $location = bis_get_request_location_value();
+    $location_meta = bis_get_request_location_meta_input();
 
     if (!in_array($request_type, array('contact', 'order', 'callback', 'exit_intent'), true)) {
         $request_type = 'contact';
     }
 
-    if ('exit_intent' === $request_type) {
-        $hcaptcha_check = bis_verify_hcaptcha_response();
-        if (is_wp_error($hcaptcha_check)) {
-            wp_send_json_error(array('message' => $hcaptcha_check->get_error_message()));
-        }
+    $hcaptcha_check = bis_maybe_verify_hcaptcha_response(in_array($request_type, array('contact', 'exit_intent'), true));
+    if (is_wp_error($hcaptcha_check)) {
+        wp_send_json_error(array('message' => $hcaptcha_check->get_error_message()));
     }
 
     if ('exit_intent' === $request_type && $name === '') {
@@ -826,16 +880,15 @@ function bis_submit_general_request() {
         'post_title' => $post_title,
         'post_type' => 'bis_request',
         'post_status' => 'publish',
-        'meta_input' => array(
+        'meta_input' => array_merge($location_meta, array(
             'bis_name' => $name,
             'bis_phone' => $phone,
             'bis_comment' => $message,
             'bis_topic' => $service,
             'bis_request_type' => $request_type,
-            'bis_location_region' => $location,
             'bis_status' => 'new',
             'bis_date' => current_time('mysql'),
-        ),
+        )),
     ));
 
     if (!$post_id || is_wp_error($post_id)) {
@@ -864,7 +917,12 @@ function bis_submit_estimate() {
     $email = sanitize_email($raw_email);
     $messenger = isset($_POST['messenger']) ? bis_normalize_request_messenger(sanitize_text_field(wp_unslash($_POST['messenger']))) : '';
     $comment = isset($_POST['comment']) ? sanitize_textarea_field(wp_unslash($_POST['comment'])) : '';
-    $location = bis_get_request_location_value();
+    $location_meta = bis_get_request_location_meta_input();
+    $hcaptcha_check = bis_maybe_verify_hcaptcha_response(true);
+
+    if (is_wp_error($hcaptcha_check)) {
+        wp_send_json_error(array('message' => $hcaptcha_check->get_error_message()));
+    }
 
     if ($name === '' || $phone === '' || trim((string) $raw_email) === '') {
         wp_send_json_error(array('message' => 'Заполните обязательные поля: имя, телефон и email.'));
@@ -885,17 +943,16 @@ function bis_submit_estimate() {
         'post_title' => $name . ' - ' . $phone,
         'post_type' => 'bis_request',
         'post_status' => 'publish',
-        'meta_input' => array(
+        'meta_input' => array_merge($location_meta, array(
             'bis_name' => $name,
             'bis_phone' => $phone,
             'bis_email' => $email,
             'bis_messenger' => $messenger,
             'bis_comment' => $comment,
             'bis_request_type' => 'estimate',
-            'bis_location_region' => $location,
             'bis_status' => 'new',
             'bis_date' => current_time('mysql'),
-        ),
+        )),
     ));
 
     if ($post_id) {
@@ -946,7 +1003,12 @@ function bis_submit_project_consultation() {
     $project_id = isset($_POST['project_id']) ? intval($_POST['project_id']) : 0;
     $privacy = isset($_POST['privacy']) ? '1' : '0';
     $marketing = isset($_POST['marketing']) ? '1' : '0';
-    $location = bis_get_request_location_value();
+    $location_meta = bis_get_request_location_meta_input();
+    $hcaptcha_check = bis_maybe_verify_hcaptcha_response(true);
+
+    if (is_wp_error($hcaptcha_check)) {
+        wp_send_json_error(array('message' => $hcaptcha_check->get_error_message()));
+    }
 
     if (empty($name) || empty($phone) || empty($email)) {
         wp_send_json_error(array('message' => 'Required fields missing'));
@@ -962,7 +1024,7 @@ function bis_submit_project_consultation() {
         'post_title' => $name . $title_suffix,
         'post_type' => 'bis_request',
         'post_status' => 'publish',
-        'meta_input' => array(
+        'meta_input' => array_merge($location_meta, array(
             'bis_name' => $name,
             'bis_phone' => $phone,
             'bis_email' => $email,
@@ -974,12 +1036,11 @@ function bis_submit_project_consultation() {
             'bis_project_title' => $project_title,
             'bis_request_type' => 'consultation',
             'bis_comment' => $details,
-            'bis_location_region' => $location,
             'bis_privacy' => $privacy,
             'bis_marketing' => $marketing,
             'bis_status' => 'new',
             'bis_date' => current_time('mysql'),
-        ),
+        )),
     ));
 
     if ($post_id) {

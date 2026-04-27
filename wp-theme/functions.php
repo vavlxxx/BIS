@@ -28,12 +28,11 @@ function bis_theme_scripts() {
     }
 
     wp_enqueue_script('bis-site-forms', get_template_directory_uri() . '/assets/js/site-forms.js', array(), bis_get_asset_version('assets/js/site-forms.js'), true);
-    $hcaptcha_settings = bis_get_hcaptcha_settings();
     wp_localize_script('bis-site-forms', 'bisSiteConfig', array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'locationCookieName' => 'bis_user_location',
-        'locationFallback' => 'Не определено',
-        'hcaptchaSiteKey' => $hcaptcha_settings['site_key'],
+        'locationFallback' => bis_get_location_placeholder(),
+        'hcaptchaSiteKey' => bis_get_hcaptcha_settings()['site_key'],
     ));
 
     wp_enqueue_script('bis-site-navigation', get_template_directory_uri() . '/assets/js/site-navigation.js', array(), bis_get_asset_version('assets/js/site-navigation.js'), true);
@@ -96,28 +95,24 @@ function bis_get_dadata_settings() {
 }
 
 function bis_get_hcaptcha_settings() {
+    $plugin_settings = get_option('hcaptcha_settings', array());
+    $plugin_site_key = is_array($plugin_settings) && !empty($plugin_settings['api_key'])
+        ? trim((string) $plugin_settings['api_key'])
+        : '';
+    $plugin_secret_key = is_array($plugin_settings) && !empty($plugin_settings['secret_key'])
+        ? trim((string) $plugin_settings['secret_key'])
+        : '';
+
     return array(
-        'site_key' => trim((string) bis_get_runtime_setting('BIS_HCAPTCHA_SITE_KEY')),
-        'secret_key' => trim((string) bis_get_runtime_setting('BIS_HCAPTCHA_SECRET_KEY')),
+        'site_key' => trim((string) bis_get_runtime_setting('BIS_HCAPTCHA_SITE_KEY', $plugin_site_key)),
+        'secret_key' => trim((string) bis_get_runtime_setting('BIS_HCAPTCHA_SECRET_KEY', $plugin_secret_key)),
     );
 }
 
 function bis_is_hcaptcha_configured() {
     $settings = bis_get_hcaptcha_settings();
 
-    return '' !== $settings['site_key'] && '' !== $settings['secret_key'];
-}
-
-function bis_render_hcaptcha_widget() {
-    $settings = bis_get_hcaptcha_settings();
-    if ('' === $settings['site_key']) {
-        return '';
-    }
-
-    return sprintf(
-        '<div class="h-captcha" data-sitekey="%s"></div>',
-        esc_attr($settings['site_key'])
-    );
+    return $settings['site_key'] !== '' && $settings['secret_key'] !== '';
 }
 
 function bis_get_smtp_settings() {
@@ -258,5 +253,4 @@ function bis_output_social_meta_tags() {
     echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
     echo '<meta name="twitter:image" content="' . esc_url($image_url) . '">' . "\n";
 }
-// add_action('wp_head', 'bis_output_social_meta_tags', 5);
 

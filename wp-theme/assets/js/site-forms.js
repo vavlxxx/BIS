@@ -1219,7 +1219,7 @@ function initEstimateModal() {
     estimateForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      if (!validateFormFields(estimateForm)) {
+      if (!validateFormFields(estimateForm) || !validateHCaptcha(estimateForm)) {
         return;
       }
 
@@ -1242,6 +1242,7 @@ function initEstimateModal() {
           if (data.success) {
             submitBtn.textContent = '✓ Отправлено!';
             submitBtn.style.background = '#10b981';
+            clearHCaptchaError(estimateForm);
 
             setTimeout(() => {
               closeEstimateModal({ resetForm: true });
@@ -1287,3 +1288,4 @@ function initEstimateModal() {
     }, ANIMATION_DURATION);
   }
 }
+
