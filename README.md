@@ -19,6 +19,8 @@ WORDPRESS_DB_HOST=mysql:3306
 WORDPRESS_DB_USER=user
 WORDPRESS_DB_PASSWORD=pwd
 WORDPRESS_DB_NAME=db
+BIS_DADATA_API_KEY=
+BIS_DADATA_SECRET_KEY=
 ```
 
 После настройки переменных окружения необходимо собрать контейнеры.
@@ -37,7 +39,7 @@ docker compose up
 
 После дампа и установки темы нужно в настройках 'Постоянные ссылки' установить 'Название записи'.
 
-Для настройки почты нужно создать её на TimeWeb (новый почтовый ящик) и добавить в `wp-config.php` новые параметры для SMTP. Для конфигурации STMP сервера необходимо установить плагин `WP Mail SMTP` и продублировать туда эти же данные.  
+Для настройки почты нужно создать её на TimeWeb (новый почтовый ящик) и добавить переменные SMTP в `.env.wordpress`. Для конфигурации SMTP сервера при необходимости можно установить плагин `WP Mail SMTP` и продублировать туда эти же данные.  
 
 ```php
 define('BIS_SMTP_HOST', 'smtp.timeweb.ru');
@@ -49,3 +51,12 @@ define('BIS_SMTP_FROM_EMAIL', 'no-reply@bis-rf.ru');
 define('BIS_SMTP_FROM_NAME', 'БИС');
 define('BIS_SMTP_AUTH', 'true');
 ```
+
+Для определения города через Dadata ключи тоже нужно хранить в `.env.wordpress`:
+
+```bash
+BIS_DADATA_API_KEY=ваш_api_ключ
+BIS_DADATA_SECRET_KEY=ваш_secret_ключ
+```
+
+Их не нужно хардкодить в теме или класть в шаблоны.

@@ -7,6 +7,7 @@ require_once get_template_directory() . '/inc/admin-tools.php';
 require_once get_template_directory() . '/inc/request-handlers.php';
 require_once get_template_directory() . '/inc/media.php';
 require_once get_template_directory() . '/inc/content-models.php';
+require_once get_template_directory() . '/inc/content-overrides.php';
 
 function bis_theme_scripts() {
     // Enqueue Google Fonts
@@ -27,8 +28,12 @@ function bis_theme_scripts() {
     }
 
     wp_enqueue_script('bis-site-forms', get_template_directory_uri() . '/assets/js/site-forms.js', array(), bis_get_asset_version('assets/js/site-forms.js'), true);
+    $hcaptcha_settings = bis_get_hcaptcha_settings();
     wp_localize_script('bis-site-forms', 'bisSiteConfig', array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
+        'locationCookieName' => 'bis_user_location',
+        'locationFallback' => 'Не определено',
+        'hcaptchaSiteKey' => $hcaptcha_settings['site_key'],
     ));
 
     wp_enqueue_script('bis-site-navigation', get_template_directory_uri() . '/assets/js/site-navigation.js', array(), bis_get_asset_version('assets/js/site-navigation.js'), true);
@@ -81,6 +86,38 @@ function bis_get_runtime_setting($key, $default = '') {
     }
 
     return $default;
+}
+
+function bis_get_dadata_settings() {
+    return array(
+        'api_key' => trim((string) bis_get_runtime_setting('BIS_DADATA_API_KEY')),
+        'secret_key' => trim((string) bis_get_runtime_setting('BIS_DADATA_SECRET_KEY')),
+    );
+}
+
+function bis_get_hcaptcha_settings() {
+    return array(
+        'site_key' => trim((string) bis_get_runtime_setting('BIS_HCAPTCHA_SITE_KEY')),
+        'secret_key' => trim((string) bis_get_runtime_setting('BIS_HCAPTCHA_SECRET_KEY')),
+    );
+}
+
+function bis_is_hcaptcha_configured() {
+    $settings = bis_get_hcaptcha_settings();
+
+    return '' !== $settings['site_key'] && '' !== $settings['secret_key'];
+}
+
+function bis_render_hcaptcha_widget() {
+    $settings = bis_get_hcaptcha_settings();
+    if ('' === $settings['site_key']) {
+        return '';
+    }
+
+    return sprintf(
+        '<div class="h-captcha" data-sitekey="%s"></div>',
+        esc_attr($settings['site_key'])
+    );
 }
 
 function bis_get_smtp_settings() {

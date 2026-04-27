@@ -13,6 +13,7 @@ get_header();
             $banner_blocks = bis_get_project_banner_blocks($project_id);
             $project_description = bis_get_project_description($project_id);
             $gallery = bis_get_project_gallery($project_id);
+            $project_content = trim((string) get_post_field('post_content', $project_id));
 
             $positions = array('top_left', 'top_right', 'bottom_left', 'bottom_right');
             $resolved_blocks = array();
@@ -107,10 +108,17 @@ get_header();
                     <span><?php the_title(); ?></span>
                 </nav>
             </section>
-            <?php if (!empty($project_description)) : ?>
+            <!-- <?php if (!empty($project_description)) : ?>
                 <section class="project-description">
                     <div class="project-description__body mw-1400px">
                         <?php echo wpautop(esc_html($project_description)); ?>
+                    </div>
+                </section>
+            <?php endif; ?> -->
+            <?php if ($project_content !== '') : ?>
+                <section class="project-content">
+                    <div class="project-content__body mw-1400px">
+                        <?php the_content(); ?>
                     </div>
                 </section>
             <?php endif; ?>

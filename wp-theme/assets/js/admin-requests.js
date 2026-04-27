@@ -42,12 +42,14 @@ jQuery(document).ready(function ($) {
         topic: 'Тема',
         date: 'Дата',
         phone: 'Телефон',
+        location: 'Город-регион',
         comment: 'Комментарий',
         type_contact: 'Связаться с нами',
         type_order: 'Заказ услуги',
         type_callback: 'Обратный звонок',
         type_estimate: 'Смета',
         type_consultation: 'Консультация по проекту',
+        type_exit_intent: 'Лид-магнит при выходе',
         type_default: 'Заявка',
         status_badge_new: 'Новая',
         status_badge_read: 'Просмотрено'
@@ -85,7 +87,8 @@ jQuery(document).ready(function ($) {
             estimate: strings.type_estimate,
             callback: strings.type_callback,
             order: strings.type_order,
-            contact: strings.type_contact
+            contact: strings.type_contact,
+            exit_intent: strings.type_exit_intent
         };
 
         return map[type] || type || strings.type_default;
@@ -160,6 +163,7 @@ jQuery(document).ready(function ($) {
                 req.position,
                 req.topic,
                 req.project,
+                req.location,
                 req.file_name,
                 getTypeLabel(req.type)
             ].join(' ').toLowerCase();
@@ -335,6 +339,7 @@ jQuery(document).ready(function ($) {
                 { label: strings.contact, value: `<span class="bis-messenger-value">${messengerValue}</span>` },
                 { label: strings.file, value: getFileMarkup(req) },
                 { label: strings.project, value: escapeHtml(req.project || '-') },
+                { label: strings.location, value: escapeHtml(req.location || '-') },
                 { label: strings.company, value: escapeHtml(req.company || '-') },
                 { label: strings.position, value: escapeHtml(req.position || '-') },
                 { label: strings.topic, value: escapeHtml(req.topic || '-') },

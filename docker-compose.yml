@@ -22,6 +22,8 @@ services:
     image: wordpress:latest
     container_name: bis_wordpress
     restart: unless-stopped
+    environment:
+      WORDPRESS_DEBUG: 1
     ports:
       - "8000:80"
     env_file:

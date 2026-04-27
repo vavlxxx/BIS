@@ -479,10 +479,10 @@
 
 .project-content {
   padding: 48px 8vw 20px;
+  text-align: justify;
 }
 
 .project-content__body {
-  max-width: 900px;
   font-size: 16px;
   line-height: 1.7;
   color: var(--text);
@@ -1429,4 +1429,119 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.15));
+}
+
+.services-catalog--archive,
+.services-catalog--related {
+  padding: 64px 8vw 128px;
+  background: var(--bg);
+}
+
+.services-catalog__container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.services-catalog__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  padding: 0;
+  margin: 0;
+}
+
+.services-catalog--archive .service-card,
+.services-catalog--related .service-card {
+  min-height: 100%;
+  margin-left: 0;
+  width: auto;
+  max-width: none;
+  flex: initial;
+}
+
+.services-catalog__grid .service-card:not(:first-child) {
+  margin-left: 0;
+}
+
+.services-catalog__grid .service-card .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.service-related__header {
+  margin-bottom: 24px;
+}
+
+.service-article {
+  padding: 64px 8vw 0;
+  background: var(--bg);
+}
+
+.service-article__container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.service-article__header {
+  max-width: 900px;
+  margin-bottom: 24px;
+}
+
+.service-article__lead {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--dark);
+  margin: 0;
+}
+
+.service-article__content {
+  max-width: 1000px;
+}
+
+.service-article__content > * + * {
+  margin-top: 1.4em;
+}
+
+.project-content__body > * + * {
+  margin-top: 1.4em;
+}
+
+.project-content__body img,
+.service-article__content img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px 0;
+}
+
+@media (max-width: 1200px) {
+  .services-catalog__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .services-catalog__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .services-catalog--archive,
+  .services-catalog--related {
+    padding: 50px 8vw 64px;
+  }
+
+  .services-catalog__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .service-article {
+    padding: 48px 8vw 0;
+  }
+
+  .service-article__lead {
+    font-size: 18px;
+  }
 }

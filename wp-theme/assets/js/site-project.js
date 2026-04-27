@@ -107,8 +107,11 @@ function initProjectConsultationForm() {
 
     const formData = new FormData(form);
     formData.append('action', 'bis_submit_project_consultation');
+    if (typeof window.bisAppendLocationToFormData === 'function') {
+      window.bisAppendLocationToFormData(formData);
+    }
 
-    fetch('/wp-admin/admin-ajax.php', {
+    fetch(bisAjaxUrl, {
       method: 'POST',
       body: formData
     })

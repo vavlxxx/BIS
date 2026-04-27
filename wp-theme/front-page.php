@@ -45,6 +45,7 @@ $has_hero_slider = !empty($hero_images);
         <li><a href="#equipment">Оборудование</a></li>
         <li><a href="#experience">Опыт</a></li>
         <li><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></li>
+        <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
         <li><a href="<?php echo esc_url(home_url('/news/')); ?>">Новости</a></li>
         <li><a href="#contact">Контакты</a></li>
@@ -150,7 +151,7 @@ $has_hero_slider = !empty($hero_images);
           <?php
           $service_id = get_the_ID();
           $image_url = bis_get_service_image_url($service_id);
-          $description = get_post_meta($service_id, 'bis_service_description', true);
+          $description = bis_get_service_description($service_id);
           ?>
           <div class="service-card">
             <div class="service-image">
@@ -163,7 +164,7 @@ $has_hero_slider = !empty($hero_images);
                   <p class="experience-description"><?php echo esc_html($description); ?></p>
                 <?php endif; ?>
               </div>
-              <button class="btn btn-primary order-btn" data-service="<?php echo esc_attr(get_the_title()); ?>">Заказать</button>
+              <a class="btn btn-primary service-card__link" href="<?php the_permalink(); ?>">Подробнее</a>
             </div>
           </div>
         <?php endwhile; ?>
@@ -175,6 +176,7 @@ $has_hero_slider = !empty($hero_images);
         </div>
       <?php endif; ?>
     </div>
+    
 
     <div class="services-slider-nav">
       <button class="slider-prev" aria-label="Предыдущая услуга">
@@ -190,6 +192,10 @@ $has_hero_slider = !empty($hero_images);
       </button>
     </div>
   </div>
+
+  <div class="experience-cta">
+      <a class="btn btn-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Смотреть все услуги</a>
+    </div>
 
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup-form">
@@ -1051,3 +1057,4 @@ $news_query = new WP_Query(array(
   </div>
 </section>
 <?php get_footer(); ?>
+

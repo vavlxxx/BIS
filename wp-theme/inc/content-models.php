@@ -69,7 +69,7 @@ function bis_register_projects_cpt() {
 add_action('init', 'bis_register_projects_cpt');
 
 function bis_get_latin_slug_post_types() {
-    return array('bis_news', 'bis_project');
+    return array('bis_news', 'bis_project', 'bis_service');
 }
 
 function bis_should_force_latin_slug($post_type) {
@@ -124,6 +124,7 @@ function bis_build_forced_latin_slug($post_type, $title, $post_id = 0, $post_sta
         $fallback_map = array(
             'bis_news' => 'news-item',
             'bis_project' => 'project',
+            'bis_service' => 'service',
         );
         $base_slug = isset($fallback_map[$post_type]) ? $fallback_map[$post_type] : 'entry';
     }
@@ -162,7 +163,7 @@ add_filter('wp_insert_post_data', 'bis_force_latin_slug_on_save', 20, 2);
 
 function bis_migrate_existing_latin_slugs() {
     $current_version = (int) get_option('bis_slug_migration_version', 0);
-    $target_version = 1;
+    $target_version = 2;
 
     if ($current_version >= $target_version) {
         return;
@@ -204,8 +205,22 @@ function bis_migrate_existing_latin_slugs() {
     }
 
     update_option('bis_slug_migration_version', $target_version, false);
+    flush_rewrite_rules(false);
 }
 add_action('init', 'bis_migrate_existing_latin_slugs', 99);
+
+function bis_register_news_meta() {
+    register_post_meta('bis_news', 'bis_news_image', array(
+        'single'            => true,
+        'type'              => 'string',
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'esc_url_raw',
+        'auth_callback'     => function () {
+            return current_user_can('edit_posts');
+        },
+    ));
+}
+add_action('init', 'bis_register_news_meta');
 
 function bis_register_project_taxonomies() {
     $type_labels = array(
@@ -469,10 +484,11 @@ function bis_register_services_cpt() {
     register_post_type('bis_service', array(
         'labels'       => $labels,
         'public'       => true,
-        'has_archive'  => false,
+        'has_archive'  => true,
+        'rewrite'      => array('slug' => 'services', 'with_front' => false),
         'menu_icon'    => 'dashicons-admin-tools',
         'show_in_rest' => true,
-        'supports'     => array('title', 'thumbnail', 'page-attributes'),
+        'supports'     => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
     ));
 }
 add_action('init', 'bis_register_services_cpt');
@@ -584,7 +600,10 @@ function bis_add_news_meta_boxes() {
         'bis_news_image_metabox',
         'bis_news',
         'normal',
-        'high'
+        'high',
+        array(
+            '__block_editor_compatible_meta_box' => true,
+        )
     );
 }
 add_action('add_meta_boxes', 'bis_add_news_meta_boxes');
@@ -1457,7 +1476,7 @@ function bis_save_news_image($post_id) {
         return;
     }
 
-    if (!isset($_POST['post_type']) || 'bis_news' !== $_POST['post_type'] || !current_user_can('edit_post', $post_id)) {
+    if ('bis_news' !== get_post_type($post_id) || !current_user_can('edit_post', $post_id)) {
         return;
     }
 

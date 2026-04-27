@@ -90,6 +90,357 @@ function bis_is_valid_request_phone($phone) {
     return 11 === strlen($digits) && '7' === substr($digits, 0, 1);
 }
 
+function bis_get_location_placeholder() {
+    return 'Не определено';
+}
+
+function bis_get_location_cookie_name() {
+    return 'bis_user_location';
+}
+
+function bis_get_request_remote_ip() {
+    $candidate_keys = array(
+        'HTTP_CF_CONNECTING_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_CLIENT_IP',
+        'REMOTE_ADDR',
+    );
+
+    foreach ($candidate_keys as $key) {
+        if (empty($_SERVER[$key])) {
+            continue;
+        }
+
+        $raw_value = sanitize_text_field(wp_unslash($_SERVER[$key]));
+        $parts = array_map('trim', explode(',', $raw_value));
+
+        foreach ($parts as $part) {
+            if ($part !== '' && false !== filter_var($part, FILTER_VALIDATE_IP)) {
+                return $part;
+            }
+        }
+    }
+
+    return '';
+}
+
+function bis_get_location_fallback_data() {
+    $placeholder = bis_get_location_placeholder();
+
+    return array(
+        'city' => $placeholder,
+        'region' => '',
+        'label' => $placeholder,
+        'source' => 'fallback',
+        'resolved' => false,
+    );
+}
+
+function bis_is_public_ip_address($ip) {
+    $ip = trim((string) $ip);
+    if ($ip === '') {
+        return false;
+    }
+
+    return false !== filter_var(
+        $ip,
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+    );
+}
+
+function bis_normalize_location_response($location, $source = 'ip') {
+    if (!is_array($location)) {
+        return bis_get_location_fallback_data();
+    }
+
+    if (!empty($location['data']) && is_array($location['data'])) {
+        $location = $location['data'];
+    }
+
+    $city = '';
+    $region = '';
+
+    $city_candidates = array(
+        $location['city'] ?? '',
+        $location['settlement'] ?? '',
+        $location['area'] ?? '',
+        $location['city_with_type'] ?? '',
+        $location['settlement_with_type'] ?? '',
+        $location['area_with_type'] ?? '',
+    );
+
+    foreach ($city_candidates as $candidate) {
+        $candidate = trim((string) $candidate);
+        if ($candidate !== '') {
+            $city = $candidate;
+            break;
+        }
+    }
+
+    $region_candidates = array(
+        $location['region_with_type'] ?? '',
+        $location['region'] ?? '',
+    );
+
+    foreach ($region_candidates as $candidate) {
+        $candidate = trim((string) $candidate);
+        if ($candidate !== '' && $candidate !== $city) {
+            $region = $candidate;
+            break;
+        }
+    }
+
+    $normalized_city = function_exists('mb_strtolower') ? mb_strtolower($city, 'UTF-8') : strtolower($city);
+    $normalized_region = function_exists('mb_strtolower') ? mb_strtolower($region, 'UTF-8') : strtolower($region);
+    $normalized_region = preg_replace('/^(г\.?|город)\s+/u', '', (string) $normalized_region);
+    if ($normalized_region === $normalized_city) {
+        $region = '';
+    }
+
+    if ($city === '') {
+        return bis_get_location_fallback_data();
+    }
+
+    $label_parts = array_values(array_unique(array_filter(array($city, $region))));
+
+    return array(
+        'city' => $city,
+        'region' => $region,
+        'label' => !empty($label_parts) ? implode(', ', $label_parts) : $city,
+        'source' => $source,
+        'resolved' => true,
+    );
+}
+
+function bis_get_dadata_request_headers() {
+    $settings = bis_get_dadata_settings();
+    if (empty($settings['api_key'])) {
+        return array();
+    }
+
+    $headers = array(
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json',
+        'Authorization' => 'Token ' . $settings['api_key'],
+    );
+
+    if (!empty($settings['secret_key'])) {
+        $headers['X-Secret'] = $settings['secret_key'];
+    }
+
+    return $headers;
+}
+
+function bis_verify_hcaptcha_response() {
+    if (!bis_is_hcaptcha_configured()) {
+        return true;
+    }
+
+    $token = isset($_POST['h-captcha-response']) ? trim((string) wp_unslash($_POST['h-captcha-response'])) : '';
+    if ('' === $token) {
+        return new WP_Error('bis_hcaptcha_missing', 'Подтвердите, что вы не робот.');
+    }
+
+    $settings = bis_get_hcaptcha_settings();
+    $response = wp_remote_post(
+        'https://hcaptcha.com/siteverify',
+        array(
+            'timeout' => 8,
+            'body'    => array(
+                'secret'   => $settings['secret_key'],
+                'response' => $token,
+                'remoteip' => bis_get_request_remote_ip(),
+            ),
+        )
+    );
+
+    if (is_wp_error($response)) {
+        return new WP_Error('bis_hcaptcha_request_failed', 'Не удалось проверить капчу. Попробуйте ещё раз.');
+    }
+
+    $payload = json_decode(wp_remote_retrieve_body($response), true);
+    if (!is_array($payload) || empty($payload['success'])) {
+        return new WP_Error('bis_hcaptcha_invalid', 'Капча не пройдена. Попробуйте ещё раз.');
+    }
+
+    return true;
+}
+
+function bis_dadata_request($endpoint, array $payload) {
+    $headers = bis_get_dadata_request_headers();
+    if (empty($headers)) {
+        return new WP_Error('bis_dadata_missing_key', 'Не настроен API-ключ Dadata.');
+    }
+
+    $response = wp_remote_post(
+        'https://suggestions.dadata.ru/suggestions/api/4_1/rs/' . ltrim($endpoint, '/'),
+        array(
+            'headers' => $headers,
+            'body' => wp_json_encode($payload),
+            'timeout' => 8,
+        )
+    );
+
+    if (is_wp_error($response)) {
+        return $response;
+    }
+
+    $status_code = (int) wp_remote_retrieve_response_code($response);
+    $body = wp_remote_retrieve_body($response);
+    $decoded = json_decode((string) $body, true);
+
+    if ($status_code < 200 || $status_code >= 300 || !is_array($decoded)) {
+        return new WP_Error('bis_dadata_invalid_response', 'Dadata вернул некорректный ответ.');
+    }
+
+    return $decoded;
+}
+
+function bis_get_client_ip_address() {
+    $server_keys = array(
+        'HTTP_CF_CONNECTING_IP',
+        'HTTP_X_REAL_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'REMOTE_ADDR',
+    );
+
+    foreach ($server_keys as $server_key) {
+        if (empty($_SERVER[$server_key])) {
+            continue;
+        }
+
+        $raw_value = wp_unslash($_SERVER[$server_key]);
+        $candidates = 'HTTP_X_FORWARDED_FOR' === $server_key ? explode(',', $raw_value) : array($raw_value);
+
+        foreach ($candidates as $candidate) {
+            $candidate = trim((string) $candidate);
+            if ($candidate !== '' && filter_var($candidate, FILTER_VALIDATE_IP)) {
+                return $candidate;
+            }
+        }
+    }
+
+    return '';
+}
+
+function bis_detect_location_by_ip($ip = '') {
+    $ip = trim((string) $ip);
+    if ($ip === '') {
+        return new WP_Error('bis_empty_ip', 'IP-адрес не определён.');
+    }
+
+    if (!bis_is_public_ip_address($ip)) {
+        return new WP_Error('bis_private_ip', 'Локальный или приватный IP нельзя использовать для геоопределения.');
+    }
+
+    $response = bis_dadata_request('iplocate/address', array('ip' => $ip));
+    if (is_wp_error($response)) {
+        return $response;
+    }
+
+    if (!empty($response['location']['data']) && is_array($response['location']['data'])) {
+        return bis_normalize_location_response($response['location']['data'], 'ip');
+    }
+
+    if (!empty($response['location']) && is_array($response['location'])) {
+        return bis_normalize_location_response($response['location'], 'ip');
+    }
+
+    if (!empty($response['suggestions'][0]['data']) && is_array($response['suggestions'][0]['data'])) {
+        return bis_normalize_location_response($response['suggestions'][0]['data'], 'ip');
+    }
+
+    return bis_get_location_fallback_data();
+}
+
+function bis_resolve_location_by_query($query) {
+    $query = trim((string) $query);
+    if ($query === '') {
+        return new WP_Error('bis_empty_location_query', 'Укажите город.');
+    }
+
+    $response = bis_dadata_request('suggest/address', array(
+        'query' => $query,
+        'count' => 5,
+    ));
+
+    if (is_wp_error($response)) {
+        return $response;
+    }
+
+    if (empty($response['suggestions']) || !is_array($response['suggestions'])) {
+        return new WP_Error('bis_location_not_found', 'Не удалось найти такой город.');
+    }
+
+    foreach ($response['suggestions'] as $suggestion) {
+        if (empty($suggestion['data']) || !is_array($suggestion['data'])) {
+            continue;
+        }
+
+        $normalized = bis_normalize_location_response($suggestion['data'], 'manual');
+        if (!empty($normalized['resolved'])) {
+            return $normalized;
+        }
+    }
+
+    return new WP_Error('bis_location_not_found', 'Не удалось найти такой город.');
+}
+
+function bis_get_request_location_value() {
+    if (!empty($_POST['location_region'])) {
+        $posted_value = sanitize_text_field(wp_unslash($_POST['location_region']));
+        if ($posted_value !== '') {
+            return $posted_value;
+        }
+    }
+
+    if (!empty($_COOKIE[bis_get_location_cookie_name()])) {
+        $cookie_value = json_decode(rawurldecode(wp_unslash($_COOKIE[bis_get_location_cookie_name()])), true);
+        if (is_array($cookie_value) && !empty($cookie_value['label'])) {
+            $label = sanitize_text_field((string) $cookie_value['label']);
+            if ($label !== '') {
+                return $label;
+            }
+        }
+    }
+
+    return bis_get_location_placeholder();
+}
+
+function bis_detect_location() {
+    $location = bis_get_location_fallback_data();
+    $requested_ip = isset($_POST['ip']) ? sanitize_text_field(wp_unslash($_POST['ip'])) : '';
+    $ip_address = bis_is_public_ip_address($requested_ip) ? $requested_ip : bis_get_client_ip_address();
+
+    if ($ip_address !== '') {
+        $detected_location = bis_detect_location_by_ip($ip_address);
+        if (!is_wp_error($detected_location)) {
+            $location = $detected_location;
+        }
+    }
+
+    wp_send_json_success($location);
+}
+add_action('wp_ajax_bis_detect_location', 'bis_detect_location');
+add_action('wp_ajax_nopriv_bis_detect_location', 'bis_detect_location');
+
+function bis_resolve_location() {
+    $query = isset($_POST['query']) ? sanitize_text_field(wp_unslash($_POST['query'])) : '';
+    if ($query === '') {
+        wp_send_json_error(array('message' => 'Укажите город.'));
+    }
+
+    $location = bis_resolve_location_by_query($query);
+    if (is_wp_error($location)) {
+        wp_send_json_error(array('message' => $location->get_error_message()));
+    }
+
+    wp_send_json_success($location);
+}
+add_action('wp_ajax_bis_resolve_location', 'bis_resolve_location');
+add_action('wp_ajax_nopriv_bis_resolve_location', 'bis_resolve_location');
+
 function bis_get_private_request_upload_subdir() {
     return 'bis-private';
 }
@@ -176,6 +527,7 @@ function bis_get_request_type_label($request_type) {
         'contact'      => 'Форма контактов',
         'order'        => 'Заявка на услугу',
         'callback'     => 'Обратный звонок',
+        'exit_intent'  => 'Лид-магнит при выходе',
     );
 
     return isset($type_labels[$request_type]) ? $type_labels[$request_type] : 'Заявка с сайта';
@@ -345,6 +697,7 @@ function bis_get_request_notification_context($post_id) {
     $topic = (string) get_post_meta($post_id, 'bis_topic', true);
     $details = (string) get_post_meta($post_id, 'bis_details', true);
     $project = (string) get_post_meta($post_id, 'bis_project_title', true);
+    $location = (string) get_post_meta($post_id, 'bis_location_region', true);
     $date = (string) get_post_meta($post_id, 'bis_date', true);
     $file = bis_get_request_file_data($post_id);
     $file_path = $file['path'];
@@ -377,6 +730,7 @@ function bis_get_request_notification_context($post_id) {
     $add_detail('Email', $email);
     $add_detail('Предпочтительный контакт', $messenger);
     $add_detail('Проект', $project);
+    $add_detail('Город-регион', $location);
     $add_detail('Компания', $company);
     $add_detail('Должность', $position);
     $add_detail('Тема', $topic);
@@ -435,12 +789,24 @@ function bis_submit_general_request() {
     $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
     $service = isset($_POST['service']) ? sanitize_text_field(wp_unslash($_POST['service'])) : '';
     $request_type = isset($_POST['request_type']) ? sanitize_key(wp_unslash($_POST['request_type'])) : 'contact';
+    $location = bis_get_request_location_value();
 
-    if (!in_array($request_type, array('contact', 'order', 'callback'), true)) {
+    if (!in_array($request_type, array('contact', 'order', 'callback', 'exit_intent'), true)) {
         $request_type = 'contact';
     }
 
-    if ($name === '' || $phone === '') {
+    if ('exit_intent' === $request_type) {
+        $hcaptcha_check = bis_verify_hcaptcha_response();
+        if (is_wp_error($hcaptcha_check)) {
+            wp_send_json_error(array('message' => $hcaptcha_check->get_error_message()));
+        }
+    }
+
+    if ('exit_intent' === $request_type && $name === '') {
+        $name = 'Посетитель сайта';
+    }
+
+    if (($name === '' && 'exit_intent' !== $request_type) || $phone === '') {
         wp_send_json_error(array('message' => 'Заполните обязательные поля: имя и телефон.'));
     }
 
@@ -466,6 +832,7 @@ function bis_submit_general_request() {
             'bis_comment' => $message,
             'bis_topic' => $service,
             'bis_request_type' => $request_type,
+            'bis_location_region' => $location,
             'bis_status' => 'new',
             'bis_date' => current_time('mysql'),
         ),
@@ -497,6 +864,7 @@ function bis_submit_estimate() {
     $email = sanitize_email($raw_email);
     $messenger = isset($_POST['messenger']) ? bis_normalize_request_messenger(sanitize_text_field(wp_unslash($_POST['messenger']))) : '';
     $comment = isset($_POST['comment']) ? sanitize_textarea_field(wp_unslash($_POST['comment'])) : '';
+    $location = bis_get_request_location_value();
 
     if ($name === '' || $phone === '' || trim((string) $raw_email) === '') {
         wp_send_json_error(array('message' => 'Заполните обязательные поля: имя, телефон и email.'));
@@ -524,6 +892,7 @@ function bis_submit_estimate() {
             'bis_messenger' => $messenger,
             'bis_comment' => $comment,
             'bis_request_type' => 'estimate',
+            'bis_location_region' => $location,
             'bis_status' => 'new',
             'bis_date' => current_time('mysql'),
         ),
@@ -577,6 +946,7 @@ function bis_submit_project_consultation() {
     $project_id = isset($_POST['project_id']) ? intval($_POST['project_id']) : 0;
     $privacy = isset($_POST['privacy']) ? '1' : '0';
     $marketing = isset($_POST['marketing']) ? '1' : '0';
+    $location = bis_get_request_location_value();
 
     if (empty($name) || empty($phone) || empty($email)) {
         wp_send_json_error(array('message' => 'Required fields missing'));
@@ -604,6 +974,7 @@ function bis_submit_project_consultation() {
             'bis_project_title' => $project_title,
             'bis_request_type' => 'consultation',
             'bis_comment' => $details,
+            'bis_location_region' => $location,
             'bis_privacy' => $privacy,
             'bis_marketing' => $marketing,
             'bis_status' => 'new',
@@ -740,6 +1111,7 @@ function bis_get_requests() {
                 'topic' => get_post_meta(get_the_ID(), 'bis_topic', true),
                 'details' => get_post_meta(get_the_ID(), 'bis_details', true),
                 'project' => get_post_meta(get_the_ID(), 'bis_project_title', true),
+                'location' => get_post_meta(get_the_ID(), 'bis_location_region', true),
                 'type' => get_post_meta(get_the_ID(), 'bis_request_type', true),
                 'file_url' => $file_url,
                 'file_name' => $file_name,

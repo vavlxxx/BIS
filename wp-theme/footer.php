@@ -34,6 +34,7 @@
         <p><a href="#services">Специализация</a></p>
         <p><a href="#equipment">Оборудование</a></p>
         <p><a href="#experience">Опыт</a></p>
+        <p><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></p>
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
         <p><a href="<?php echo esc_url(home_url('/news/')); ?>">Новости</a></p>
@@ -83,6 +84,30 @@
   </footer>
 
   <?php get_template_part('estimate-modal'); ?>
+  <div class="cookie-consent" id="cookieConsentBanner" hidden>
+    <p class="cookie-consent__text">Этот сайт использует cookie для хранения данных. Продолжая использовать сайт, Вы даете согласие на работу с этими файлами.</p>
+    <button class="cookie-consent__button" id="cookieConsentAccept" type="button">Принять и закрыть</button>
+  </div>
+  <div class="popup-overlay popup-overlay--exit-intent" id="exitIntentOverlay" aria-hidden="true">
+    <div class="exit-intent-modal">
+      <button class="popup-close exit-intent-modal__close" type="button" data-exit-intent-close aria-label="Закрыть форму">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="exit-intent-modal__tag">Специальное предложение</div>
+      <h2 class="exit-intent-modal__title">Уже уходите не получив предложение?</h2>
+      <p class="exit-intent-modal__text">Просто оставьте телефон.</p>
+      <form class="contact-form exit-intent-modal__form" id="exitIntentForm">
+        <div class="form-group">
+          <label for="exitIntentPhone">Телефон</label>
+          <input type="tel" id="exitIntentPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
+        </div>
+        <?php echo bis_render_hcaptcha_widget(); ?>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+      </form>
+    </div>
+  </div>
   <?php wp_footer(); ?>
   <div class="floating-estimate-wrapper">
     <div class="floating-socials-panel" data-floating-social-panel>
@@ -112,3 +137,4 @@
   </div>
 </body>
 </html>
+

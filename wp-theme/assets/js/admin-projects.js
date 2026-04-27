@@ -2,15 +2,37 @@
   $(document).ready(function () {
     const galleryList = $('#bis-project-gallery-list');
     const galleryTemplate = $('#bis-project-gallery-item-template');
+    const hasBlockEditorStore = Boolean(window.wp && wp.data && wp.data.dispatch && wp.data.select);
 
     const getPreview = (targetId) => {
       if (!targetId) return $();
       return $(`[data-image-preview="${targetId}"]`);
     };
 
+    const syncMetaField = (fieldName, value) => {
+      if (!hasBlockEditorStore || !fieldName) return;
+
+      const currentMeta = wp.data.select('core/editor').getEditedPostAttribute('meta') || {};
+      wp.data.dispatch('core/editor').editPost({
+        meta: {
+          ...currentMeta,
+          [fieldName]: value
+        }
+      });
+    };
+
+    const syncFeaturedMedia = (targetId, attachmentId) => {
+      if (!hasBlockEditorStore || targetId !== 'bis_news_image') return;
+
+      wp.data.dispatch('core/editor').editPost({
+        featured_media: attachmentId ? Number(attachmentId) : 0
+      });
+    };
+
     const updateBadge = (checkbox) => {
       const badge = $('[data-featured-badge]');
       if (!badge.length) return;
+
       if (checkbox.is(':checked')) {
         badge.addClass('is-featured').text('Ключевой проект');
       } else {
@@ -20,15 +42,36 @@
 
     const updatePreview = (preview, url) => {
       if (!preview || !preview.length) return;
+
       if (url) {
         preview.css('background-image', `url('${url}')`);
         preview.removeClass('is-empty').find('.bis-project-media__placeholder').remove();
-      } else {
-        preview.css('background-image', 'none').addClass('is-empty');
-        if (!preview.find('.bis-project-media__placeholder').length) {
-          preview.append('<span class="bis-project-media__placeholder">Нет изображения</span>');
-        }
+        return;
       }
+
+      preview.css('background-image', 'none').addClass('is-empty');
+      if (!preview.find('.bis-project-media__placeholder').length) {
+        preview.append('<span class="bis-project-media__placeholder">Нет изображения</span>');
+      }
+    };
+
+    const syncFieldFromElement = (element) => {
+      const fieldName = element.data('meta-field');
+      if (!fieldName) return;
+      syncMetaField(fieldName, element.val() || '');
+    };
+
+    const clearAttachmentField = (input) => {
+      const attachmentTarget = input.data('attachment-target');
+      if (!attachmentTarget) return null;
+
+      const attachmentInput = $('#' + attachmentTarget);
+      if (!attachmentInput.length) return null;
+
+      attachmentInput.val('').trigger('input').trigger('change');
+      syncFieldFromElement(attachmentInput);
+
+      return attachmentInput;
     };
 
     const openMediaFrame = (title, multiple, callback) => {
@@ -42,13 +85,12 @@
         const selection = frame.state().get('selection');
         if (multiple) {
           selection.each(function (attachment) {
-            const data = attachment.toJSON();
-            callback(data.url);
+            callback(attachment.toJSON().url);
           });
           return;
         }
-        const attachment = selection.first().toJSON();
-        callback(attachment.url);
+
+        callback(selection.first().toJSON());
       });
 
       frame.open();
@@ -61,8 +103,22 @@
       const input = $('#' + targetId);
       const preview = getPreview(targetId);
 
-      openMediaFrame('Выберите изображение', false, (url) => {
-        input.val(url);
+      openMediaFrame('Выберите изображение', false, (attachment) => {
+        const url = attachment && attachment.url ? attachment.url : '';
+        const attachmentTarget = button.data('attachment-target') || input.data('attachment-target');
+
+        input.val(url).trigger('input').trigger('change');
+        syncFieldFromElement(input);
+
+        if (attachmentTarget) {
+          const attachmentInput = $('#' + attachmentTarget);
+          if (attachmentInput.length) {
+            attachmentInput.val(attachment && attachment.id ? attachment.id : '').trigger('input').trigger('change');
+            syncFieldFromElement(attachmentInput);
+          }
+        }
+
+        syncFeaturedMedia(targetId, attachment && attachment.id ? attachment.id : 0);
         updatePreview(preview, url);
       });
     });
@@ -73,21 +129,33 @@
       const targetId = button.data('target');
       const input = $('#' + targetId);
       const preview = getPreview(targetId);
-      input.val('');
+
+      input.val('').trigger('input').trigger('change');
+      syncFieldFromElement(input);
+      clearAttachmentField(input);
+      syncFeaturedMedia(targetId, 0);
       updatePreview(preview, '');
     });
 
     $('[data-image-input]').on('input', function () {
       const input = $(this);
       const targetId = input.data('preview-target') || input.attr('id');
+
+      syncFieldFromElement(input);
+      clearAttachmentField(input);
       updatePreview(getPreview(targetId), input.val());
+    });
+
+    $('[data-meta-field]').not('[data-image-input]').on('input change', function () {
+      syncFieldFromElement($(this));
     });
 
     const addGalleryItem = (url) => {
       if (!galleryList.length || !galleryTemplate.length || !url) return;
+
       const item = $(galleryTemplate.html());
       item.find('.bis-project-gallery-thumb').css('background-image', `url('${url}')`);
-      item.find('input[type=\"hidden\"]').attr('name', 'bis_project_gallery[]').val(url);
+      item.find('input[type="hidden"]').attr('name', 'bis_project_gallery[]').val(url);
       galleryList.append(item);
     };
 
@@ -102,8 +170,10 @@
       e.preventDefault();
       const urlInput = $('#bis-project-gallery-url');
       if (!urlInput.length) return;
+
       const url = urlInput.val().trim();
       if (!url) return;
+
       addGalleryItem(url);
       urlInput.val('');
     });
@@ -125,6 +195,7 @@
     });
 
     updateBadge($('[data-featured-toggle]'));
+
     $('[data-image-input]').each(function () {
       const input = $(this);
       const targetId = input.data('preview-target') || input.attr('id');

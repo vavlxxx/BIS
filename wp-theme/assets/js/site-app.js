@@ -116,6 +116,7 @@ if (document.readyState === 'complete') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  runInit('initHeaderLocation');
   runInit('initTypingEffect');
   runInit('initMobileMenu');
   runInit('initCallbackModal');
@@ -139,9 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
   runInit('initRevenueChart');
   runInit('initProjectConsultationForm');
   runInit('initProjectGallery');
+  runInit('initCookieConsent');
   initLazyYandexMap();
   runInit('initObjectsSlider');
   runInit('initPhoneMasks');
+  runInit('initExitIntentModal');
   runInit('syncUniformCardHeights');
 
   let resizeTimer;

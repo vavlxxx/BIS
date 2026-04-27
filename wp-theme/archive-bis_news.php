@@ -30,13 +30,13 @@ $banner_image = $news_page_id ? bis_get_page_banner_image_url($news_page_id) : '
 ?>
 
 <main class="news-archive-page">
-    <section class="news-hero">
+    <section class="news-hero" style="padding-inline: 8vw;">
         <?php if ($banner_image) : ?>
             <div class="news-hero__media">
                 <img src="<?php echo esc_url($banner_image); ?>" alt="<?php echo esc_attr($banner_title); ?>" decoding="async">
             </div>
         <?php endif; ?>
-        <div class="news-hero__overlay">
+        <div class="news-hero__overlay mw-1400px">
             <h1 class="news-hero__title"><?php echo esc_html($banner_title); ?></h1>
             <?php if (!empty($banner_subtitle)) : ?>
                 <p class="news-hero__text"><?php echo nl2br(esc_html($banner_subtitle)); ?></p>
