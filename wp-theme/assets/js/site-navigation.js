@@ -214,11 +214,22 @@ function initFloatingSocialPanel() {
 
   const closeBtn = panel.querySelector('[data-floating-social-close]');
   const openBtn = document.querySelector('[data-floating-social-open]');
+  const storageKey = 'bisFloatingSocialPanelClosed';
 
-  const setHidden = (hidden) => {
+  const setHidden = (hidden, { persist = true } = {}) => {
     panel.classList.toggle('is-hidden', hidden);
     if (openBtn) {
       openBtn.hidden = !hidden;
+    }
+
+    if (!persist) {
+      return;
+    }
+
+    if (hidden) {
+      window.localStorage.setItem(storageKey, '1');
+    } else {
+      window.localStorage.removeItem(storageKey);
     }
   };
 
@@ -234,7 +245,7 @@ function initFloatingSocialPanel() {
     });
   }
 
-  setHidden(panel.classList.contains('is-hidden'));
+  setHidden(window.localStorage.getItem(storageKey) === '1' || panel.classList.contains('is-hidden'), { persist: false });
 }
 
 // Параллакс в hero по умолчанию

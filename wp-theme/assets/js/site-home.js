@@ -216,7 +216,8 @@ function initCardSlider({
   sectionSelector,
   trackSelector,
   cardSelector,
-  navSelector
+  navSelector,
+  desktopEnabled = true
 }) {
   const section = document.querySelector(sectionSelector);
   if (!section) return;
@@ -235,11 +236,12 @@ function initCardSlider({
 
   const isMobile = window.innerWidth <= CARD_SLIDER_MOBILE_BREAKPOINT;
   const isWideDesktop = window.innerWidth >= CARD_SLIDER_DESKTOP_BREAKPOINT;
-  const isEnabled = isMobile || isWideDesktop;
-  const sliderMode = isWideDesktop ? 'desktop' : 'mobile';
-  const visibleSlides = isWideDesktop ? 3 : 1;
+  const isDesktopMode = desktopEnabled && isWideDesktop;
+  const isEnabled = isMobile || isDesktopMode;
+  const sliderMode = isDesktopMode ? 'desktop' : 'mobile';
+  const visibleSlides = isDesktopMode ? 3 : 1;
   const maxStartIndex = Math.max(0, cards.length - visibleSlides);
-  const slidePositions = isWideDesktop
+  const slidePositions = isDesktopMode
     ? Array.from({ length: Math.ceil(cards.length / visibleSlides) }, (_, index) => Math.min(index * visibleSlides, maxStartIndex))
     : cards.map((_, index) => index);
   const maxSlideIndex = Math.max(0, slidePositions.length - 1);
@@ -395,6 +397,16 @@ function initServicesSlider() {
     trackSelector: '.services-grid',
     cardSelector: '.service-card',
     navSelector: '.services-slider-nav'
+  });
+}
+
+function initRelatedServicesSlider() {
+  initCardSlider({
+    sectionSelector: '.services-catalog--related',
+    trackSelector: '[data-related-services-track]',
+    cardSelector: '.service-card',
+    navSelector: '.services-slider-nav',
+    desktopEnabled: false
   });
 }
 

@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   runInit('initTeamSlider');
   runInit('initTeamModal');
   runInit('initServicesSlider');
+  runInit('initRelatedServicesSlider');
   runInit('initEstimateModal');
   runInit('initRevenueChart');
   runInit('initProjectConsultationForm');
@@ -152,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       runInit('initServicesSlider');
+      runInit('initRelatedServicesSlider');
       runInit('initExperienceSlider');
       runInit('initObjectsSlider');
       runInit('syncUniformCardHeights');
