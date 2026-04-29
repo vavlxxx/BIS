@@ -222,6 +222,31 @@ function bis_register_news_meta() {
 }
 add_action('init', 'bis_register_news_meta');
 
+function bis_register_seo_meta() {
+    foreach (array('bis_project', 'bis_service') as $post_type) {
+        register_post_meta($post_type, 'bis_seo_title', array(
+            'single'            => true,
+            'type'              => 'string',
+            'show_in_rest'      => true,
+            'sanitize_callback' => 'sanitize_text_field',
+            'auth_callback'     => function () {
+                return current_user_can('edit_posts');
+            },
+        ));
+
+        register_post_meta($post_type, 'bis_seo_description', array(
+            'single'            => true,
+            'type'              => 'string',
+            'show_in_rest'      => true,
+            'sanitize_callback' => 'sanitize_textarea_field',
+            'auth_callback'     => function () {
+                return current_user_can('edit_posts');
+            },
+        ));
+    }
+}
+add_action('init', 'bis_register_seo_meta');
+
 function bis_register_project_taxonomies() {
     $type_labels = array(
         'name'              => 'Типы проектов',
@@ -569,6 +594,20 @@ function bis_add_service_meta_boxes() {
 }
 add_action('add_meta_boxes', 'bis_add_service_meta_boxes');
 
+function bis_add_seo_meta_boxes() {
+    foreach (array('bis_project', 'bis_service') as $post_type) {
+        add_meta_box(
+            'bis_seo_meta',
+            'SEO-метатеги',
+            'bis_seo_metabox',
+            $post_type,
+            'normal',
+            'high'
+        );
+    }
+}
+add_action('add_meta_boxes', 'bis_add_seo_meta_boxes');
+
 function bis_add_equipment_meta_boxes() {
     add_meta_box(
         'bis_equipment_details',
@@ -635,6 +674,34 @@ function bis_page_banner_metabox($post) {
             <div class="bis-field">
                 <label for="bis_page_banner_subtitle">Подзаголовок</label>
                 <textarea id="bis_page_banner_subtitle" name="bis_page_banner_subtitle" rows="3" placeholder="Введите подзаголовок"><?php echo esc_textarea($banner_subtitle); ?></textarea>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+function bis_seo_metabox($post) {
+    wp_nonce_field('bis_seo_nonce', 'bis_seo_nonce_field');
+
+    $seo_title = get_post_meta($post->ID, 'bis_seo_title', true);
+    $seo_description = get_post_meta($post->ID, 'bis_seo_description', true);
+    ?>
+    <div class="bis-project-box">
+        <div class="bis-project-box__header">
+            <div>
+                <h3>SEO-метатеги</h3>
+                <p>Укажите значения для meta title и meta description. Если поля пустые, используются стандартные заголовок и описание.</p>
+            </div>
+        </div>
+
+        <div class="bis-project-grid">
+            <div class="bis-field">
+                <label for="bis_seo_title">Meta «title»</label>
+                <input type="text" id="bis_seo_title" name="bis_seo_title" value="<?php echo esc_attr($seo_title); ?>" placeholder="<?php echo esc_attr(get_the_title($post->ID)); ?>">
+            </div>
+            <div class="bis-field">
+                <label for="bis_seo_description">Meta «description»</label>
+                <textarea id="bis_seo_description" name="bis_seo_description" rows="3" placeholder="Описание для поисковых систем"><?php echo esc_textarea($seo_description); ?></textarea>
             </div>
         </div>
     </div>
@@ -1049,7 +1116,6 @@ function bis_project_details_metabox($post) {
     $is_key = get_post_meta($post->ID, 'bis_project_is_featured', true);
     $preview_image = get_post_meta($post->ID, 'bis_project_preview_image', true);
     $banner_image = get_post_meta($post->ID, 'bis_project_banner_image', true);
-    $banner_title = get_post_meta($post->ID, 'bis_project_banner_title', true);
     $banner_blocks = get_post_meta($post->ID, 'bis_project_banner_blocks', true);
     $project_description = get_post_meta($post->ID, 'bis_project_description', true);
     $gallery = get_post_meta($post->ID, 'bis_project_gallery', true);
@@ -1069,34 +1135,6 @@ function bis_project_details_metabox($post) {
         'bottom_right' => array('label' => '', 'value' => ''),
     );
     $banner_blocks = wp_parse_args($banner_blocks, $default_blocks);
-
-    $legacy_year = get_post_meta($post->ID, 'bis_project_year', true);
-    $legacy_area = get_post_meta($post->ID, 'bis_project_area', true);
-    $legacy_address = get_post_meta($post->ID, 'bis_project_address', true);
-
-    $has_blocks = false;
-    foreach ($banner_blocks as $block) {
-        if (!empty($block['label']) || !empty($block['value'])) {
-            $has_blocks = true;
-            break;
-        }
-    }
-
-    if (!$has_blocks) {
-        if ($legacy_year) {
-            $banner_blocks['top_left'] = array('label' => 'Год реализации', 'value' => $legacy_year);
-        }
-        if ($legacy_address) {
-            $banner_blocks['bottom_left'] = array('label' => 'Адрес', 'value' => $legacy_address);
-        }
-        if ($legacy_area) {
-            $area_value = $legacy_area;
-            if (!preg_match('/\b(м2|м²|m2|m²)\b/iu', $area_value)) {
-                $area_value .= ' м²';
-            }
-            $banner_blocks['top_right'] = array('label' => 'Площадь', 'value' => $area_value);
-        }
-    }
 
     $legacy_image = get_post_meta($post->ID, 'bis_project_image', true);
     $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'full');
@@ -1150,33 +1188,11 @@ function bis_project_details_metabox($post) {
 
         <div class="bis-project-section">
             <div class="bis-project-section__header">
-                <h4>Параметры проекта</h4>
-                <p class="bis-field__hint">Поля требуются для фильтров на странице проектов.</p>
-            </div>
-            <div class="bis-project-grid">
-                <div class="bis-field">
-                    <label for="bis_project_area">Площадь (м²)</label>
-                    <input type="text" id="bis_project_area" name="bis_project_area" value="<?php echo esc_attr($legacy_area); ?>" placeholder="45 000">
-                </div>
-                <div class="bis-field">
-                    <label for="bis_project_year">Год</label>
-                    <input type="text" id="bis_project_year" name="bis_project_year" value="<?php echo esc_attr($legacy_year); ?>" placeholder="2024">
-                </div>
-            </div>
-        </div>
-
-        <div class="bis-project-section">
-            <div class="bis-project-section__header">
                 <h4>Текст на баннере</h4>
                 <p class="bis-field__hint">Заполните подписи и значения для четырех блоков. Если подпись и значение пустые — блок не отображается.</p>
             </div>
 
             <div class="bis-project-grid">
-                <div class="bis-field">
-                    <label for="bis_project_banner_title">Заголовок баннера</label>
-                    <input type="text" id="bis_project_banner_title" name="bis_project_banner_title" value="<?php echo esc_attr($banner_title); ?>" placeholder="<?php echo esc_attr(get_the_title($post->ID)); ?>">
-                    <p class="bis-field__hint">Если оставить пустым, будет использовано название записи.</p>
-                </div>
                 <div class="bis-field">
                     <label for="bis_project_description">Описание проекта</label>
                     <textarea id="bis_project_description" name="bis_project_description" rows="4" placeholder="Краткое описание проекта для карточек и страницы"><?php echo esc_textarea($project_description); ?></textarea>
@@ -1274,7 +1290,6 @@ function bis_save_project_details($post_id) {
 
     $preview_image = isset($_POST['bis_project_preview_image']) ? esc_url_raw(wp_unslash($_POST['bis_project_preview_image'])) : '';
     $banner_image = isset($_POST['bis_project_banner_image']) ? esc_url_raw(wp_unslash($_POST['bis_project_banner_image'])) : '';
-    $banner_title = isset($_POST['bis_project_banner_title']) ? sanitize_text_field(wp_unslash($_POST['bis_project_banner_title'])) : '';
     $project_description = isset($_POST['bis_project_description']) ? sanitize_textarea_field(wp_unslash($_POST['bis_project_description'])) : '';
     $is_key = isset($_POST['bis_project_is_featured']) ? '1' : '0';
 
@@ -1306,27 +1321,10 @@ function bis_save_project_details($post_id) {
         }
     }
 
-    $year_input = isset($_POST['bis_project_year']) ? sanitize_text_field(wp_unslash($_POST['bis_project_year'])) : '';
-    $area_input = isset($_POST['bis_project_area']) ? sanitize_text_field(wp_unslash($_POST['bis_project_area'])) : '';
-    $address_input = isset($_POST['bis_project_address']) ? sanitize_text_field(wp_unslash($_POST['bis_project_address'])) : '';
-
-    $legacy_year = isset($banner_blocks['top_left']['value']) ? $banner_blocks['top_left']['value'] : '';
-    $legacy_address = isset($banner_blocks['bottom_left']['value']) ? $banner_blocks['bottom_left']['value'] : '';
-    $legacy_area_raw = isset($banner_blocks['top_right']['value']) ? $banner_blocks['top_right']['value'] : '';
-    $legacy_area = trim(preg_replace('/\\s*(м2|м²|m2|m²)\\s*/iu', '', $legacy_area_raw));
-
-    $area_input = trim(preg_replace('/\\s*(м2|м²|m2|m²)\\s*/iu', '', $area_input));
-    $project_year = $year_input !== '' ? $year_input : $legacy_year;
-    $project_address = $address_input !== '' ? $address_input : $legacy_address;
-    $project_area = $area_input !== '' ? $area_input : $legacy_area;
-
-    update_post_meta($post_id, 'bis_project_address', $project_address);
-    update_post_meta($post_id, 'bis_project_area', $project_area);
-    update_post_meta($post_id, 'bis_project_year', $project_year);
     update_post_meta($post_id, 'bis_project_preview_image', $preview_image);
     update_post_meta($post_id, 'bis_project_image', $preview_image);
     update_post_meta($post_id, 'bis_project_banner_image', $banner_image);
-    update_post_meta($post_id, 'bis_project_banner_title', $banner_title);
+    delete_post_meta($post_id, 'bis_project_banner_title');
     update_post_meta($post_id, 'bis_project_banner_blocks', $banner_blocks);
     update_post_meta($post_id, 'bis_project_gallery', $gallery);
     update_post_meta($post_id, 'bis_project_is_featured', $is_key);
@@ -1377,6 +1375,27 @@ function bis_save_service_details($post_id) {
     update_post_meta($post_id, 'bis_service_description', $description);
 }
 add_action('save_post', 'bis_save_service_details');
+
+function bis_save_seo_meta($post_id) {
+    if (!isset($_POST['bis_seo_nonce_field']) || !wp_verify_nonce($_POST['bis_seo_nonce_field'], 'bis_seo_nonce')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!in_array(get_post_type($post_id), array('bis_project', 'bis_service'), true) || !current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $seo_title = isset($_POST['bis_seo_title']) ? sanitize_text_field(wp_unslash($_POST['bis_seo_title'])) : '';
+    $seo_description = isset($_POST['bis_seo_description']) ? sanitize_textarea_field(wp_unslash($_POST['bis_seo_description'])) : '';
+
+    update_post_meta($post_id, 'bis_seo_title', $seo_title);
+    update_post_meta($post_id, 'bis_seo_description', $seo_description);
+}
+add_action('save_post', 'bis_save_seo_meta');
 
 function bis_save_equipment_details($post_id) {
     if (!isset($_POST['bis_equipment_details_nonce_field']) || !wp_verify_nonce($_POST['bis_equipment_details_nonce_field'], 'bis_equipment_details_nonce')) {
@@ -1442,8 +1461,6 @@ function bis_project_columns($columns) {
     $new_columns = array();
     foreach ($columns as $key => $label) {
         if ('title' === $key) {
-            $new_columns['bis_project_address'] = 'Адрес';
-            $new_columns['bis_project_year'] = 'Год';
             $new_columns['bis_project_featured'] = 'Ключевой';
         }
         $new_columns[$key] = $label;
@@ -1453,14 +1470,6 @@ function bis_project_columns($columns) {
 add_filter('manage_bis_project_posts_columns', 'bis_project_columns');
 
 function bis_project_custom_column($column, $post_id) {
-    if ('bis_project_address' === $column) {
-        echo esc_html(get_post_meta($post_id, 'bis_project_address', true));
-    }
-
-    if ('bis_project_year' === $column) {
-        echo esc_html(get_post_meta($post_id, 'bis_project_year', true));
-    }
-
     if ('bis_project_featured' === $column) {
         $is_key = get_post_meta($post_id, 'bis_project_is_featured', true);
         echo $is_key ? '✓' : '—';

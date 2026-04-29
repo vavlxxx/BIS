@@ -1082,7 +1082,7 @@ select {
 
 .hero-nav {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: clamp(18px, 4vw, 32px);
   list-style: none;
   flex-wrap: wrap;

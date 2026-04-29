@@ -7,7 +7,6 @@ get_header();
         <?php while (have_posts()) : the_post(); ?>
             <?php
             $project_id = get_the_ID();
-            $details = bis_get_project_details($project_id);
             $banner_image = bis_get_project_banner_image($project_id);
             $banner_title = bis_get_project_banner_title($project_id);
             $banner_blocks = bis_get_project_banner_blocks($project_id);
@@ -29,20 +28,6 @@ get_header();
                 $resolved_blocks[$position] = array(
                     'label' => $label,
                     'value' => $value,
-                );
-            }
-
-            if (!$has_blocks) {
-                $area_value = $details['area'];
-                if ($area_value && !preg_match('/\b(м2|м²|m2|m²)\b/iu', $area_value)) {
-                    $area_value .= ' м²';
-                }
-
-                $resolved_blocks = array(
-                    'top_left' => array('label' => 'Год реализации', 'value' => $details['year']),
-                    'bottom_left' => array('label' => 'Адрес', 'value' => $details['address']),
-                    'top_right' => array('label' => 'Площадь', 'value' => $area_value),
-                    'bottom_right' => array('label' => '', 'value' => ''),
                 );
             }
 

@@ -3,10 +3,6 @@
 <head>
   <meta charset="<?php bloginfo( 'charset' ); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="title" content="<?php echo esc_attr(get_option('blogname')); ?>">
-  <meta name="description" content="<?php bloginfo('description');?>">
-  <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.ico">
- 
   <?php
 $document_title = get_bloginfo('name');
 
@@ -33,8 +29,20 @@ if (!is_front_page()) {
         $document_title = 'Страница не найдена';
     }
 }
+
+if (is_singular(bis_get_seo_enabled_post_types())) {
+    $seo_title = bis_get_post_seo_title(get_queried_object_id());
+    if ($seo_title !== '') {
+        $document_title = $seo_title;
+    }
+}
+
+$document_description = bis_get_current_meta_description();
 ?>
-<title><?php echo esc_html($document_title); ?></title>
+  <meta name="title" content="<?php echo esc_attr($document_title); ?>">
+  <meta name="description" content="<?php echo esc_attr($document_description); ?>">
+  <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.ico">
+  <title><?php echo esc_html($document_title); ?></title>
 
   <?php wp_head(); ?>
   <script src="https://js.hcaptcha.com/1/api.js" async defer></script>

@@ -188,6 +188,65 @@ function bis_theme_setup() {
 }
 add_action('after_setup_theme', 'bis_theme_setup');
 
+function bis_get_seo_enabled_post_types() {
+    return array('bis_project', 'bis_service');
+}
+
+function bis_get_post_seo_title($post_id) {
+    if (!in_array(get_post_type($post_id), bis_get_seo_enabled_post_types(), true)) {
+        return '';
+    }
+
+    return trim((string) get_post_meta($post_id, 'bis_seo_title', true));
+}
+
+function bis_get_post_seo_description($post_id) {
+    if (!in_array(get_post_type($post_id), bis_get_seo_enabled_post_types(), true)) {
+        return '';
+    }
+
+    return trim((string) get_post_meta($post_id, 'bis_seo_description', true));
+}
+
+function bis_filter_document_title($title) {
+    if (!is_singular(bis_get_seo_enabled_post_types())) {
+        return $title;
+    }
+
+    $seo_title = bis_get_post_seo_title(get_queried_object_id());
+    return $seo_title !== '' ? $seo_title : $title;
+}
+add_filter('pre_get_document_title', 'bis_filter_document_title', 20);
+
+function bis_get_current_meta_description() {
+    $description = '';
+
+    if (is_singular()) {
+        $post = get_queried_object();
+
+        if ($post instanceof WP_Post) {
+            $description = bis_get_post_seo_description($post->ID);
+
+            if ($description === '') {
+                $excerpt = has_excerpt($post) ? get_the_excerpt($post) : wp_strip_all_tags(get_the_content(null, false, $post));
+                if (!empty($excerpt)) {
+                    $description = wp_trim_words($excerpt, 30, '...');
+                }
+            }
+        }
+    }
+
+    if ($description === '') {
+        $description = get_bloginfo('description');
+    }
+
+    if ($description === '') {
+        $description = 'БИС: комплексные пусконаладочные работы, техническое обслуживание и сопровождение инженерных систем';
+    }
+
+    return $description;
+}
+
 function bis_get_social_share_image_url() {
     if (is_singular() && has_post_thumbnail()) {
         $thumbnail_url = get_the_post_thumbnail_url(get_queried_object_id(), 'large');
@@ -205,22 +264,7 @@ function bis_output_social_meta_tags() {
     }
 
     $title = wp_get_document_title();
-    $description = get_bloginfo('description');
-
-    if (is_singular()) {
-        $post = get_queried_object();
-
-        if ($post instanceof WP_Post) {
-            $excerpt = has_excerpt($post) ? get_the_excerpt($post) : wp_strip_all_tags(get_the_content(null, false, $post));
-            if (!empty($excerpt)) {
-                $description = wp_trim_words($excerpt, 30, '...');
-            }
-        }
-    }
-
-    if (empty($description)) {
-        $description = 'БИС: комплексные пусконаладочные работы, техническое обслуживание и сопровождение инженерных систем';
-    }
+    $description = bis_get_current_meta_description();
 
     $url = home_url(add_query_arg(array(), $GLOBALS['wp']->request ?? ''));
     if (is_singular()) {

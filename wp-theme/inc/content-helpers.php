@@ -51,11 +51,6 @@ function bis_get_project_banner_image($post_id) {
 }
 
 function bis_get_project_banner_title($post_id) {
-    $title = get_post_meta($post_id, 'bis_project_banner_title', true);
-    if ($title) {
-        return $title;
-    }
-
     return get_the_title($post_id);
 }
 
