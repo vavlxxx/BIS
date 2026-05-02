@@ -949,9 +949,11 @@ function initFormValidation() {
       const formData = {
         name: form.querySelector('[name="name"]').value,
         phone: form.querySelector('[name="phone"]').value,
+        email: form.querySelector('[name="email"]')?.value || '',
         message: form.querySelector('[name="message"]').value,
         service: form.querySelector('#orderService')?.value || '',
-        isOrder: form.id === 'orderForm'
+        isOrder: form.id === 'orderForm',
+        isContact: form.id === 'contactForm'
       };
 
       if (validateFormFields(form) && validateForm(formData)) {
@@ -1057,6 +1059,10 @@ function validateForm(data) {
   }
 
   if (!data.message && !data.isOrder && data.type !== 'callback') {
+    isValid = false;
+  }
+
+  if (data.isContact && !data.email) {
     isValid = false;
   }
 
