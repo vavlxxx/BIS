@@ -889,6 +889,10 @@ $news_query = new WP_Query(array(
             <input type="tel" id="phone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
           </div>
           <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="example@mail.ru" autocomplete="email">
+          </div>
+          <div class="form-group">
             <label for="message">Сообщение</label>
             <textarea id="message" name="message" required placeholder="Кратко опишите ваш вопрос" autocomplete="off"></textarea>
           </div>

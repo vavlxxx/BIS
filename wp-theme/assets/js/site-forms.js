@@ -987,6 +987,13 @@ function validateField(field) {
     } else {
       clearError(field);
     }
+  } else if (field.type === 'email' && value) {
+    if (!field.checkValidity()) {
+      isValid = false;
+      showError(field, 'Введите корректный email');
+    } else {
+      clearError(field);
+    }
   } else {
     clearError(field);
   }

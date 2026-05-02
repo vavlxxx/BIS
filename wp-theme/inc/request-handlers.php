@@ -842,6 +842,8 @@ function bis_send_request_notification($post_id) {
 function bis_submit_general_request() {
     $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
+    $raw_email = isset($_POST['email']) ? wp_unslash($_POST['email']) : '';
+    $email = sanitize_email($raw_email);
     $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
     $service = isset($_POST['service']) ? sanitize_text_field(wp_unslash($_POST['service'])) : '';
     $request_type = isset($_POST['request_type']) ? sanitize_key(wp_unslash($_POST['request_type'])) : 'contact';
@@ -870,6 +872,12 @@ function bis_submit_general_request() {
     if ('contact' === $request_type && $message === '') {
         wp_send_json_error(array('message' => 'Заполните поле сообщения.'));
     }
+    if ('contact' === $request_type && trim((string) $raw_email) === '') {
+        wp_send_json_error(array('message' => 'Заполните поле email.'));
+    }
+    if ($email !== '' && !is_email($email)) {
+        wp_send_json_error(array('message' => 'Укажите корректный email.'));
+    }
 
     $post_title = $name . ' - ' . $phone;
     if ($service !== '') {
@@ -883,6 +891,7 @@ function bis_submit_general_request() {
         'meta_input' => array_merge($location_meta, array(
             'bis_name' => $name,
             'bis_phone' => $phone,
+            'bis_email' => $email,
             'bis_comment' => $message,
             'bis_topic' => $service,
             'bis_request_type' => $request_type,
