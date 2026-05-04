@@ -1643,7 +1643,6 @@
 
   .service-card .btn {
     width: auto;
-    justify-content: flex-start;
   }
 
   .services-grid .service-card.fade-in {
@@ -3433,7 +3432,6 @@
 
   .service-card .btn {
     width: auto;
-    justify-content: flex-start;
   }
 }
 

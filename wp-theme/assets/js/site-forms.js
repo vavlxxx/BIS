@@ -1126,6 +1126,15 @@ function initPopupForm() {
 
   orderButtons.forEach(button => {
     button.addEventListener('click', (event) => {
+      const href = button.getAttribute('href') || '';
+      const shouldScrollToContact = href === '#contact' || href === '#contactForm';
+
+      if (shouldScrollToContact && document.getElementById('contactForm')) {
+        event.preventDefault();
+        scrollToContactForm();
+        return;
+      }
+
       event.preventDefault();
       const serviceName = button.getAttribute('data-service') || button.textContent.trim();
       orderServiceInput.value = serviceName;
@@ -1156,6 +1165,26 @@ function closePopup() {
     if (orderForm) {
       resetFormState(orderForm, { clearErrors: true });
     }
+  }
+}
+
+function scrollToContactForm() {
+  const contactForm = document.getElementById('contactForm');
+  const contactSection = contactForm?.closest('section') || document.getElementById('contact') || contactForm;
+
+  if (!contactSection) return;
+
+  contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const nameInput = contactForm?.querySelector('input[name="name"]');
+  if (nameInput) {
+    window.setTimeout(() => {
+      try {
+        nameInput.focus({ preventScroll: true });
+      } catch (error) {
+        nameInput.focus();
+      }
+    }, 450);
   }
 }
 
@@ -1300,5 +1329,8 @@ function initEstimateModal() {
       }
     }, ANIMATION_DURATION);
   }
+
+  window.bisOpenEstimateForm = openEstimateModal;
+  window.bisCloseEstimateForm = closeEstimateModal;
 }
 

@@ -194,35 +194,7 @@ $has_hero_slider = !empty($hero_images);
   </div>
 
   <div class="experience-cta">
-      <a class="btn btn-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Смотреть все услуги</a>
-    </div>
-
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup-form">
-      <button class="popup-close" id="popupClose" aria-label="Закрыть форму">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <h2>Заявка на услугу</h2>
-      <p>Заполните контакты, и команда БИС — Баланс Инженерных Систем свяжется с вами для уточнения деталей.</p>
-      <form class="contact-form" id="orderForm">
-        <input type="hidden" id="orderService" name="service" value="">
-        <div class="form-group">
-          <label for="orderName">Имя</label>
-          <input type="text" id="orderName" name="name" required placeholder="Ваше имя" autocomplete="name">
-        </div>
-        <div class="form-group">
-          <label for="orderPhone">Телефон</label>
-          <input type="tel" id="orderPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
-        </div>
-        <div class="form-group">
-          <label for="orderMessage">Комментарий</label>
-          <textarea id="orderMessage" name="message" placeholder="Опишите задачу или оставьте комментарий"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Отправить заявку</button>
-      </form>
-    </div>
+    <a class="btn btn-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Смотреть все услуги</a>
   </div>
 </section>
 
@@ -281,7 +253,9 @@ $has_hero_slider = !empty($hero_images);
       </div>
       <p class="pnr-stats-note">Комплексный подход: мы команда высококлассных инженеров с уникальным опытом наладки инженерных систем.</p>
     </div>
-    <a href="#contact" class="order-btn" data-service="Общая заявка">Отправить заявку</a>
+    <div style="margin-top: 40px;width: 100%; text-align: center;display: flex; justify-content: center;">
+      <a href="#contact" class="btn btn-primary" data-service="Общая заявка">Отправить заявку</a>
+    </div>
   </div>
 </section>
 
