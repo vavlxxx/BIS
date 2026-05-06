@@ -497,11 +497,6 @@ endif;
       </button>
     </div>
   </div>
-  <?php else : ?>
-    <div class="team-empty">
-      <span class="team-empty__label">Проекты</span>
-      <p>Мы готовим презентацию ключевых проектов.</p>
-    </div>
   <?php endif; ?>
   
   <div class="experience-cta">
@@ -579,11 +574,6 @@ endif;
           </div>
         <?php endwhile; ?>
         <?php wp_reset_postdata(); ?>
-      <?php else : ?>
-        <div class="team-empty">
-          <span class="team-empty__label">Проекты</span>
-          <p>Мы готовим презентацию наших проектов.</p>
-        </div>
       <?php endif; ?>
     </div>
   </div>

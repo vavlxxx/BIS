@@ -26,14 +26,6 @@ if (is_wp_error($project_types)) {
     $project_types = bis_sort_project_type_terms($project_types);
 }
 
-$selected_type_term = null;
-if ($selected_type !== '') {
-    $selected_type_term = get_term_by('slug', $selected_type, 'bis_project_type');
-    if (!($selected_type_term instanceof WP_Term)) {
-        $selected_type_term = null;
-    }
-}
-
 $projects_args = array(
     'post_type'      => 'bis_project',
     'post_status'    => 'publish',
@@ -132,15 +124,6 @@ if ($selected_type === '') {
                         </div>
                     </div>
                 <?php endforeach; ?>
-            <?php else : ?>
-                <div class="team-empty">
-                    <span class="team-empty__label">Проекты</span>
-                    <?php if ($selected_type_term) : ?>
-                        <p>Проекты типа «<?php echo esc_html($selected_type_term->name); ?>» пока не найдены.</p>
-                    <?php else : ?>
-                        <p>Мы готовим презентацию наших проектов.</p>
-                    <?php endif; ?>
-                </div>
             <?php endif; ?>
             <?php wp_reset_postdata(); ?>
         </div>
