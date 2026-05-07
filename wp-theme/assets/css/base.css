@@ -64,10 +64,6 @@ body {
   font-size: var(--font-size-body);
 }
 
-small {
-  opacity: 1 !important;
-}
-
 body.nav-open {
   overflow: hidden;
 }
