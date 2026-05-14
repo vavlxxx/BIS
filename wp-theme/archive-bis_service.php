@@ -63,7 +63,7 @@ $banner_image = $services_page_id ? bis_get_page_banner_image_url($services_page
                         $image_url = bis_get_service_preview_image_url($service_id);
                         $description = bis_get_service_description($service_id);
                         ?>
-                        <div class="service-card">
+                        <a class="service-card" href="<?php the_permalink(); ?>">
                             <div class="service-image">
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
                             </div>
@@ -74,9 +74,8 @@ $banner_image = $services_page_id ? bis_get_page_banner_image_url($services_page
                                         <p class="experience-description"><?php echo esc_html($description); ?></p>
                                     <?php endif; ?>
                                 </div>
-                                <a class="btn btn-primary service-card__link" href="<?php the_permalink(); ?>">Подробнее</a>
                             </div>
-                        </div>
+                        </a>
                     <?php endwhile; ?>
                 </div>
             <?php else : ?>

@@ -77,7 +77,7 @@ get_header();
                                     $related_image = bis_get_service_preview_image_url($related_id);
                                     $related_description = bis_get_service_description($related_id);
                                     ?>
-                                    <div class="service-card">
+                                    <a class="service-card" href="<?php the_permalink(); ?>">
                                         <div class="service-image">
                                             <img src="<?php echo esc_url($related_image); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
                                         </div>
@@ -88,9 +88,8 @@ get_header();
                                                     <p class="experience-description"><?php echo esc_html($related_description); ?></p>
                                                 <?php endif; ?>
                                             </div>
-                                            <a class="btn btn-primary service-card__link" href="<?php the_permalink(); ?>">Подробнее</a>
                                         </div>
-                                    </div>
+                                    </a>
                                 <?php endwhile; ?>
                                 <?php wp_reset_postdata(); ?>
                             </div>

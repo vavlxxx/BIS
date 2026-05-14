@@ -1,8 +1,8 @@
 /* Variables */
 :root {
-  --primary: #39c2d0;
+  --primary: #70C6D4;
   --primary-dark: #167b88;
-  --accent: #2bb9c2;
+  --accent: #70C6D4;
   --dark: #0d1118;
   --text: #111827;
   --text-light: #6b7280;
@@ -104,7 +104,7 @@ body.site-loading {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(110deg, transparent 0%, transparent 42%, rgba(57, 194, 208, 0.14) 50%, transparent 58%, transparent 100%);
+    linear-gradient(110deg, transparent 0%, transparent 42%, rgba(112, 198, 212, 0.14) 50%, transparent 58%, transparent 100%);
   transform: translateX(-100%);
   animation: siteLoaderSweep 2.4s ease-in-out infinite;
 }
@@ -137,7 +137,7 @@ body.site-loading {
   inset: 0;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-top-color: var(--primary);
-  border-right-color: rgba(43, 185, 194, 0.75);
+  border-right-color: rgba(112, 198, 212, 0.75);
   border-radius: 50%;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.03) inset,
@@ -485,7 +485,7 @@ select {
 
 .header-location__caption {
   margin-bottom: 10px;
-  color: #0f766e;
+  color: #70C6D4;
   font-size: 11px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.16em;
@@ -567,7 +567,7 @@ select {
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-1px);
   color: #0f172a;
-  background: linear-gradient(135deg, #ffffff, #e2f3f8);
+  background: linear-gradient(135deg, #ffffff, rgba(112, 198, 212, 0.18));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -600,12 +600,12 @@ select {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
-  box-shadow: 0 4px 12px rgba(111, 200, 214, 0.4);
+  box-shadow: 0 4px 12px rgba(112, 198, 212, 0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(111, 200, 214, 0.5);
+  box-shadow: 0 8px 24px rgba(112, 198, 212, 0.5);
 }
 
 
@@ -920,7 +920,7 @@ select {
 }
 
 .drawer-nav a:hover {
-  color: #e0fbff;
+  color: #70C6D4;
 }
 
 .drawer-footer {
@@ -1031,8 +1031,8 @@ select {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 20% 30%, rgba(111, 200, 214, 0.2), transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(56, 178, 172, 0.2), transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(112, 198, 212, 0.2), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(112, 198, 212, 0.2), transparent 50%);
   animation: pulse 8s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
@@ -1226,7 +1226,7 @@ select {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #6fc8d6, #38b2ac, #5eead4);
+  background: #70C6D4;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1393,7 +1393,7 @@ select {
 .section-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: rgba(111, 200, 214, 0.1);
+  background: rgba(112, 198, 212, 0.1);
   color: var(--primary);
   border-radius: 20px;
   font-size: var(--font-size-body);
@@ -1434,6 +1434,9 @@ select {
   background: white;
   border: 1px solid var(--border);
   border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
   transition: all 0.4s ease;
   position: relative;
   overflow: hidden;
@@ -1513,8 +1516,13 @@ select {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
-.service-card__link {
+.service-card:focus-visible {
   text-decoration: none;
+}
+
+.service-card:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
 }
 
 .service-article {
@@ -1574,7 +1582,7 @@ select {
 
 .case-image {
   height: 200px;
-  background: linear-gradient(135deg, #6fc8d6 0%, #38b2ac 100%);
+  background: #70C6D4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1582,11 +1590,11 @@ select {
 }
 
 .case-card:nth-child(2) .case-image {
-  background: linear-gradient(135deg, #38b2ac 0%, #5eead4 100%);
+  background: #70C6D4;
 }
 
 .case-card:nth-child(3) .case-image {
-  background: linear-gradient(135deg, var(--primary) 0%, rgba(56, 178, 172, 0.65) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, rgba(112, 198, 212, 0.65) 100%);
 }
 
 .case-content {
@@ -1615,7 +1623,7 @@ select {
 
 .case-tag {
   padding: 6px 12px;
-  background: rgba(111, 200, 214, 0.1);
+  background: rgba(112, 198, 212, 0.1);
   color: var(--primary);
   border-radius: 8px;
   font-size: var(--font-size-body);
@@ -1639,8 +1647,8 @@ select {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 30% 40%, rgba(111, 200, 214, 0.1), transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(56, 178, 172, 0.1), transparent 50%);
+    radial-gradient(circle at 30% 40%, rgba(112, 198, 212, 0.1), transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(112, 198, 212, 0.1), transparent 50%);
 }
 
 .why-us .section-header {
@@ -1692,7 +1700,7 @@ select {
 .stat-card .stat-value {
   font-size: var(--font-heading);
   font-weight: var(--font-weight-bold);
-  background: linear-gradient(135deg, #6fc8d6, #38b2ac);
+  background: #70C6D4;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1738,7 +1746,7 @@ select {
 .why-number {
   font-size: var(--font-heading);
   font-weight: var(--font-weight-bold);
-  background: linear-gradient(135deg, #6fc8d6, #38b2ac);
+  background: #70C6D4;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1864,7 +1872,7 @@ select {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(111, 200, 214, 0.1);
+  box-shadow: 0 0 0 4px rgba(112, 198, 212, 0.1);
 }
 
 .form-group textarea {
@@ -1999,8 +2007,8 @@ select {
   display: inline-flex;
   margin-bottom: 16px;
   padding: 8px 12px;
-  background: rgba(57, 194, 208, 0.12);
-  color: #0f766e;
+  background: rgba(112, 198, 212, 0.12);
+  color: #70C6D4;
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.08em;

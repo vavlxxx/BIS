@@ -133,7 +133,12 @@
       </div>
       <button class="open-estimate-modal floating-estimate-btn">Рассчитать смету и сроки</button>
     </div>
-    <button class="floating-socials-open" type="button" data-floating-social-open hidden aria-label="Показать мессенджеры">+</button>
+    <button class="floating-socials-open" type="button" data-floating-social-open hidden aria-label="Показать контакты">
+      <svg class="floating-socials-open__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 4.5c0-.83.67-1.5 1.5-1.5h2.1c.67 0 1.26.44 1.44 1.08l.76 2.66a1.5 1.5 0 0 1-.39 1.47L9.1 9.52a11.2 11.2 0 0 0 5.38 5.38l1.31-1.31a1.5 1.5 0 0 1 1.47-.39l2.66.76A1.5 1.5 0 0 1 21 15.4v2.1c0 .83-.67 1.5-1.5 1.5H18C10.82 19 5 13.18 5 6V4.5Z" fill="currentColor"/>
+        <path d="M15.5 4.25c2.35.55 4.2 2.4 4.75 4.75M15.75 7.5c.92.32 1.43.83 1.75 1.75" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
 </body>
 </html>
