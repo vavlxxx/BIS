@@ -218,6 +218,23 @@ function bis_filter_document_title($title) {
 }
 add_filter('pre_get_document_title', 'bis_filter_document_title', 20);
 
+function bis_is_project_single_page() {
+    return is_singular('bis_project');
+}
+
+function bis_noindex_project_single_pages($robots) {
+    if (!bis_is_project_single_page()) {
+        return $robots;
+    }
+
+    $robots['noindex'] = true;
+    $robots['follow'] = true;
+    unset($robots['index'], $robots['nofollow']);
+
+    return $robots;
+}
+add_filter('wp_robots', 'bis_noindex_project_single_pages');
+
 function bis_get_current_meta_description() {
     $description = '';
 
