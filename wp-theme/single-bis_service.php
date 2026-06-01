@@ -57,7 +57,7 @@ get_header();
             $related_services = new WP_Query(array(
                 'post_type'      => 'bis_service',
                 'post_status'    => 'publish',
-                'posts_per_page' => 4,
+                'posts_per_page' => 3,
                 'post__not_in'   => array($service_id),
                 'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
             ));
