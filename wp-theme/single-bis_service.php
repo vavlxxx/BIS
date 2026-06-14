@@ -118,6 +118,7 @@ get_header();
                 }));
                 $related_services = array_slice($related_services, 0, 3);
             }
+
             ?>
 
             <?php if (!empty($related_services)) : ?>

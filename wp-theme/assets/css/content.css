@@ -1228,6 +1228,10 @@
   width: 22px;
   height: 22px;
   display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-52%, -42%);
 }
 
 .floating-socials-open:hover {
