@@ -510,6 +510,7 @@ function bis_register_services_cpt() {
         'labels'       => $labels,
         'public'       => true,
         'has_archive'  => true,
+        'hierarchical' => true,
         'rewrite'      => array('slug' => 'services', 'with_front' => false),
         'menu_icon'    => 'dashicons-admin-tools',
         'show_in_rest' => true,
@@ -517,6 +518,36 @@ function bis_register_services_cpt() {
     ));
 }
 add_action('init', 'bis_register_services_cpt');
+
+function bis_register_service_taxonomies() {
+    $labels = array(
+        'name'                       => 'Теги услуг',
+        'singular_name'              => 'Тег услуги',
+        'search_items'               => 'Искать теги услуг',
+        'popular_items'              => 'Популярные теги услуг',
+        'all_items'                  => 'Все теги услуг',
+        'edit_item'                  => 'Редактировать тег услуги',
+        'update_item'                => 'Обновить тег услуги',
+        'add_new_item'               => 'Добавить тег услуги',
+        'new_item_name'              => 'Новый тег услуги',
+        'separate_items_with_commas' => 'Разделяйте теги запятыми',
+        'add_or_remove_items'        => 'Добавить или удалить теги',
+        'choose_from_most_used'      => 'Выбрать из часто используемых',
+        'not_found'                  => 'Теги не найдены',
+        'menu_name'                  => 'Теги услуг',
+    );
+
+    register_taxonomy('bis_service_tag', array('bis_service'), array(
+        'hierarchical'      => false,
+        'labels'            => $labels,
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
+        'query_var'         => true,
+        'rewrite'           => array('slug' => 'service-tag'),
+    ));
+}
+add_action('init', 'bis_register_service_taxonomies');
 
 function bis_register_equipment_cpt() {
     $labels = array(

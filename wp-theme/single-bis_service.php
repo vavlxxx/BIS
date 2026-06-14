@@ -10,6 +10,12 @@ get_header();
             $cover = bis_get_service_banner_image_url($service_id);
             $description = bis_get_service_description($service_id);
             $content = trim((string) get_post_field('post_content', $service_id));
+            $parent_service = null;
+            $service_post = get_post($service_id);
+            if ($service_post instanceof WP_Post && (int) $service_post->post_parent > 0) {
+                $parent_service = get_post((int) $service_post->post_parent);
+            }
+            $service_tags = get_the_terms($service_id, 'bis_service_tag');
             ?>
 
             <section class="news-hero news-hero--single">
@@ -29,9 +35,23 @@ get_header();
                     <span class="breadcrumbs-delimiter">/</span>
                     <a href="<?php echo esc_url(get_post_type_archive_link('bis_service')); ?>">Услуги</a>
                     <span class="breadcrumbs-delimiter">/</span>
+                    <?php if ($parent_service instanceof WP_Post) : ?>
+                        <a href="<?php echo esc_url(get_permalink($parent_service)); ?>"><?php echo esc_html(get_the_title($parent_service)); ?></a>
+                        <span class="breadcrumbs-delimiter">/</span>
+                    <?php endif; ?>
                     <span><?php the_title(); ?></span>
                 </nav>
             </section>
+
+            <?php if (is_array($service_tags) && !empty($service_tags) && !is_wp_error($service_tags)) : ?>
+                <section class="service-tags-section">
+                    <div class="service-tags mw-1400px" aria-label="Теги услуги">
+                        <?php foreach ($service_tags as $tag) : ?>
+                            <span class="service-tag" href="<?php echo esc_url(get_term_link($tag)); ?>"><?php echo esc_html($tag->name); ?></span>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
 
             <section class="service-article">
                 <div class="service-article__container">
@@ -54,43 +74,63 @@ get_header();
             </section>
 
             <?php
-            $related_services = new WP_Query(array(
-                'post_type'      => 'bis_service',
-                'post_status'    => 'publish',
-                'posts_per_page' => 4,
-                'post__not_in'   => array($service_id),
-                'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
-            ));
+            $associated_services = bis_get_associated_services($service_id);
             ?>
 
-            <?php if ($related_services->have_posts()) : ?>
+            <?php if (!empty($associated_services)) : ?>
+                <section class="service-links-section service-links-section--associated">
+                    <div class="service-links-section__container">
+                        <div class="service-related__header mw-1400px">
+                            <h2 class="section-title">Связанные услуги</h2>
+                        </div>
+                        <ul class="service-links-list">
+                            <?php foreach ($associated_services as $post) : setup_postdata($post); ?>
+                                <?php $associated_description = bis_get_service_description(get_the_ID()); ?>
+                                <li class="service-links-list__item">
+                                    <a class="service-links-list__link" href="<?php the_permalink(); ?>">
+                                        <span class="service-links-list__button" aria-hidden="true">
+                                            <svg class="service-links-list__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" focusable="false">
+                                                <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </span>
+                                        <span class="service-links-list__content">
+                                            <span class="service-links-list__title"><?php the_title(); ?></span>
+                                            <?php if ($associated_description !== '') : ?>
+                                                <span class="service-links-list__description"><?php echo esc_html($associated_description); ?></span>
+                                            <?php endif; ?>
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                            <?php wp_reset_postdata(); ?>
+                        </ul>
+                    </div>
+                </section>
+            <?php endif; ?>
+
+            <?php
+            $related_services = bis_get_service_sibling_services($service_id, 3);
+            if (empty($related_services)) {
+                $related_services = array_values(array_filter(bis_get_catalog_services(array(
+                    'exclude' => array($service_id),
+                )), function ($post) use ($service_id) {
+                    return $post instanceof WP_Post && (int) $post->ID !== (int) $service_id;
+                }));
+                $related_services = array_slice($related_services, 0, 3);
+            }
+            ?>
+
+            <?php if (!empty($related_services)) : ?>
                 <section class="services-catalog services-catalog--related">
                     <div class="services-catalog__container">
                         <div class="service-related__header mw-1400px">
                             <h2 class="section-title">Другие услуги</h2>
                         </div>
                         <div class="services-slider-shell services-slider-shell--related">
-                            <div class="services-catalog__grid" data-related-services-track>
-                                <?php while ($related_services->have_posts()) : $related_services->the_post(); ?>
-                                    <?php
-                                    $related_id = get_the_ID();
-                                    $related_image = bis_get_service_preview_image_url($related_id);
-                                    $related_description = bis_get_service_description($related_id);
-                                    ?>
-                                    <a class="service-card" href="<?php the_permalink(); ?>">
-                                        <div class="service-image">
-                                            <img src="<?php echo esc_url($related_image); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
-                                        </div>
-                                        <div class="service-content">
-                                            <div class="service-content-main">
-                                                <h3><?php the_title(); ?></h3>
-                                                <?php if ($related_description !== '') : ?>
-                                                    <p class="experience-description"><?php echo esc_html($related_description); ?></p>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                    </a>
-                                <?php endwhile; ?>
+                            <div class="services-catalog__grid<?php echo bis_services_have_associated_services($related_services) ? ' services-catalog__grid--has-submenus' : ''; ?>" data-related-services-track>
+                                <?php foreach ($related_services as $post) : setup_postdata($post); ?>
+                                    <?php bis_render_service_card(get_the_ID()); ?>
+                                <?php endforeach; ?>
                                 <?php wp_reset_postdata(); ?>
                             </div>
                             <div class="services-slider-nav">

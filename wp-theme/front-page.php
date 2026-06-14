@@ -110,7 +110,7 @@ $has_hero_slider = !empty($hero_images);
           <p>Многоквартирные дома, апартаменты и частные резиденции.</p>
         </div>
       </div>
-      
+
       <div class="objects-slider-nav">
         <button class="slider-prev" aria-label="Предыдущий объект">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -136,37 +136,16 @@ $has_hero_slider = !empty($hero_images);
   </div>
 
   <div class="services-slider-shell">
-    <div class="services-grid">
-      <?php
-      $services = new WP_Query(array(
-        'post_type'      => 'bis_service',
-        'post_status'    => 'publish',
-        'posts_per_page' => -1,
-        'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
-      ));
-      ?>
+    <?php
+    $services = bis_get_catalog_services();
+    $services_grid_classes = 'services-grid' . (bis_services_have_associated_services($services) ? ' services-grid--has-submenus' : '');
+    ?>
+    <div class="<?php echo esc_attr($services_grid_classes); ?>">
 
-      <?php if ($services->have_posts()) : ?>
-        <?php while ($services->have_posts()) : $services->the_post(); ?>
-          <?php
-          $service_id = get_the_ID();
-          $image_url = bis_get_service_image_url($service_id);
-          $description = bis_get_service_description($service_id);
-          ?>
-          <a class="service-card" href="<?php the_permalink(); ?>">
-            <div class="service-image">
-              <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
-            </div>
-            <div class="service-content">
-              <div class="service-content-main">
-                <h3><?php the_title(); ?></h3>
-                <?php if (!empty($description)) : ?>
-                  <p class="experience-description"><?php echo esc_html($description); ?></p>
-                <?php endif; ?>
-              </div>
-            </div>
-          </a>
-        <?php endwhile; ?>
+      <?php if (!empty($services)) : ?>
+        <?php foreach ($services as $post) : setup_postdata($post); ?>
+          <?php bis_render_service_card(get_the_ID()); ?>
+        <?php endforeach; ?>
         <?php wp_reset_postdata(); ?>
       <?php else : ?>
         <div class="team-empty">
@@ -175,7 +154,7 @@ $has_hero_slider = !empty($hero_images);
         </div>
       <?php endif; ?>
     </div>
-    
+
 
     <div class="services-slider-nav">
       <button class="slider-prev" aria-label="Предыдущая услуга">
@@ -443,7 +422,7 @@ endif;
     <h2 class="section-title">Наши ключевые проекты</h2>
     <p class="section-subtitle">Реализованные решения для ведущих компаний</p>
   </div>
-  
+
   <?php
   $featured_projects = new WP_Query(array(
     'post_type'      => 'bis_project',
@@ -529,11 +508,11 @@ endif;
         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-    
+
     <div class="modal-header">
       <h2>Все наши проекты</h2>
     </div>
-    
+
     <div class="all-cases-grid">
       <?php
       $all_projects = new WP_Query(array(
@@ -586,26 +565,26 @@ endif;
         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-    
+
     <h2>Обратный звонок</h2>
     <p>Оставьте свои контакты и мы перезвоним вам в течение 15 минут</p>
-    
+
     <form class="contact-form" id="callbackForm">
       <div class="form-group">
         <label for="callbackName">Имя</label>
         <input type="text" id="callbackName" name="name" required placeholder="Ваше имя" autocomplete="name">
       </div>
-      
+
       <div class="form-group">
         <label for="callbackPhone">Телефон</label>
         <input type="tel" id="callbackPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
       </div>
-      
+
       <div class="form-group">
         <label for="callbackMessage">Сообщение (необязательно)</label>
         <textarea id="callbackMessage" name="message" placeholder="Кратко опишите ваш вопрос"></textarea>
       </div>
-      
+
       <button type="submit" class="btn btn-primary">Позвоните мне</button>
     </form>
   </div>
@@ -617,7 +596,7 @@ endif;
     <h2 class="section-title">Наша команда</h2>
     <p class="section-subtitle">Ведущие специалисты в области инженерных систем</p>
   </div>
-<section class="structure-section team-section" id="structure" 
+<section class="structure-section team-section" id="structure"
   <?php if (empty($team_members)) : ?>
     style="padding: 60px 0;"
   <?php endif; ?>
@@ -733,7 +712,7 @@ style>
     <span class="section-badge">Почему выбирают нас</span>
     <p class="section-subtitle">«БИС — Баланс Инженерных Систем» — это команда молодых и трудолюбивых специалистов. Для нас нет неразрешимых задач, поэтому если в Вашей деятельности возник вопрос по пусконаладке или замерам, то мы обязательно постараемся помочь.</p>
   </div>
-  
+
 
   <div class="why-grid">
     <div class="why-card">
@@ -771,7 +750,7 @@ $news_query = new WP_Query(array(
   <div class="homepage-news__container">
   <div class="homepage-news__header">
       <!-- <span class="section-badge">Новости</span> -->
-      <h2 class="section-title">Свежие новости компании</h2>
+      <h2 class="section-title">Новости компании</h2>
       <p class="section-subtitle">Рассказываем о ключевых событиях, проектах и экспертизе нашей команды.</p>
     </div>
 

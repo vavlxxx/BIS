@@ -645,14 +645,21 @@ body.post-type-archive-bis_news {
   display: block;
   overflow: hidden;
   background: #f1f5f9;
-  aspect-ratio: 16 / 9;
 }
 
 .news-item__image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  transition: transform 0.45s ease;
+  aspect-ratio: 16 / 9;
+}
+
+.news-item__image:hover img,
+.news-item__image:focus-visible img {
+  transform: scale(1.05);
 }
 
 .news-item__body {
