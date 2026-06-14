@@ -28,6 +28,8 @@ if (!$banner_subtitle) {
 }
 
 $banner_image = $services_page_id ? bis_get_page_banner_image_url($services_page_id) : '';
+$services = bis_get_catalog_services();
+$services_grid_classes = 'services-catalog__grid' . (bis_services_have_associated_services($services) ? ' services-catalog__grid--has-submenus' : '');
 ?>
 
 <main class="services-archive-page">
@@ -55,28 +57,12 @@ $banner_image = $services_page_id ? bis_get_page_banner_image_url($services_page
 
     <section class="services-catalog services-catalog--archive">
         <div class="services-catalog__container">
-            <?php if (have_posts()) : ?>
-                <div class="services-catalog__grid">
-                    <?php while (have_posts()) : the_post(); ?>
-                        <?php
-                        $service_id = get_the_ID();
-                        $image_url = bis_get_service_preview_image_url($service_id);
-                        $description = bis_get_service_description($service_id);
-                        ?>
-                        <a class="service-card" href="<?php the_permalink(); ?>">
-                            <div class="service-image">
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
-                            </div>
-                            <div class="service-content">
-                                <div class="service-content-main">
-                                    <h3><?php the_title(); ?></h3>
-                                    <?php if (!empty($description)) : ?>
-                                        <p class="experience-description"><?php echo esc_html($description); ?></p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </a>
-                    <?php endwhile; ?>
+            <?php if (!empty($services)) : ?>
+                <div class="<?php echo esc_attr($services_grid_classes); ?>">
+                    <?php foreach ($services as $post) : setup_postdata($post); ?>
+                        <?php bis_render_service_card(get_the_ID()); ?>
+                    <?php endforeach; ?>
+                    <?php wp_reset_postdata(); ?>
                 </div>
             <?php else : ?>
                 <div class="team-empty">

@@ -135,6 +135,43 @@
   padding-top: 12px;
 }
 
+.bis-service-children-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.bis-service-child-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.bis-service-child-option input {
+  margin-top: 3px;
+}
+
+.bis-service-child-option span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bis-service-child-option strong {
+  color: #111827;
+  line-height: 1.35;
+}
+
+.bis-service-child-option em {
+  color: #6b7280;
+  font-size: 12px;
+  font-style: normal;
+}
+
 .bis-switch {
   display: inline-flex;
   align-items: center;

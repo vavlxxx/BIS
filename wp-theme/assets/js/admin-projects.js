@@ -58,7 +58,8 @@
     const syncFieldFromElement = (element) => {
       const fieldName = element.data('meta-field');
       if (!fieldName) return;
-      syncMetaField(fieldName, element.val() || '');
+      const value = element.is(':checkbox') ? (element.is(':checked') ? '1' : '0') : (element.val() || '');
+      syncMetaField(fieldName, value);
     };
 
     const clearAttachmentField = (input) => {

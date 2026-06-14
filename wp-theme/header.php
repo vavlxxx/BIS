@@ -30,16 +30,16 @@ if (!is_front_page()) {
     }
 }
 
+$meta_title = $document_title;
 if (is_singular(bis_get_seo_enabled_post_types())) {
     $seo_title = bis_get_post_seo_title(get_queried_object_id());
     if ($seo_title !== '') {
-        $document_title = $seo_title;
+        $meta_title = $seo_title;
     }
 }
-
 $document_description = bis_get_current_meta_description();
 ?>
-  <meta name="title" content="<?php echo esc_attr($document_title); ?>">
+  <meta name="title" content="<?php echo esc_attr($meta_title); ?>">
   <meta name="description" content="<?php echo esc_attr($document_description); ?>">
   <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.ico">
   <title><?php echo esc_html($document_title); ?></title>

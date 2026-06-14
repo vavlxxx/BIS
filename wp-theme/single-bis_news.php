@@ -5,7 +5,7 @@ get_header();
 <main class="news-single-page">
     <?php if (have_posts()) : ?>
         <?php while (have_posts()) : the_post(); ?>
-            <?php $cover = bis_get_news_image_url(get_the_ID()); ?>
+            <?php $cover = bis_get_news_banner_image_url(get_the_ID()); ?>
 
             <section class="news-hero news-hero--single" style="padding-inline: 8vw;">
                 <div class="news-hero__media">

@@ -83,7 +83,31 @@ function bis_get_news_placeholder_image_url() {
 }
 
 function bis_get_news_image_url($post_id) {
+    $custom = get_post_meta($post_id, 'bis_news_image', true);
+    if ($custom) {
+        return bis_get_optimized_image_url($custom, 'bis-card');
+    }
+
     $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'bis-card');
+    if ($thumb) {
+        return $thumb;
+    }
+
+    return bis_get_news_placeholder_image_url();
+}
+
+function bis_get_news_banner_image_url($post_id) {
+    $banner = get_post_meta($post_id, 'bis_news_banner_image', true);
+    if ($banner) {
+        return bis_get_optimized_image_url($banner, 'bis-banner');
+    }
+
+    $custom = get_post_meta($post_id, 'bis_news_image', true);
+    if ($custom) {
+        return bis_get_optimized_image_url($custom, 'bis-banner');
+    }
+
+    $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'bis-banner');
     if ($thumb) {
         return $thumb;
     }
@@ -145,6 +169,146 @@ function bis_get_service_description($post_id) {
     }
 
     return '';
+}
+
+function bis_service_should_show_in_catalog($post_id) {
+    $post = get_post($post_id);
+    if (!($post instanceof WP_Post) || 'bis_service' !== $post->post_type) {
+        return false;
+    }
+
+    $show_in_catalog = get_post_meta($post_id, 'bis_service_show_in_catalog', true);
+    if ($show_in_catalog === '1') {
+        return true;
+    }
+
+    if ($show_in_catalog === '0') {
+        return false;
+    }
+
+    return (int) $post->post_parent === 0;
+}
+
+function bis_get_catalog_services($args = array()) {
+    $defaults = array(
+        'post_type'      => 'bis_service',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
+    );
+
+    $query_args = wp_parse_args($args, $defaults);
+    $query_args['post_type'] = 'bis_service';
+    $query_args['post_status'] = 'publish';
+    $query_args['posts_per_page'] = -1;
+
+    $posts = get_posts($query_args);
+    return array_values(array_filter($posts, function ($post) {
+        return $post instanceof WP_Post && bis_service_should_show_in_catalog($post->ID);
+    }));
+}
+
+function bis_get_associated_services($service_id) {
+    $service_id = (int) $service_id;
+    if ($service_id <= 0) {
+        return array();
+    }
+
+    return get_posts(array(
+        'post_type'      => 'bis_service',
+        'post_status'    => 'publish',
+        'post_parent'    => $service_id,
+        'posts_per_page' => -1,
+        'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
+    ));
+}
+
+function bis_service_has_associated_services($service_id) {
+    $service_id = (int) $service_id;
+    if ($service_id <= 0) {
+        return false;
+    }
+
+    $children = get_posts(array(
+        'post_type'              => 'bis_service',
+        'post_status'            => 'publish',
+        'post_parent'            => $service_id,
+        'posts_per_page'         => 1,
+        'fields'                 => 'ids',
+        'no_found_rows'          => true,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
+    ));
+
+    return !empty($children);
+}
+
+function bis_services_have_associated_services($services) {
+    if (empty($services) || !is_array($services)) {
+        return false;
+    }
+
+    foreach ($services as $service) {
+        $service_id = $service instanceof WP_Post ? $service->ID : (int) $service;
+        if (bis_service_has_associated_services($service_id)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function bis_get_service_sibling_services($service_id, $limit = 4) {
+    $post = get_post($service_id);
+    if (!($post instanceof WP_Post) || 'bis_service' !== $post->post_type || (int) $post->post_parent <= 0) {
+        return array();
+    }
+
+    return get_posts(array(
+        'post_type'      => 'bis_service',
+        'post_status'    => 'publish',
+        'post_parent'    => (int) $post->post_parent,
+        'posts_per_page' => (int) $limit,
+        'post__not_in'   => array((int) $service_id),
+        'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
+    ));
+}
+
+function bis_render_service_card($service_id) {
+    $service_id = (int) $service_id;
+    if ($service_id <= 0) {
+        return;
+    }
+
+    $image_url = bis_get_service_preview_image_url($service_id);
+    $description = bis_get_service_description($service_id);
+    $children = bis_get_associated_services($service_id);
+    $has_children = !empty($children);
+    $card_classes = 'service-card' . ($has_children ? ' service-card--has-children' : '');
+    ?>
+    <article class="<?php echo esc_attr($card_classes); ?>">
+        <a class="service-card__main" href="<?php echo esc_url(get_permalink($service_id)); ?>">
+            <div class="service-image">
+                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr(get_the_title($service_id)); ?>" loading="lazy" decoding="async">
+            </div>
+            <div class="service-content">
+                <div class="service-content-main">
+                    <h3><?php echo esc_html(get_the_title($service_id)); ?></h3>
+                    <?php if ($description !== '') : ?>
+                        <p class="experience-description"><?php echo esc_html($description); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </a>
+        <?php if ($has_children) : ?>
+            <nav class="service-card__submenu" aria-label="<?php echo esc_attr('Подуслуги: ' . get_the_title($service_id)); ?>">
+                <?php foreach ($children as $child) : ?>
+                    <a class="service-card__submenu-link" href="<?php echo esc_url(get_permalink($child)); ?>"><?php echo esc_html(get_the_title($child)); ?></a>
+                <?php endforeach; ?>
+            </nav>
+        <?php endif; ?>
+    </article>
+    <?php
 }
 
 function bis_get_equipment_image_url($post_id) {
