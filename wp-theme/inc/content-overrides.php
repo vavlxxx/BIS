@@ -36,6 +36,8 @@ function bis_override_post_type_args($args, $post_type) {
 
     if ('bis_service' === $post_type) {
         $args['hierarchical'] = true;
+        $args['rewrite'] = isset($args['rewrite']) && is_array($args['rewrite']) ? $args['rewrite'] : array('slug' => 'services', 'with_front' => false);
+        $args['rewrite']['hierarchical'] = true;
         $args['supports'] = array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes');
     }
 

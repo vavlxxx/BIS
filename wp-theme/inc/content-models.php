@@ -511,13 +511,24 @@ function bis_register_services_cpt() {
         'public'       => true,
         'has_archive'  => true,
         'hierarchical' => true,
-        'rewrite'      => array('slug' => 'services', 'with_front' => false),
+        'rewrite'      => array('slug' => 'services', 'with_front' => false, 'hierarchical' => true),
         'menu_icon'    => 'dashicons-admin-tools',
         'show_in_rest' => true,
         'supports'     => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
     ));
 }
 add_action('init', 'bis_register_services_cpt');
+
+function bis_flush_service_hierarchy_rewrites() {
+    $target_version = '20260615-service-hierarchy';
+    if (get_option('bis_service_rewrite_version') === $target_version) {
+        return;
+    }
+
+    flush_rewrite_rules(false);
+    update_option('bis_service_rewrite_version', $target_version, false);
+}
+add_action('init', 'bis_flush_service_hierarchy_rewrites', 100);
 
 function bis_register_service_taxonomies() {
     $labels = array(
