@@ -3139,13 +3139,12 @@
 
 .services-grid--has-submenus .service-card--has-children {
   background: #fff;
-  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
   margin-bottom: 12px;
 }
 
 @media (min-width: 769px) {
   .services.slider-enabled .services-grid.services-grid--has-submenus {
-    padding-bottom: 118px;
+    padding-bottom: 64px;
   }
 }
 

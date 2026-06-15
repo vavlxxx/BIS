@@ -99,15 +99,15 @@ function bis_get_news_image_url($post_id) {
 function bis_get_news_banner_image_url($post_id) {
     $banner = get_post_meta($post_id, 'bis_news_banner_image', true);
     if ($banner) {
-        return bis_get_optimized_image_url($banner, 'bis-banner');
+        return bis_get_optimized_image_url($banner, 'full');
     }
 
     $custom = get_post_meta($post_id, 'bis_news_image', true);
     if ($custom) {
-        return bis_get_optimized_image_url($custom, 'bis-banner');
+        return bis_get_optimized_image_url($custom, 'full');
     }
 
-    $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'bis-banner');
+    $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'full');
     if ($thumb) {
         return $thumb;
     }
