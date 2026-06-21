@@ -43,16 +43,6 @@ get_header();
                 </nav>
             </section>
 
-            <?php if (is_array($service_tags) && !empty($service_tags) && !is_wp_error($service_tags)) : ?>
-                <section class="service-tags-section">
-                    <div class="service-tags mw-1400px" aria-label="Теги услуги">
-                        <?php foreach ($service_tags as $tag) : ?>
-                            <span class="service-tag" href="<?php echo esc_url(get_term_link($tag)); ?>"><?php echo esc_html($tag->name); ?></span>
-                        <?php endforeach; ?>
-                    </div>
-                </section>
-            <?php endif; ?>
-
             <section class="service-article">
                 <div class="service-article__container">
                     <?php if ($description !== '') : ?>
@@ -72,6 +62,22 @@ get_header();
                     </div>
                 </div>
             </section>
+
+            <section class="service-estimate-cta" aria-label="Расчет сметы">
+                <div class="service-estimate-cta__container mw-1400px">
+                    <button class="btn btn-primary open-estimate-modal" type="button">Рассчитать смету и сроки</button>
+                </div>
+            </section>
+
+            <?php if (is_array($service_tags) && !empty($service_tags) && !is_wp_error($service_tags)) : ?>
+                <section class="service-tags-section">
+                    <div class="service-tags mw-1400px" aria-label="Теги услуги">
+                        <?php foreach ($service_tags as $tag) : ?>
+                            <span class="service-tag"><?php echo esc_html($tag->name); ?></span>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
 
             <?php
             $associated_services = bis_get_associated_services($service_id);
@@ -109,14 +115,13 @@ get_header();
             <?php endif; ?>
 
             <?php
-            $related_services = bis_get_service_sibling_services($service_id, 3);
+            $related_services = bis_get_service_sibling_services($service_id, -1);
             if (empty($related_services)) {
                 $related_services = array_values(array_filter(bis_get_catalog_services(array(
                     'exclude' => array($service_id),
                 )), function ($post) use ($service_id) {
                     return $post instanceof WP_Post && (int) $post->ID !== (int) $service_id;
                 }));
-                $related_services = array_slice($related_services, 0, 3);
             }
 
             ?>

@@ -27,7 +27,44 @@
     <div class="footer-content">
       <div class="footer-section footer-section--contacts">
         <h3>ООО «БИС — Баланс Инженерных Систем»</h3>
-        <p>ИНН 7722323589</p>
+        <dl class="footer-requisites">
+          <div class="footer-requisites__row">
+            <dt>ИНН / ОГРН</dt>
+            <dd>7722323589 / 1157746324625</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>КПП</dt>
+            <dd>772201001</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>ОКПО</dt>
+            <dd>43250753</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>ОКАТО</dt>
+            <dd>45290564000</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>ОКТМО</dt>
+            <dd>45388000000</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>Наименование Банка</dt>
+            <dd>ПАО СБЕРБАНК г. Москва</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>Расчетный счет (в рублях)</dt>
+            <dd>40702810338000031340</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>Корреспондентский счет</dt>
+            <dd>30101810400000000225</dd>
+          </div>
+          <div class="footer-requisites__row">
+            <dt>БИК</dt>
+            <dd>044525225</dd>
+          </div>
+        </dl>
       </div>
       <div class="footer-section">
         <h3>Навигация</h3>
