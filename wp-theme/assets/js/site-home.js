@@ -405,8 +405,7 @@ function initRelatedServicesSlider() {
     sectionSelector: '.services-catalog--related',
     trackSelector: '[data-related-services-track]',
     cardSelector: '.service-card',
-    navSelector: '.services-slider-nav',
-    desktopEnabled: false
+    navSelector: '.services-slider-nav'
   });
 }
 
