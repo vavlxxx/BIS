@@ -115,14 +115,9 @@ get_header();
             <?php endif; ?>
 
             <?php
-            $related_services = bis_get_service_sibling_services($service_id, -1);
-            if (empty($related_services)) {
-                $related_services = array_values(array_filter(bis_get_catalog_services(array(
-                    'exclude' => array($service_id),
-                )), function ($post) use ($service_id) {
-                    return $post instanceof WP_Post && (int) $post->ID !== (int) $service_id;
-                }));
-            }
+            $related_services = bis_get_catalog_services(array(
+                'exclude' => array($service_id),
+            ));
 
             ?>
 
