@@ -621,24 +621,6 @@ style>
             ?>
             <article class="team-slide" data-team-slide data-name="<?php echo esc_attr($name); ?>" data-role="<?php echo esc_attr($role); ?>" data-since="<?php echo esc_attr($since); ?>" data-slide-photo="<?php echo esc_url($photo); ?>" data-modal-photo="<?php echo esc_url($modal_photo); ?>">
               <div class="team-slide__content">
-              <div class="team-header">
-                  <!-- <span class="team-label">Команда</span> -->
-                  <div class="team-controls" style="
-                    display: flex;
-                    gap: 10px;
-                  ">
-                    <button class="team-nav team-prev" aria-label="Предыдущий сотрудник">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                    <button class="team-nav team-next" aria-label="Следующий сотрудник">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
                 <div class="team-story"><?php echo wp_kses_post(wpautop($short)); ?></div>
                 <div class="team-meta">
                   <span class="team-name"><?php echo esc_html($name); ?></span>
@@ -675,6 +657,18 @@ style>
             </article>
           <?php endforeach; ?>
         </div>
+      </div>
+      <div class="team-controls team-slider__controls" aria-label="Навигация по команде">
+        <button class="team-nav team-prev" type="button" aria-label="Предыдущий сотрудник">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="team-nav team-next" type="button" aria-label="Следующий сотрудник">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </div>
   <?php else : ?>

@@ -5,8 +5,8 @@ function initTeamSlider() {
 
   const track = slider.querySelector('.team-track');
   const wrap = slider.querySelector('.team-track-wrap');
-  const prevBtn = slider.querySelector('.team-prev');
-  const nextBtn = slider.querySelector('.team-next');
+  const prevBtn = slider.querySelector('.team-slider__controls .team-prev');
+  const nextBtn = slider.querySelector('.team-slider__controls .team-next');
 
   if (!track || !wrap) return;
 
