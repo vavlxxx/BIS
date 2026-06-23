@@ -65,7 +65,7 @@
             <dd>044525225</dd>
           </div>
         </dl>
-        <a class="footer-trusted-company" href="https://focus.kontur.ru/entity?query=1157746324625" rel="nofollow" aria-label="ООО «БИС — Баланс Инженерных Систем» в Контур.Фокус">
+        <a class="footer-trusted-company" href="https://focus.kontur.ru/entity?query=1157746324625" target="_blank" rel="nofollow" aria-label="ООО «БИС — Баланс Инженерных Систем» в Контур.Фокус">
           <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/trusted-company.png" alt="Надёжная компания">
         </a>
       </div>
