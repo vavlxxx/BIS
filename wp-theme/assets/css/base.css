@@ -2252,6 +2252,26 @@ select {
   overflow-wrap: anywhere;
 }
 
+.footer-trusted-company {
+  display: inline-flex;
+  width: min(100%, 220px);
+  margin-top: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.footer-trusted-company img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.footer-trusted-company:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
 .document-links {
   list-style: none;
   margin: 0;
