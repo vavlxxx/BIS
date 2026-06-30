@@ -6,26 +6,26 @@ remove_action('save_post', 'bis_save_news_image');
 function bis_override_post_type_args($args, $post_type) {
     if ('bis_news' === $post_type) {
         $args['labels'] = array(
-            'name'                  => 'Новости',
-            'singular_name'         => 'Новость',
-            'add_new'               => 'Добавить новость',
-            'add_new_item'          => 'Добавить новую новость',
-            'edit_item'             => 'Редактировать новость',
-            'new_item'              => 'Новая новость',
-            'view_item'             => 'Просмотр новости',
-            'search_items'          => 'Поиск новостей',
-            'not_found'             => 'Новости не найдены',
-            'not_found_in_trash'    => 'В корзине нет новостей',
-            'all_items'             => 'Все новости',
-            'archives'              => 'Архив новостей',
-            'attributes'            => 'Атрибуты новости',
-            'insert_into_item'      => 'Вставить в новость',
-            'uploaded_to_this_item' => 'Загружено для этой новости',
-            'menu_name'             => 'Новости',
-            'filter_items_list'     => 'Фильтровать новости',
-            'items_list_navigation' => 'Навигация по новостям',
-            'items_list'            => 'Список новостей',
-            'name_admin_bar'        => 'Новость',
+            'name'                  => 'Медиа',
+            'singular_name'         => 'Запись медиа',
+            'add_new'               => 'Добавить запись',
+            'add_new_item'          => 'Добавить новую запись',
+            'edit_item'             => 'Редактировать запись',
+            'new_item'              => 'Новая запись',
+            'view_item'             => 'Просмотр записи',
+            'search_items'          => 'Поиск записей',
+            'not_found'             => 'Записи не найдены',
+            'not_found_in_trash'    => 'В корзине нет записей',
+            'all_items'             => 'Все записи',
+            'archives'              => 'Медиа компании',
+            'attributes'            => 'Атрибуты записи',
+            'insert_into_item'      => 'Вставить в запись',
+            'uploaded_to_this_item' => 'Загружено для этой записи',
+            'menu_name'             => 'Медиа',
+            'filter_items_list'     => 'Фильтровать записи',
+            'items_list_navigation' => 'Навигация по записям',
+            'items_list'            => 'Список записей',
+            'name_admin_bar'        => 'Запись медиа',
         );
     }
 
@@ -176,7 +176,7 @@ function bis_replace_custom_meta_boxes() {
 
     add_meta_box(
         'bis_news_images',
-        'Изображения новости',
+        'Изображения записи',
         'bis_render_news_images_metabox',
         'bis_news',
         'normal',
@@ -489,8 +489,8 @@ function bis_render_news_images_metabox($post) {
     <div class="bis-project-box">
         <div class="bis-project-box__header">
             <div>
-                <h3>Изображения новости</h3>
-                <p>Превью используется в списках новостей, баннер - в верхнем блоке страницы новости. Если баннер не заполнен, используется превью.</p>
+                <h3>Изображения записи</h3>
+                <p>Превью используется в списках медиа, баннер - в верхнем блоке страницы материала. Если баннер не заполнен, используется превью.</p>
             </div>
         </div>
 

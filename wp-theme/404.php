@@ -26,8 +26,8 @@ get_header();
                 <p>Посмотреть реализованные объекты по категориям.</p>
             </a>
             <a class="error-404-links__card" href="<?php echo esc_url(home_url('/news/')); ?>">
-                <span class="error-404-links__label">Новости</span>
-                <p>Открыть актуальные публикации и новости компании.</p>
+                <span class="error-404-links__label">Медиа</span>
+                <p>Открыть актуальные публикации и материалы компании.</p>
             </a>
         </div>
     </section>

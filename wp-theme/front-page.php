@@ -47,7 +47,7 @@ $has_hero_slider = !empty($hero_images);
         <li><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></li>
         <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
-        <li><a href="<?php echo esc_url(home_url('/news/')); ?>">Новости</a></li>
+        <li><a href="<?php echo esc_url(home_url('/news/')); ?>">Медиа</a></li>
         <li><a href="#contact">Контакты</a></li>
         <li><a href="#faq">F.A.Q</a></li>
       </ul>
@@ -600,7 +600,7 @@ endif;
   <?php if (empty($team_members)) : ?>
     style="padding: 60px 0;"
   <?php endif; ?>
-style>
+>
   <?php if (!empty($team_members)) : ?>
     <div class="team-slider" data-team-slider>
       <div class="team-track-wrap">
@@ -743,8 +743,8 @@ $news_query = new WP_Query(array(
 <section class="homepage-news" id="news">
   <div class="homepage-news__container">
   <div class="homepage-news__header">
-      <!-- <span class="section-badge">Новости</span> -->
-      <h2 class="section-title">Новости компании</h2>
+      <!-- <span class="section-badge">Медиа</span> -->
+      <h2 class="section-title">Медиа компании</h2>
       <p class="section-subtitle">Рассказываем о ключевых событиях, проектах и экспертизе нашей команды.</p>
     </div>
 
@@ -770,13 +770,13 @@ $news_query = new WP_Query(array(
         <?php endwhile; ?>
       </div>
       <div class="homepage-news__cta">
-        <a class="btn btn-outline btn-outline--bold" href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Все новости</a>
+        <a class="btn btn-outline btn-outline--bold" href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Все медиа</a>
       </div>
       <?php wp_reset_postdata(); ?>
     <?php else : ?>
       <div class="team-empty">
-        <span class="team-empty__label">Новости</span>
-        <p>Мы готовим подборку новостей компании.</p>
+        <span class="team-empty__label">Медиа</span>
+        <p>Мы готовим подборку материалов компании.</p>
       </div>
     <?php endif; ?>
     <?php wp_reset_postdata(); ?>

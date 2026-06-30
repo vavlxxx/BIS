@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   runInit('initHeaderLocation');
   runInit('initTypingEffect');
   runInit('initMobileMenu');
+  runInit('initLangSwitcher');
   runInit('initCallbackModal');
   runInit('initScrollEffects');
   runInit('initFloatingSocialPanel');

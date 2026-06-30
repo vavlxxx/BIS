@@ -372,3 +372,109 @@ function cleanupCardSlider(track, section, nav, dotsContainer) {
     dotsContainer.innerHTML = '';
   }
 }
+
+function initLangSwitcher() {
+  const langToggle = document.getElementById('langToggle');
+  const langDropdown = document.getElementById('langDropdown');
+  const langItems = document.querySelectorAll('.lang-item');
+
+  if (!langToggle || !langDropdown) return;
+
+  const showDropdown = () => {
+    langDropdown.removeAttribute('hidden');
+    langToggle.setAttribute('aria-expanded', 'true');
+  };
+
+  const hideDropdown = () => {
+    langDropdown.setAttribute('hidden', '');
+    langToggle.setAttribute('aria-expanded', 'false');
+  };
+
+  langToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isExpanded = langToggle.getAttribute('aria-expanded') === 'true';
+    if (isExpanded) {
+      hideDropdown();
+    } else {
+      showDropdown();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!langDropdown.contains(e.target) && e.target !== langToggle) {
+      hideDropdown();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      hideDropdown();
+    }
+  });
+
+  langItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = item.dataset.lang;
+      if (lang === 'en') {
+        showToast('English version is under development / Английская версия в разработке');
+      } else if (lang === 'ru') {
+        // Already on RU
+        hideDropdown();
+      }
+    });
+  });
+
+  function showToast(message) {
+    let container = document.getElementById('bisToastContainer');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'bisToastContainer';
+      container.style.cssText = `
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        pointer-events: none;
+      `;
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      background: #ffffff;
+      border: 1px solid var(--border, #e2e8f0);
+      box-shadow: 0 10px 30px rgba(13, 17, 24, 0.12);
+      border-radius: 0;
+      padding: 16px 24px;
+      color: var(--text, #111827);
+      font-family: var(--font-base);
+      font-size: 14px;
+      font-weight: var(--font-weight-semibold, 600);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: auto;
+      max-width: 320px;
+    `;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    }, 10);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-20px)';
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, 4000);
+  }
+}
+
