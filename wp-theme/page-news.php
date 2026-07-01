@@ -1,23 +1,19 @@
 <?php
 /*
-Template Name: Новости
+Template Name: Медиа компании
 */
 get_header();
 
 $page_id = get_the_ID();
 $banner_title = get_post_meta($page_id, 'bis_page_banner_title', true);
 $banner_subtitle = get_post_meta($page_id, 'bis_page_banner_subtitle', true);
-$banner_title = $banner_title ? $banner_title : get_the_title();
-$banner_subtitle = $banner_subtitle ? $banner_subtitle : 'Комплексная экспертиза в инженерных системах, исследования и практические кейсы — рассказываем о проектах и жизни команды «БИС».\nСвязаться с пресс-службой: pr@bis-rf.ru';
+$banner_title = $banner_title ? $banner_title : 'Медиа компании';
+$banner_subtitle = $banner_subtitle ? $banner_subtitle : 'Короткие обновления, новости и материалы компании.';
 $banner_image = bis_get_page_banner_image_url($page_id);
 
 $paged = max(1, get_query_var('paged') ? get_query_var('paged') : get_query_var('page'));
-$news_query = new WP_Query(array(
-    'post_type'      => 'bis_news',
-    'post_status'    => 'publish',
-    'posts_per_page' => 9,
-    'paged'          => $paged,
-));
+$news_filters = bis_get_news_filter_state();
+$news_query = new WP_Query(bis_build_news_query_args($paged, 9, $news_filters));
 ?>
 
 <main class="news-archive-page">
@@ -45,6 +41,8 @@ $news_query = new WP_Query(array(
 
     <section class="news-list">
         <div class="news-list__container">
+            <?php bis_render_news_filters($news_filters); ?>
+
             <?php if ($news_query->have_posts()) : ?>
                 <div class="news-grid">
                     <?php while ($news_query->have_posts()) : $news_query->the_post(); ?>
@@ -71,6 +69,7 @@ $news_query = new WP_Query(array(
                     'prev_text' => '&larr; Предыдущие',
                     'next_text' => 'Следующие &rarr;',
                     'type'      => 'array',
+                    'add_args'  => bis_get_news_filter_query_args($news_filters),
                 ));
                 ?>
                 <?php if (!empty($pagination)) : ?>
@@ -81,8 +80,8 @@ $news_query = new WP_Query(array(
                 <?php wp_reset_postdata(); ?>
             <?php else : ?>
                 <div class="team-empty">
-                    <span class="team-empty__label">Новости</span>
-                    <p>Мы готовим подборку новостей компании.</p>
+                    <span class="team-empty__label">Медиа</span>
+                    <p>Материалы по выбранным фильтрам не найдены.</p>
                 </div>
             <?php endif; ?>
         </div>

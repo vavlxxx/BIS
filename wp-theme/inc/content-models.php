@@ -2,26 +2,26 @@
 
 function bis_register_news_cpt() {
     $labels = array(
-        'name'                     => 'Новости',
-        'singular_name'            => 'Новость',
-        'add_new'                  => 'Добавить новость',
-        'add_new_item'             => 'Добавить новую новость',
-        'edit_item'                => 'Редактировать новость',
-        'new_item'                 => 'Новая новость',
-        'view_item'                => 'Просмотр новости',
-        'search_items'             => 'Поиск новостей',
-        'not_found'                => 'Новости не найдены',
-        'not_found_in_trash'       => 'В корзине нет новостей',
-        'all_items'                => 'Все новости',
-        'archives'                 => 'Архив новостей',
-        'attributes'               => 'Атрибуты новости',
-        'insert_into_item'         => 'Вставить в новость',
-        'uploaded_to_this_item'    => 'Загружено для этой новости',
-        'menu_name'                => 'Новости',
-        'filter_items_list'        => 'Фильтровать новости',
-        'items_list_navigation'    => 'Навигация по новостям',
-        'items_list'               => 'Список новостей',
-        'name_admin_bar'           => 'Новость',
+        'name'                     => 'Медиа',
+        'singular_name'            => 'Запись медиа',
+        'add_new'                  => 'Добавить запись',
+        'add_new_item'             => 'Добавить новую запись',
+        'edit_item'                => 'Редактировать запись',
+        'new_item'                 => 'Новая запись',
+        'view_item'                => 'Просмотр записи',
+        'search_items'             => 'Поиск записей',
+        'not_found'                => 'Записи не найдены',
+        'not_found_in_trash'       => 'В корзине нет записей',
+        'all_items'                => 'Все записи',
+        'archives'                 => 'Медиа компании',
+        'attributes'               => 'Атрибуты записи',
+        'insert_into_item'         => 'Вставить в запись',
+        'uploaded_to_this_item'    => 'Загружено для этой записи',
+        'menu_name'                => 'Медиа',
+        'filter_items_list'        => 'Фильтровать записи',
+        'items_list_navigation'    => 'Навигация по записям',
+        'items_list'               => 'Список записей',
+        'name_admin_bar'           => 'Запись медиа',
     );
 
     register_post_type('bis_news', array(
@@ -35,6 +35,71 @@ function bis_register_news_cpt() {
     ));
 }
 add_action('init', 'bis_register_news_cpt');
+
+function bis_register_news_taxonomies() {
+    $category_labels = array(
+        'name'              => 'Рубрики',
+        'singular_name'     => 'Рубрика',
+        'search_items'      => 'Поиск рубрик',
+        'all_items'         => 'Все рубрики',
+        'parent_item'       => 'Родительская рубрика',
+        'parent_item_colon' => 'Родительская рубрика:',
+        'edit_item'         => 'Редактировать рубрику',
+        'update_item'       => 'Обновить рубрику',
+        'add_new_item'      => 'Добавить рубрику',
+        'new_item_name'     => 'Новая рубрика',
+        'menu_name'         => 'Рубрики',
+    );
+
+    register_taxonomy('bis_news_category', array('bis_news'), array(
+        'hierarchical'      => true,
+        'labels'            => $category_labels,
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
+        'query_var'         => true,
+        'rewrite'           => array('slug' => 'media-category'),
+    ));
+
+    $tag_labels = array(
+        'name'                       => 'Метки',
+        'singular_name'              => 'Метка',
+        'search_items'               => 'Поиск меток',
+        'popular_items'              => 'Часто используемые',
+        'all_items'                  => 'Все метки',
+        'edit_item'                  => 'Редактировать метку',
+        'update_item'                => 'Обновить метку',
+        'add_new_item'               => 'Добавить метку',
+        'new_item_name'              => 'Новая метка',
+        'separate_items_with_commas' => 'Разделяйте метки запятыми',
+        'add_or_remove_items'        => 'Добавить или удалить метки',
+        'choose_from_most_used'      => 'Выбрать из часто используемых',
+        'not_found'                  => 'Метки не найдены',
+        'menu_name'                  => 'Метки',
+    );
+
+    register_taxonomy('bis_news_tag', array('bis_news'), array(
+        'hierarchical'      => false,
+        'labels'            => $tag_labels,
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
+        'query_var'         => true,
+        'rewrite'           => array('slug' => 'media-tag'),
+    ));
+}
+add_action('init', 'bis_register_news_taxonomies');
+
+function bis_flush_news_media_rewrites() {
+    $target_version = '20260629-news-media-taxonomies';
+    if (get_option('bis_news_media_rewrite_version') === $target_version) {
+        return;
+    }
+
+    flush_rewrite_rules(false);
+    update_option('bis_news_media_rewrite_version', $target_version, false);
+}
+add_action('init', 'bis_flush_news_media_rewrites', 100);
 
 /**
  * Registers projects custom post type to manage portfolio objects.
@@ -1161,6 +1226,8 @@ function bis_project_details_metabox($post) {
     $banner_blocks = get_post_meta($post->ID, 'bis_project_banner_blocks', true);
     $project_description = get_post_meta($post->ID, 'bis_project_description', true);
     $gallery = get_post_meta($post->ID, 'bis_project_gallery', true);
+    $map_coords = get_post_meta($post->ID, 'bis_project_map_coords', true);
+    $address = get_post_meta($post->ID, 'bis_project_address', true);
 
     if (!is_array($banner_blocks)) {
         $banner_blocks = array();
@@ -1305,6 +1372,25 @@ function bis_project_details_metabox($post) {
             </li>
         </script>
 
+        <div class="bis-project-section">
+            <div class="bis-project-section__header">
+                <h4>Геолокация объекта</h4>
+                <p class="bis-field__hint">Укажите координаты для отображения объекта на карте.</p>
+            </div>
+            <div class="bis-project-grid">
+                <div class="bis-field">
+                    <label for="bis_project_map_coords">Координаты для карты (Яндекс.Карты)</label>
+                    <input type="text" id="bis_project_map_coords" name="bis_project_map_coords" value="<?php echo esc_attr($map_coords); ?>" placeholder="Например: 55.7558, 37.6173">
+                    <p class="bis-field__hint">Широта и долгота через запятую. Если поле пустое, объект не отобразится на карте.</p>
+                </div>
+                <div class="bis-field">
+                    <label for="bis_project_address">Адрес / Локация (для балуна)</label>
+                    <input type="text" id="bis_project_address" name="bis_project_address" value="<?php echo esc_attr($address); ?>" placeholder="Например: БЦ Высоцкий, Екатеринбург">
+                    <p class="bis-field__hint">Краткое текстовое описание места.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="bis-project-toggle">
             <label class="bis-switch">
                 <input type="checkbox" name="bis_project_is_featured" value="1" <?php checked($is_key, '1'); ?> data-featured-toggle>
@@ -1334,6 +1420,8 @@ function bis_save_project_details($post_id) {
     $banner_image = isset($_POST['bis_project_banner_image']) ? esc_url_raw(wp_unslash($_POST['bis_project_banner_image'])) : '';
     $project_description = isset($_POST['bis_project_description']) ? sanitize_textarea_field(wp_unslash($_POST['bis_project_description'])) : '';
     $is_key = isset($_POST['bis_project_is_featured']) ? '1' : '0';
+    $map_coords = isset($_POST['bis_project_map_coords']) ? sanitize_text_field(wp_unslash($_POST['bis_project_map_coords'])) : '';
+    $address = isset($_POST['bis_project_address']) ? sanitize_text_field(wp_unslash($_POST['bis_project_address'])) : '';
 
     $positions = array('top_left', 'bottom_left', 'top_right', 'bottom_right');
     $banner_blocks = array();
@@ -1371,6 +1459,8 @@ function bis_save_project_details($post_id) {
     update_post_meta($post_id, 'bis_project_gallery', $gallery);
     update_post_meta($post_id, 'bis_project_is_featured', $is_key);
     update_post_meta($post_id, 'bis_project_description', $project_description);
+    update_post_meta($post_id, 'bis_project_map_coords', $map_coords);
+    update_post_meta($post_id, 'bis_project_address', $address);
 }
 add_action('save_post', 'bis_save_project_details');
 

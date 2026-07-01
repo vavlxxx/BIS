@@ -77,7 +77,7 @@
         <p><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></p>
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
-        <p><a href="<?php echo esc_url(home_url('/news/')); ?>">Новости</a></p>
+        <p><a href="<?php echo esc_url(home_url('/news/')); ?>">Медиа</a></p>
         <p><a href="#contact">Контакты</a></p>
         <p><a href="#faq">F.A.Q</a></p>
       </div>

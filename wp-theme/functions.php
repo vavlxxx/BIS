@@ -44,6 +44,8 @@ function bis_theme_scripts() {
     // Enqueue Slider Script
     if (is_front_page()) {
         wp_enqueue_script('bis-slider', get_template_directory_uri() . '/assets/js/slider.js', array(), bis_get_asset_version('assets/js/slider.js'), true);
+        wp_enqueue_script('yandex-maps-api', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU', array(), null, true);
+        wp_enqueue_script('bis-objects-map', get_template_directory_uri() . '/assets/js/objects-map.js', array('yandex-maps-api'), bis_get_asset_version('assets/js/objects-map.js'), true);
 
         $revenue = bis_get_revenue_settings();
         $revenue_points = array();
@@ -227,7 +229,7 @@ function bis_noindex_project_single_pages($robots) {
         return $robots;
     }
 
-    $robots['noindex'] = true;
+    $robots['noindex'] = false;
     $robots['follow'] = true;
     unset($robots['index'], $robots['nofollow']);
 

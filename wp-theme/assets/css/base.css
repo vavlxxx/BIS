@@ -764,6 +764,94 @@ select {
   filter: invert(1) grayscale(1) brightness(0.15) contrast(2);
 }
 
+
+/* Language Switcher */
+.header-lang {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-toggle {
+  display: inline-flex;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 12px;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  color: var(--header-fg, #fff);
+  transition: border-color 0.3s ease, box-shadow 0.35s ease, background 0.35s ease, color 0.35s ease, transform 0.2s ease;
+}
+
+.lang-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.lang-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.header.scrolled .lang-toggle {
+  border-color: rgba(15, 23, 42, 0.14);
+  color: var(--header-fg);
+}
+
+.header.scrolled .lang-toggle:hover {
+  background: rgba(15, 23, 42, 0.06);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12);
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--radius, 12px);
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.16);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 80px;
+  z-index: 1010;
+}
+
+.lang-dropdown[hidden] {
+  display: none !important;
+}
+
+.lang-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: #475569;
+  border-radius: calc(var(--radius, 12px) - 4px);
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lang-item:hover {
+  background: rgba(112, 198, 212, 0.08);
+  color: var(--primary-dark, #167b88);
+}
+
+.lang-item.active {
+  background: var(--primary, #70C6D4);
+  color: #ffffff;
+}
+
 /* Off-canvas drawer */
 .nav-drawer {
   position: fixed;

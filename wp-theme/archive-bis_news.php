@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Новости
+Template Name: Медиа компании
 */
 get_header();
 
@@ -22,11 +22,15 @@ if (!$news_page_id) {
 
 $banner_title = $news_page_id ? get_post_meta($news_page_id, 'bis_page_banner_title', true) : '';
 $banner_subtitle = $news_page_id ? get_post_meta($news_page_id, 'bis_page_banner_subtitle', true) : '';
-$banner_title = $banner_title ? $banner_title : ($news_page_id ? get_the_title($news_page_id) : 'Новости');
+$banner_title = $banner_title ? $banner_title : 'Медиа компании';
 if (!$banner_subtitle) {
-    $banner_subtitle = 'Комплексная экспертиза в инженерных системах, исследования и практические кейсы — рассказываем о проектах и жизни команды «БИС — Баланс Инженерных Систем».';
+    $banner_subtitle = 'Короткие обновления, новости и материалы компании.';
 }
 $banner_image = $news_page_id ? bis_get_page_banner_image_url($news_page_id) : '';
+
+$paged = max(1, get_query_var('paged') ? get_query_var('paged') : get_query_var('page'));
+$news_filters = bis_get_news_filter_state();
+$news_query = new WP_Query(bis_build_news_query_args($paged, 9, $news_filters));
 ?>
 
 <main class="news-archive-page">
@@ -54,9 +58,11 @@ $banner_image = $news_page_id ? bis_get_page_banner_image_url($news_page_id) : '
 
     <section class="news-list">
         <div class="news-list__container">
-            <?php if (have_posts()) : ?>
+            <?php bis_render_news_filters($news_filters); ?>
+
+            <?php if ($news_query->have_posts()) : ?>
                 <div class="news-grid">
-                    <?php while (have_posts()) : the_post(); ?>
+                    <?php while ($news_query->have_posts()) : $news_query->the_post(); ?>
                         <?php $image_url = bis_get_news_image_url(get_the_ID()); ?>
                         <article class="news-item">
                             <a class="news-item__image" href="<?php the_permalink(); ?>">
@@ -73,18 +79,26 @@ $banner_image = $news_page_id ? bis_get_page_banner_image_url($news_page_id) : '
                     <?php endwhile; ?>
                 </div>
 
-                <div class="news-pagination">
-                    <?php
-                    the_posts_pagination(array(
-                        'prev_text' => '&larr; Предыдущие',
-                        'next_text' => 'Следующие &rarr;',
-                    ));
-                    ?>
-                </div>
+                <?php
+                $pagination = paginate_links(array(
+                    'total'     => $news_query->max_num_pages,
+                    'current'   => $paged,
+                    'prev_text' => '&larr; Предыдущие',
+                    'next_text' => 'Следующие &rarr;',
+                    'type'      => 'array',
+                    'add_args'  => bis_get_news_filter_query_args($news_filters),
+                ));
+                ?>
+                <?php if (!empty($pagination)) : ?>
+                    <div class="news-pagination">
+                        <?php echo wp_kses_post(implode('', $pagination)); ?>
+                    </div>
+                <?php endif; ?>
+                <?php wp_reset_postdata(); ?>
             <?php else : ?>
                 <div class="team-empty">
-                    <span class="team-empty__label">Новости</span>
-                    <p>Мы готовим подборку новостей компании.</p>
+                    <span class="team-empty__label">Медиа</span>
+                    <p>Материалы по выбранным фильтрам не найдены.</p>
                 </div>
             <?php endif; ?>
         </div>

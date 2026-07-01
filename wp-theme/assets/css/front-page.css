@@ -1357,7 +1357,7 @@
 
 /* Experience Section */
 .experience {
-  padding: 120px 32px;
+  padding: 96px 32px;
   background: var(--bg);
 }
 
@@ -3172,4 +3172,130 @@
   .services .service-card__main {
     height: 340px;
   }
+}
+
+/* Objects Map Section */
+.objects-map-section {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg);
+  padding-bottom: 96px;
+}
+
+.objects-yandex-map {
+  width: 100%;
+  height: 500px;
+  position: relative;
+  background-color: var(--bg-alt);
+}
+
+.objects-map__interactive {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .objects-yandex-map {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .objects-yandex-map {
+    height: 350px;
+  }
+}
+
+/* Custom Circular Map Markers */
+.map-project-marker-container {
+  position: absolute;
+  width: 24px;
+  height: 26px;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+  z-index: 10;
+  transform-origin: bottom center;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.map-project-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--primary);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 2px 6px rgba(13, 17, 24, 0.2);
+  background-color: var(--primary);
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.map-project-marker-container:hover .map-project-marker {
+  transform: scale(1.1);
+  border-color: var(--primary-dark);
+}
+
+.map-project-marker-pin {
+  width: 0;
+  height: 0;
+  /* border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid var(--primary); */
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 4px);
+  filter: drop-shadow(0 1px 1px rgba(13, 17, 24, 0.15));
+  transition: border-top-color 0.2s ease;
+}
+
+.map-project-marker-container:hover .map-project-marker-pin {
+  border-top-color: var(--primary-dark);
+}
+
+/* Zoom level scaling rules */
+.objects-map--zoom-1 .map-project-marker-container,
+.objects-map--zoom-2 .map-project-marker-container,
+.objects-map--zoom-3 .map-project-marker-container,
+.objects-map--zoom-4 .map-project-marker-container,
+.objects-map--zoom-5 .map-project-marker-container,
+.objects-map--zoom-6 .map-project-marker-container {
+  transform: scale(0.9);
+}
+
+.objects-map--zoom-7 .map-project-marker-container {
+  transform: scale(0.9);
+}
+
+.objects-map--zoom-8 .map-project-marker-container {
+  transform: scale(0.8);
+}
+
+.objects-map--zoom-9 .map-project-marker-container {
+  transform: scale(1);
+}
+
+.objects-map--zoom-10 .map-project-marker-container {
+  transform: scale(1.2);
+}
+
+.objects-map--zoom-11 .map-project-marker-container {
+  transform: scale(1.45);
+}
+
+.objects-map--zoom-12 .map-project-marker-container,
+.objects-map--zoom-13 .map-project-marker-container,
+.objects-map--zoom-14 .map-project-marker-container,
+.objects-map--zoom-15 .map-project-marker-container,
+.objects-map--zoom-16 .map-project-marker-container,
+.objects-map--zoom-17 .map-project-marker-container,
+.objects-map--zoom-18 .map-project-marker-container,
+.objects-map--zoom-19 .map-project-marker-container,
+.objects-map--zoom-20 .map-project-marker-container,
+.objects-map--zoom-21 .map-project-marker-container,
+.objects-map--zoom-22 .map-project-marker-container,
+.objects-map--zoom-23 .map-project-marker-container {
+  transform: scale(1.75);
 }

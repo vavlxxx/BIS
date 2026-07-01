@@ -5,7 +5,11 @@ get_header();
 <main class="news-single-page">
     <?php if (have_posts()) : ?>
         <?php while (have_posts()) : the_post(); ?>
-            <?php $cover = bis_get_news_banner_image_url(get_the_ID()); ?>
+            <?php
+            $news_id = get_the_ID();
+            $cover = bis_get_news_banner_image_url($news_id);
+            $news_tags = get_the_terms($news_id, 'bis_news_tag');
+            ?>
 
             <section class="news-hero news-hero--single" style="padding-inline: 8vw;">
                 <div class="news-hero__media">
@@ -21,7 +25,7 @@ get_header();
                     <nav class="project-breadcrumbs">
                         <a href="<?php echo esc_url(home_url('/')); ?>">Главная</a>
                         <span class="breadcrumbs-delimiter">/</span>
-                        <a href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Новости</a>
+                        <a href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Медиа</a>
                         <span class="breadcrumbs-delimiter">/</span>
                         <span><?php the_title(); ?></span>
                     </nav>
@@ -41,6 +45,23 @@ get_header();
                     </div>
                 </div>
             </section>
+
+            <?php if (is_array($news_tags) && !empty($news_tags) && !is_wp_error($news_tags)) : ?>
+                <section class="news-tags-section">
+                    <div class="news-tags-panel mw-1400px">
+                        <div class="news-tags" aria-label="Метки медиа">
+                            <?php foreach ($news_tags as $tag) : ?>
+                                <a class="news-tag" href="<?php echo esc_url(add_query_arg(array('media_search' => $tag->name), bis_get_news_archive_url())); ?>" aria-label="<?php echo esc_attr('Метка: ' . $tag->name); ?>">
+                                    <?php echo esc_html($tag->name); ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                        <button class="btn btn-primary news-tags-panel__cta open-estimate-modal" type="button">
+                            Заказать оборудование <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+                </section>
+            <?php endif; ?>
 
             <?php
             $related = new WP_Query(array(
@@ -77,8 +98,8 @@ get_header();
                         <?php wp_reset_postdata(); ?>
                     <?php else : ?>
                         <div class="team-empty">
-                            <span class="team-empty__label">Новости</span>
-                            <p>Мы готовим подборку новостей компании.</p>
+                            <span class="team-empty__label">Медиа</span>
+                            <p>Мы готовим подборку материалов компании.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -88,8 +109,8 @@ get_header();
         <section class="news-article">
             <div class="news-article__container">
                 <div class="team-empty">
-                    <span class="team-empty__label">Новости</span>
-                    <p>Новость не найдена.</p>
+                    <span class="team-empty__label">Медиа</span>
+                    <p>Материал не найден.</p>
                 </div>
             </div>
         </section>
