@@ -1226,6 +1226,8 @@ function bis_project_details_metabox($post) {
     $banner_blocks = get_post_meta($post->ID, 'bis_project_banner_blocks', true);
     $project_description = get_post_meta($post->ID, 'bis_project_description', true);
     $gallery = get_post_meta($post->ID, 'bis_project_gallery', true);
+    $map_coords = get_post_meta($post->ID, 'bis_project_map_coords', true);
+    $address = get_post_meta($post->ID, 'bis_project_address', true);
 
     if (!is_array($banner_blocks)) {
         $banner_blocks = array();
@@ -1370,6 +1372,25 @@ function bis_project_details_metabox($post) {
             </li>
         </script>
 
+        <div class="bis-project-section">
+            <div class="bis-project-section__header">
+                <h4>Геолокация объекта</h4>
+                <p class="bis-field__hint">Укажите координаты для отображения объекта на карте.</p>
+            </div>
+            <div class="bis-project-grid">
+                <div class="bis-field">
+                    <label for="bis_project_map_coords">Координаты для карты (Яндекс.Карты)</label>
+                    <input type="text" id="bis_project_map_coords" name="bis_project_map_coords" value="<?php echo esc_attr($map_coords); ?>" placeholder="Например: 55.7558, 37.6173">
+                    <p class="bis-field__hint">Широта и долгота через запятую. Если поле пустое, объект не отобразится на карте.</p>
+                </div>
+                <div class="bis-field">
+                    <label for="bis_project_address">Адрес / Локация (для балуна)</label>
+                    <input type="text" id="bis_project_address" name="bis_project_address" value="<?php echo esc_attr($address); ?>" placeholder="Например: БЦ Высоцкий, Екатеринбург">
+                    <p class="bis-field__hint">Краткое текстовое описание места.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="bis-project-toggle">
             <label class="bis-switch">
                 <input type="checkbox" name="bis_project_is_featured" value="1" <?php checked($is_key, '1'); ?> data-featured-toggle>
@@ -1399,6 +1420,8 @@ function bis_save_project_details($post_id) {
     $banner_image = isset($_POST['bis_project_banner_image']) ? esc_url_raw(wp_unslash($_POST['bis_project_banner_image'])) : '';
     $project_description = isset($_POST['bis_project_description']) ? sanitize_textarea_field(wp_unslash($_POST['bis_project_description'])) : '';
     $is_key = isset($_POST['bis_project_is_featured']) ? '1' : '0';
+    $map_coords = isset($_POST['bis_project_map_coords']) ? sanitize_text_field(wp_unslash($_POST['bis_project_map_coords'])) : '';
+    $address = isset($_POST['bis_project_address']) ? sanitize_text_field(wp_unslash($_POST['bis_project_address'])) : '';
 
     $positions = array('top_left', 'bottom_left', 'top_right', 'bottom_right');
     $banner_blocks = array();
@@ -1436,6 +1459,8 @@ function bis_save_project_details($post_id) {
     update_post_meta($post_id, 'bis_project_gallery', $gallery);
     update_post_meta($post_id, 'bis_project_is_featured', $is_key);
     update_post_meta($post_id, 'bis_project_description', $project_description);
+    update_post_meta($post_id, 'bis_project_map_coords', $map_coords);
+    update_post_meta($post_id, 'bis_project_address', $address);
 }
 add_action('save_post', 'bis_save_project_details');
 

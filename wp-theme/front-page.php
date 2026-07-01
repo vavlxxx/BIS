@@ -590,6 +590,66 @@ endif;
   </div>
 </div>
 
+<!-- Objects Map Section -->
+<?php
+$map_projects = new WP_Query(array(
+    'post_type'      => 'bis_project',
+    'post_status'    => 'publish',
+    'posts_per_page' => -1,
+    'meta_query'     => array(
+        'relation' => 'AND',
+        array(
+            'key'     => 'bis_project_map_coords',
+            'compare' => 'EXISTS',
+        ),
+        array(
+            'key'     => 'bis_project_map_coords',
+            'value'   => '',
+            'compare' => '!=',
+        ),
+    ),
+));
+
+$projects_data = array();
+if ($map_projects->have_posts()) {
+    while ($map_projects->have_posts()) {
+        $map_projects->the_post();
+        $p_id = get_the_ID();
+        $coords_raw = get_post_meta($p_id, 'bis_project_map_coords', true);
+        $coords_clean = trim((string) $coords_raw);
+        if (empty($coords_clean)) {
+            continue;
+        }
+        $coords_arr = array_map('trim', explode(',', $coords_clean));
+        if (count($coords_arr) === 2 && is_numeric($coords_arr[0]) && is_numeric($coords_arr[1])) {
+            $img = bis_get_project_preview_image_url($p_id);
+            if (empty($img)) {
+                $img = get_template_directory_uri() . '/assets/img/LOGOLOGO11.png';
+            }
+            $projects_data[] = array(
+                'id'          => $p_id,
+                'title'       => get_the_title(),
+                'link'        => get_permalink(),
+                'coords'      => array(floatval($coords_arr[0]), floatval($coords_arr[1])),
+                'address'     => get_post_meta($p_id, 'bis_project_address', true),
+                'description' => wp_trim_words(bis_get_project_description($p_id), 12, '...'),
+                'image'       => $img,
+            );
+        }
+    }
+    wp_reset_postdata();
+}
+?>
+
+<section class="objects-map-section" id="objects-map">
+    <div id="objects-yandex-map" class="objects-yandex-map" data-objects-map data-projects="<?php echo esc_attr(json_encode($projects_data, JSON_UNESCAPED_UNICODE)); ?>">
+        <div class="yandex-map__static" id="objects-yandex-map-placeholder">
+            <div class="yandex-map__hint">Интерактивная карта объектов загружается при просмотре...</div>
+        </div>
+        <div id="objects-yandex-map-live" class="objects-map__interactive"></div>
+    </div>
+</section>
+
 <?php $team_members = bis_get_team_members(); ?>
 <div class="section-header">
     <!-- <span class="section-badge">Оборудование</span> -->
