@@ -971,6 +971,7 @@
   .projects-types__link {
     width: 100%;
     text-align: center;
+    justify-content: center;
   }
 }
 
@@ -1834,7 +1835,7 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 28px;
-    padding: 0 72px 64px;
+    padding-bottom: 64px;
     margin: 0;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
