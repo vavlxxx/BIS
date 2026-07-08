@@ -18,7 +18,7 @@ function bis_build_collection_query_args($post_type, array $args = array()) {
 
 function bis_get_news_archive_url() {
     $archive_url = get_post_type_archive_link('bis_news');
-    return $archive_url ? $archive_url : home_url('/news/');
+    return $archive_url ? $archive_url : home_url('/media/');
 }
 
 function bis_get_news_filter_state() {

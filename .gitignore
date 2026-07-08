@@ -2,3 +2,4 @@
 !.env.template
 uploads/*
 wp-theme/assets/documents/*
+.agents

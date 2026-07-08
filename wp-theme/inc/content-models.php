@@ -27,14 +27,28 @@ function bis_register_news_cpt() {
     register_post_type('bis_news', array(
         'labels'             => $labels,
         'public'             => true,
-        'has_archive'        => true,
-        'rewrite'            => array('slug' => 'news'),
+        'has_archive'        => 'media',
+        'rewrite'            => array('slug' => 'media/%bis_news_category%', 'with_front' => false),
         'menu_icon'          => 'dashicons-media-document',
         'show_in_rest'       => true, // Enables the block editor
         'supports'           => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
     ));
 }
 add_action('init', 'bis_register_news_cpt');
+
+function bis_news_permalink($post_link, $id = 0) {
+    $post = get_post($id);
+    if (is_object($post) && $post->post_type == 'bis_news') {
+        $terms = wp_get_object_terms($post->ID, 'bis_news_category');
+        if ($terms && !is_wp_error($terms)) {
+            return str_replace('%bis_news_category%', $terms[0]->slug, $post_link);
+        } else {
+            return str_replace('%bis_news_category%', 'all', $post_link);
+        }
+    }
+    return $post_link;
+}
+add_filter('post_type_link', 'bis_news_permalink', 1, 3);
 
 function bis_register_news_taxonomies() {
     $category_labels = array(
@@ -58,7 +72,7 @@ function bis_register_news_taxonomies() {
         'show_admin_column' => true,
         'show_in_rest'      => true,
         'query_var'         => true,
-        'rewrite'           => array('slug' => 'media-category'),
+        'rewrite'           => array('slug' => 'media', 'with_front' => false),
     ));
 
     $tag_labels = array(

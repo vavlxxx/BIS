@@ -39,7 +39,8 @@ function bis_theme_scripts() {
     wp_enqueue_script('bis-site-home', get_template_directory_uri() . '/assets/js/site-home.js', array('bis-site-forms'), bis_get_asset_version('assets/js/site-home.js'), true);
     wp_enqueue_script('bis-site-team', get_template_directory_uri() . '/assets/js/site-team.js', array(), bis_get_asset_version('assets/js/site-team.js'), true);
     wp_enqueue_script('bis-site-project', get_template_directory_uri() . '/assets/js/site-project.js', array('bis-site-forms'), bis_get_asset_version('assets/js/site-project.js'), true);
-    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project'), bis_get_asset_version('assets/js/site-app.js'), true);
+    wp_enqueue_script('bis-site-news-ajax', get_template_directory_uri() . '/assets/js/site-news-ajax.js', array(), bis_get_asset_version('assets/js/site-news-ajax.js'), true);
+    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax'), bis_get_asset_version('assets/js/site-app.js'), true);
 
     // Enqueue Slider Script
     if (is_front_page()) {
@@ -317,3 +318,10 @@ function bis_output_social_meta_tags() {
     echo '<meta name="twitter:image" content="' . esc_url($image_url) . '">' . "\n";
 }
 
+function bis_admin_enqueue_scripts($hook) {
+    global $current_screen;
+    if ($current_screen && $current_screen->taxonomy === 'bis_news_category') {
+        wp_enqueue_script('bis-admin-auto-slug', get_template_directory_uri() . '/assets/js/admin-auto-slug.js', array(), bis_get_asset_version('assets/js/admin-auto-slug.js'), true);
+    }
+}
+add_action('admin_enqueue_scripts', 'bis_admin_enqueue_scripts');

@@ -47,7 +47,7 @@ $has_hero_slider = !empty($hero_images);
         <li><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></li>
         <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
-        <li><a href="<?php echo esc_url(home_url('/news/')); ?>">Медиа</a></li>
+        <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li>
         <li><a href="#contact">Контакты</a></li>
         <li><a href="#faq">F.A.Q</a></li>
       </ul>
@@ -798,48 +798,108 @@ $news_query = new WP_Query(array(
   'posts_per_page' => 3,
   'post_status'    => 'publish',
 ));
+$categories = get_terms(array(
+    'taxonomy'   => 'bis_news_category',
+    'hide_empty' => true,
+));
 ?>
 
 <section class="homepage-news" id="news">
   <div class="homepage-news__container">
-  <div class="homepage-news__header">
-      <!-- <span class="section-badge">Медиа</span> -->
+    <div class="homepage-news__header">
       <h2 class="section-title">Медиа компании</h2>
       <p class="section-subtitle">Рассказываем о ключевых событиях, проектах и экспертизе нашей команды.</p>
     </div>
 
-    <?php if ($news_query->have_posts()) : ?>
-      <div class="news-grid news-grid--home">
-        <?php while ($news_query->have_posts()) : $news_query->the_post(); ?>
-          <?php
-          $news_id = get_the_ID();
-          $image_url = bis_get_news_image_url($news_id);
-          ?>
-          <article class="news-item">
-            <a class="news-item__image" href="<?php the_permalink(); ?>">
-              <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
-            </a>
-            <div class="news-item__body">
-              <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
-              <h3 class="news-item__title">
-                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-              </h3>
-              <p class="news-item__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 18)); ?></p>
-            </div>
-          </article>
-        <?php endwhile; ?>
+    <nav class="news-filter__categories" aria-label="Рубрики медиа" style="margin-bottom: 30px; justify-content: center;">
+      <button type="button" class="news-filter__category news-tab is-active" data-news-target="all">Все</button>
+      <?php foreach ($categories as $cat) : ?>
+        <button type="button" class="news-filter__category news-tab" data-news-target="<?php echo esc_attr($cat->slug); ?>"><?php echo esc_html($cat->name); ?></button>
+      <?php endforeach; ?>
+    </nav>
+
+    <div class="news-tab-content active" data-news-content="all">
+      <?php if ($news_query->have_posts()) : ?>
+        <div class="news-grid news-grid--home">
+          <?php while ($news_query->have_posts()) : $news_query->the_post(); ?>
+            <?php
+            $news_id = get_the_ID();
+            $image_url = bis_get_news_image_url($news_id);
+            ?>
+            <article class="news-item">
+              <a class="news-item__image" href="<?php the_permalink(); ?>">
+                <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
+              </a>
+              <div class="news-item__body">
+                <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                <h3 class="news-item__title">
+                  <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                </h3>
+                <p class="news-item__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 18)); ?></p>
+              </div>
+            </article>
+          <?php endwhile; ?>
+        </div>
+        <div class="homepage-news__cta">
+          <a class="btn btn-outline btn-outline--bold" href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Все медиа</a>
+        </div>
+        <?php wp_reset_postdata(); ?>
+      <?php else : ?>
+        <div class="team-empty">
+          <span class="team-empty__label">Медиа</span>
+          <p>Мы готовим подборку материалов компании.</p>
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <?php foreach ($categories as $cat) : ?>
+      <?php
+      $cat_query = new WP_Query(array(
+        'post_type'      => 'bis_news',
+        'posts_per_page' => 3,
+        'post_status'    => 'publish',
+        'tax_query'      => array(
+            array(
+                'taxonomy' => 'bis_news_category',
+                'field'    => 'slug',
+                'terms'    => $cat->slug,
+            ),
+        ),
+      ));
+      ?>
+      <div class="news-tab-content" data-news-content="<?php echo esc_attr($cat->slug); ?>" style="display: none;">
+        <?php if ($cat_query->have_posts()) : ?>
+          <div class="news-grid news-grid--home">
+            <?php while ($cat_query->have_posts()) : $cat_query->the_post(); ?>
+              <?php
+              $news_id = get_the_ID();
+              $image_url = bis_get_news_image_url($news_id);
+              ?>
+              <article class="news-item">
+                <a class="news-item__image" href="<?php the_permalink(); ?>">
+                  <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
+                </a>
+                <div class="news-item__body">
+                  <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                  <h3 class="news-item__title">
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                  </h3>
+                  <p class="news-item__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 18)); ?></p>
+                </div>
+              </article>
+            <?php endwhile; wp_reset_postdata(); ?>
+          </div>
+          <div class="homepage-news__cta">
+            <a class="btn btn-outline btn-outline--bold" href="<?php echo esc_url(bis_get_news_filter_url(array('category' => $cat->slug))); ?>">Все статьи рубрики</a>
+          </div>
+        <?php else : ?>
+          <div class="team-empty">
+            <p>Нет записей.</p>
+          </div>
+        <?php endif; ?>
       </div>
-      <div class="homepage-news__cta">
-        <a class="btn btn-outline btn-outline--bold" href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Все медиа</a>
-      </div>
-      <?php wp_reset_postdata(); ?>
-    <?php else : ?>
-      <div class="team-empty">
-        <span class="team-empty__label">Медиа</span>
-        <p>Мы готовим подборку материалов компании.</p>
-      </div>
-    <?php endif; ?>
-    <?php wp_reset_postdata(); ?>
+    <?php endforeach; ?>
+
   </div>
 </section>
 

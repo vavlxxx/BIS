@@ -40,3 +40,23 @@
     background: #f0f0f1;
     border: 2px dashed #ccc;
 }
+
+/* Fix cluttered metaboxes */
+#poststuff .postbox:has(.bis-project-box),
+#poststuff .postbox:has(.bis-team-box),
+#poststuff .postbox:has(.bis-requests-box) {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+#poststuff .postbox:has(.bis-project-box) .postbox-header,
+#poststuff .postbox:has(.bis-team-box) .postbox-header,
+#poststuff .postbox:has(.bis-requests-box) .postbox-header {
+    display: none !important;
+}
+#poststuff .postbox:has(.bis-project-box) .inside,
+#poststuff .postbox:has(.bis-team-box) .inside,
+#poststuff .postbox:has(.bis-requests-box) .inside {
+    padding: 0 !important;
+    margin: 0 !important;
+}

@@ -26,8 +26,16 @@ get_header();
                         <a href="<?php echo esc_url(home_url('/')); ?>">Главная</a>
                         <span class="breadcrumbs-delimiter">/</span>
                         <a href="<?php echo esc_url(get_post_type_archive_link('bis_news')); ?>">Медиа</a>
-                        <span class="breadcrumbs-delimiter">/</span>
-                        <span><?php the_title(); ?></span>
+                        <?php
+                        $terms = get_the_terms(get_the_ID(), 'bis_news_category');
+                        if ($terms && !is_wp_error($terms)) {
+                            $term = $terms[0];
+                            echo '<span class="breadcrumbs-delimiter">/</span>';
+                            echo '<a href="' . esc_url(bis_get_news_filter_url(array('category' => $term->slug))) . '">' . esc_html($term->name) . '</a>';
+                        }
+                        ?>
+                        <!-- <span class="breadcrumbs-delimiter">/</span>
+                        <span><?php the_title(); ?></span> -->
                     </nav>
                     <div class="news-article__meta">
                         <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
