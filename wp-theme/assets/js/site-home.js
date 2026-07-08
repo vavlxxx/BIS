@@ -1006,3 +1006,27 @@ function initFAQ() {
     });
   });
 }
+
+function initNewsTabs() {
+  const tabs = document.querySelectorAll('.news-tab');
+  const contents = document.querySelectorAll('.news-tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.newsTarget;
+
+      tabs.forEach(t => {
+        t.classList.remove('is-active');
+      });
+      tab.classList.add('is-active');
+
+      contents.forEach(content => {
+        if (content.dataset.newsContent === target) {
+          content.style.display = 'block';
+        } else {
+          content.style.display = 'none';
+        }
+      });
+    });
+  });
+}

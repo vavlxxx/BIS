@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   runInit('initExperienceModal');
   runInit('initCasesModal');
   runInit('initFAQ');
+  runInit('initNewsTabs');
   runInit('initTeamSlider');
   runInit('initTeamModal');
   runInit('initServicesSlider');

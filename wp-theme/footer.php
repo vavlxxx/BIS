@@ -22,6 +22,10 @@
         'label' => 'Уведомление о соответствии ЛИЦЕНЗИИ МЧС',
         'file' => 'Уведомление_о_соответствии_ЛИЦЕНЗИИ_МЧС.pdf',
       ),
+      array(
+        'label' => 'Сертификат качества испытательных и калибровочных лабораторий применительно к пусконаладке инженерных систем',
+        'file' => 'СС_ИСО_9001_БИС_–_Баланс_Инженерных_Систем.pdf',
+      ),
     );
     ?>
     <div class="footer-content">
@@ -77,7 +81,7 @@
         <p><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></p>
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
-        <p><a href="<?php echo esc_url(home_url('/news/')); ?>">Медиа</a></p>
+        <p><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></p>
         <p><a href="#contact">Контакты</a></p>
         <p><a href="#faq">F.A.Q</a></p>
       </div>
