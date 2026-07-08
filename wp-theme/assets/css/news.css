@@ -856,31 +856,27 @@ body.post-type-archive-bis_news {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border: 1px solid var(--border);
-  border-radius: 999px;
   color: var(--text-light);
   background: #fff;
   font-size: 14px;
-  font-weight: var(--font-weight-semibold);
   line-height: 1.2;
   text-decoration: none;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .news-filter__category:hover,
 .news-filter__category:focus-visible {
+  color: var(--primary) !important;
   border-color: var(--primary);
-  color: var(--dark);
-  transform: translateY(-1px);
   outline: none;
 }
 
 .news-filter__category.is-active {
-  border-color: var(--primary-dark);
-  background: var(--primary-dark);
-  color: #fff;
-  box-shadow: 0 14px 28px -20px rgba(22, 123, 136, 0.9);
+  color: #fff !important;
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .news-pagination {
