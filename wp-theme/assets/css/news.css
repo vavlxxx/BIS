@@ -703,6 +703,7 @@ body.post-type-archive-bis_news {
   align-items: center;
   color: #fff;
   overflow: hidden;
+  padding-top: 82px; /* Учет высоты хедера для центрирования */
 }
 
 .news-hero__media {
@@ -1019,6 +1020,10 @@ body.post-type-archive-bis_news {
 }
 
 @media (max-width: 1024px) {
+  .news-hero {
+    padding-top: 76px;
+  }
+
   .news-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
