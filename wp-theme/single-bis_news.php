@@ -54,8 +54,8 @@ get_header();
                 </div>
             </section>
 
+            <section class="news-tags-section">
             <?php if (is_array($news_tags) && !empty($news_tags) && !is_wp_error($news_tags)) : ?>
-                <section class="news-tags-section">
                     <div class="news-tags-panel mw-1400px">
                         <div class="news-tags" aria-label="Метки медиа">
                             <?php foreach ($news_tags as $tag) : ?>
@@ -64,12 +64,15 @@ get_header();
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                        <button class="btn btn-primary news-tags-panel__cta open-estimate-modal" type="button">
-                            Заказать оборудование <span aria-hidden="true">→</span>
-                        </button>
                     </div>
-                </section>
-            <?php endif; ?>
+                    <?php endif; ?>
+                    
+                <div class="mw-1400px news-tags-order-btn">
+                    <button class="btn btn-primary news-tags-panel__cta open-estimate-modal" type="button">
+                        Заказать оборудование <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </section>
 
             <?php
             $related = new WP_Query(array(
