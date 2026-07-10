@@ -1056,10 +1056,6 @@ body.post-type-archive-bis_news {
     font-size: clamp(28px, 8vw, 32px);
   }
 
-  .news-filter {
-    padding: 18px;
-  }
-
   .news-filter__form {
     grid-template-columns: 1fr;
   }
@@ -1067,6 +1063,7 @@ body.post-type-archive-bis_news {
   .news-filter__submit,
   .news-filter__reset {
     width: 100%;
+    min-width: 100%;
   }
 
   .news-tags-panel {
