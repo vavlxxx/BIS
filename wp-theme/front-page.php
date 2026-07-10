@@ -641,6 +641,10 @@ if ($map_projects->have_posts()) {
 }
 ?>
 
+<div class="section-header">
+    <h2 class="section-title">Карта объектов</h2>
+    <!-- <p class="section-subtitle">Ведущие специалисты в области инженерных систем</p> -->
+</div>
 <section class="objects-map-section" id="objects-map">
     <div id="objects-yandex-map" class="objects-yandex-map" data-objects-map data-projects="<?php echo esc_attr(json_encode($projects_data, JSON_UNESCAPED_UNICODE)); ?>">
         <div class="yandex-map__static" id="objects-yandex-map-placeholder">
