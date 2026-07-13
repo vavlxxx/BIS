@@ -712,6 +712,14 @@ function bis_add_service_meta_boxes() {
         'normal',
         'high'
     );
+    add_meta_box(
+        'bis_service_children_order',
+        'Порядок дочерних услуг',
+        'bis_service_children_order_metabox',
+        'bis_service',
+        'normal',
+        'high'
+    );
 }
 add_action('add_meta_boxes', 'bis_add_service_meta_boxes');
 
@@ -866,6 +874,47 @@ function bis_service_details_metabox($post) {
             <label for="bis_service_description">Описание</label>
             <textarea id="bis_service_description" name="bis_service_description" rows="4" placeholder="Краткое описание услуги"><?php echo esc_textarea($description); ?></textarea>
         </div>
+    </div>
+    <?php
+}
+
+function bis_service_children_order_metabox($post) {
+    wp_nonce_field('bis_service_children_nonce', 'bis_service_children_nonce_field');
+    
+    $children = bis_get_associated_services($post->ID);
+    
+    if (empty($children)) {
+        echo '<p>У этой услуги нет дочерних услуг.</p>';
+        return;
+    }
+    
+    wp_enqueue_script('jquery-ui-sortable');
+    ?>
+    <div class="bis-project-box">
+        <div class="bis-project-box__header">
+            <div>
+                <h3>Порядок дочерних услуг</h3>
+                <p>Перетащите услуги мышкой, чтобы изменить порядок их отображения на сайте (например, в блоке «Комплексное обследование»).</p>
+            </div>
+        </div>
+        <ul id="bis-service-children-sortable" style="margin: 0; padding: 0; list-style: none;">
+            <?php foreach ($children as $child) : ?>
+                <li style="margin-bottom: 8px; padding: 10px 15px; background: #fff; border: 1px solid #ccd0d4; box-shadow: 0 1px 1px rgba(0,0,0,.04); cursor: move; display: flex; align-items: center;">
+                    <span class="dashicons dashicons-menu" style="margin-right: 10px; color: #8c8f94;"></span>
+                    <strong><?php echo esc_html(get_the_title($child->ID)); ?></strong>
+                    <input type="hidden" name="bis_service_children_order[]" value="<?php echo esc_attr($child->ID); ?>">
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <script>
+        jQuery(document).ready(function($) {
+            $('#bis-service-children-sortable').sortable({
+                containment: 'parent',
+                cursor: 'move',
+                opacity: 0.8
+            });
+        });
+        </script>
     </div>
     <?php
 }
@@ -1521,6 +1570,40 @@ function bis_save_service_details($post_id) {
     update_post_meta($post_id, 'bis_service_description', $description);
 }
 add_action('save_post', 'bis_save_service_details');
+
+function bis_save_service_children_order($post_id) {
+    if (!isset($_POST['bis_service_children_nonce_field']) || !wp_verify_nonce($_POST['bis_service_children_nonce_field'], 'bis_service_children_nonce')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!isset($_POST['post_type']) || 'bis_service' !== $_POST['post_type'] || !current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    if (isset($_POST['bis_service_children_order']) && is_array($_POST['bis_service_children_order'])) {
+        global $wpdb;
+        $order = 0;
+        foreach ($_POST['bis_service_children_order'] as $child_id) {
+            $child_id = (int) $child_id;
+            if ($child_id > 0) {
+                $wpdb->update(
+                    $wpdb->posts,
+                    array('menu_order' => $order),
+                    array('ID' => $child_id),
+                    array('%d'),
+                    array('%d')
+                );
+                clean_post_cache($child_id);
+                $order++;
+            }
+        }
+    }
+}
+add_action('save_post', 'bis_save_service_children_order');
 
 function bis_save_seo_meta($post_id) {
     if (!isset($_POST['bis_seo_nonce_field']) || !wp_verify_nonce($_POST['bis_seo_nonce_field'], 'bis_seo_nonce')) {
