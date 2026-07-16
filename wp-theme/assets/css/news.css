@@ -940,7 +940,7 @@ body.post-type-archive-bis_news {
 }
 
 .news-tags-section {
-  padding: 48px 8vw 0;
+  padding: 24px 8vw 0;
   background: var(--bg);
 }
 
@@ -1011,7 +1011,7 @@ body.post-type-archive-bis_news {
 }
 
 .news-related {
-  padding: 128px 8vw;
+  padding: 64px 8vw;
   background: var(--bg);
 }
 

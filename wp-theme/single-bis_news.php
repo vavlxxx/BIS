@@ -55,23 +55,22 @@ get_header();
             </section>
 
             <section class="news-tags-section">
-            <?php if (is_array($news_tags) && !empty($news_tags) && !is_wp_error($news_tags)) : ?>
-                    <div class="news-tags-panel mw-1400px">
-                        <div class="news-tags" aria-label="Метки медиа">
-                            <?php foreach ($news_tags as $tag) : ?>
-                                <a class="news-tag" href="<?php echo esc_url(add_query_arg(array('media_search' => $tag->name), bis_get_news_archive_url())); ?>" aria-label="<?php echo esc_attr('Метка: ' . $tag->name); ?>">
-                                    <?php echo esc_html($tag->name); ?>
-                                </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                    
-                <div class="mw-1400px news-tags-order-btn">
+                <div class="mw-1400px news-tags-order-btn" style="margin-bottom: 32px;">
                     <button class="btn btn-primary news-tags-panel__cta open-estimate-modal" type="button">
                         Заказать оборудование <span aria-hidden="true">→</span>
                     </button>
                 </div>
+                <?php if (is_array($news_tags) && !empty($news_tags) && !is_wp_error($news_tags)) : ?>
+                <div class="news-tags-panel mw-1400px">
+                    <div class="news-tags" aria-label="Метки медиа">
+                        <?php foreach ($news_tags as $tag) : ?>
+                            <a class="news-tag" href="<?php echo esc_url(add_query_arg(array('media_search' => $tag->name), bis_get_news_archive_url())); ?>" aria-label="<?php echo esc_attr('Метка: ' . $tag->name); ?>">
+                                <?php echo esc_html($tag->name); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
             </section>
 
             <?php
