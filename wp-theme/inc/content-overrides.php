@@ -371,9 +371,7 @@ function bis_render_service_children_metabox($post) {
             </div>
         </div>
 
-        <?php if ($parent_id > 0) : ?>
-            <p class="bis-field__hint">Эта услуга уже является дочерней для «<?php echo esc_html(get_the_title($parent_id)); ?>». Чтобы сделать её родительской, сначала уберите её из дочерних у текущего родителя.</p>
-        <?php elseif (empty($candidates)) : ?>
+        <?php if (empty($candidates)) : ?>
             <p class="bis-field__hint">Нет доступных услуг для добавления. Текущая услуга и услуги, которые уже являются родительскими, в список не попадают.</p>
         <?php else : ?>
             <div class="bis-service-children-list">
@@ -411,7 +409,7 @@ function bis_assign_service_child_ids($parent_id, $selected_ids) {
     }
 
     $parent = get_post($parent_id);
-    if (!($parent instanceof WP_Post) || 'bis_service' !== $parent->post_type || (int) $parent->post_parent > 0) {
+    if (!($parent instanceof WP_Post) || 'bis_service' !== $parent->post_type) {
         return;
     }
 
@@ -474,7 +472,7 @@ function bis_prevent_invalid_service_hierarchy($post_id) {
         $is_fixing = false;
     }
 }
-add_action('save_post_bis_service', 'bis_prevent_invalid_service_hierarchy', 25);
+// add_action('save_post_bis_service', 'bis_prevent_invalid_service_hierarchy', 25);
 
 function bis_render_news_images_metabox($post) {
     wp_nonce_field('bis_news_override_nonce', 'bis_news_override_nonce_field');
