@@ -42,7 +42,7 @@ $document_description = bis_get_current_meta_description();
   <meta name="title" content="<?php echo esc_attr($meta_title); ?>">
   <meta name="description" content="<?php echo esc_attr($document_description); ?>">
   <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.ico">
-  <title><?php echo esc_html($document_title); ?></title>
+  <title><?php echo esc_html($meta_title); ?></title>
 
   <?php wp_head(); ?>
   <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
