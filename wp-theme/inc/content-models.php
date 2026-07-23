@@ -240,6 +240,46 @@ function bis_force_latin_slug_on_save($data, $postarr) {
 }
 add_filter('wp_insert_post_data', 'bis_force_latin_slug_on_save', 20, 2);
 
+function bis_get_latin_slug_taxonomies() {
+    return array('bis_service_tag', 'bis_news_tag', 'bis_news_category', 'bis_project_type', 'bis_project_service', 'category', 'post_tag');
+}
+
+function bis_should_force_latin_term_slug($taxonomy) {
+    return in_array($taxonomy, bis_get_latin_slug_taxonomies(), true);
+}
+
+function bis_force_latin_term_slug_on_save($data, $taxonomy, $args) {
+    if (!bis_should_force_latin_term_slug($taxonomy)) {
+        return $data;
+    }
+
+    $slug_base = !empty($args['slug']) ? $args['slug'] : $data['name'];
+    $new_slug = bis_transliterate_to_latin_slug($slug_base);
+    
+    if ($new_slug !== '') {
+        $data['slug'] = $new_slug;
+    }
+
+    return $data;
+}
+add_filter('wp_insert_term_data', 'bis_force_latin_term_slug_on_save', 20, 3);
+
+function bis_force_latin_term_slug_on_update($data, $term_id, $taxonomy, $args) {
+    if (!bis_should_force_latin_term_slug($taxonomy)) {
+        return $data;
+    }
+
+    $slug_base = !empty($args['slug']) ? $args['slug'] : $data['name'];
+    $new_slug = bis_transliterate_to_latin_slug($slug_base);
+    
+    if ($new_slug !== '') {
+        $data['slug'] = $new_slug;
+    }
+
+    return $data;
+}
+add_filter('wp_update_term_data', 'bis_force_latin_term_slug_on_update', 20, 4);
+
 function bis_migrate_existing_latin_slugs() {
     $current_version = (int) get_option('bis_slug_migration_version', 0);
     $target_version = 2;
