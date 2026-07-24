@@ -153,6 +153,7 @@ $document_description = bis_get_current_meta_description();
           <span></span>
         </button>
       </div>
+      <div class="drawer-mobile-actions" id="drawerMobileActions"></div>
       <ul class="drawer-nav">
         <li><a href="<?php echo esc_url(home_url()); ?>">На главную</a></li>
         <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
@@ -169,3 +170,31 @@ $document_description = bis_get_current_meta_description();
       </div>
     </aside>
   </div>
+
+  <script>
+    (function() {
+      function moveHeaderWidgets() {
+        var isMobile = window.innerWidth <= 640;
+        var locationWidget = document.querySelector('.header-location');
+        var langWidget = document.querySelector('.header-lang');
+        var headerActions = document.querySelector('.header-actions');
+        var drawerActions = document.getElementById('drawerMobileActions');
+        var menuToggle = document.getElementById('menuToggle');
+        if (!locationWidget || !langWidget || !headerActions || !drawerActions || !menuToggle) return;
+        
+        if (isMobile) {
+          if (locationWidget.parentElement !== drawerActions) {
+            drawerActions.appendChild(locationWidget);
+            drawerActions.appendChild(langWidget);
+          }
+        } else {
+          if (locationWidget.parentElement !== headerActions) {
+            headerActions.insertBefore(locationWidget, menuToggle);
+            headerActions.appendChild(langWidget);
+          }
+        }
+      }
+      moveHeaderWidgets();
+      window.addEventListener('resize', moveHeaderWidgets);
+    })();
+  </script>

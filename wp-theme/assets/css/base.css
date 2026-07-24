@@ -325,9 +325,9 @@ select {
 }
 
 .brand-mark {
-  height: 52px;
+  height: 64px;
   width: auto;
-  max-width: 190px;
+  max-width: 240px;
   object-fit: contain;
   transition: transform 0.2s ease, filter 0.25s ease;
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.25));
@@ -971,6 +971,43 @@ select {
 .drawer-close:hover {
   background: rgba(255, 255, 255, 0.06);
   transform: rotate(3deg);
+}
+
+.drawer-mobile-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 24px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drawer-mobile-actions:empty {
+  display: none;
+}
+
+.drawer-mobile-actions .header-location {
+  flex-grow: 1;
+}
+
+.drawer-mobile-actions .header-location__trigger {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 999px;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+.drawer-mobile-actions .header-location__eyebrow {
+  display: none;
+}
+
+.drawer-mobile-actions .lang-toggle {
+  flex-shrink: 0;
 }
 
 .drawer-nav {
@@ -2579,8 +2616,8 @@ select {
   }
 
   .brand-mark {
-    height: 40px;
-    max-width: 150px;
+    height: 48px;
+    max-width: 180px;
   }
 
   .hero {
