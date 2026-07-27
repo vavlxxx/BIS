@@ -2601,9 +2601,20 @@ select {
   }
 
   .header-location__popover {
-    right: -16px;
-    width: min(320px, calc(100vw - 24px));
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    width: min(320px, calc(100vw - 32px));
     padding: 24px 18px 18px;
+    z-index: 9999;
+    box-shadow: 0 0 0 100vmax rgba(7, 10, 16, 0.55), 0 24px 64px rgba(15, 23, 42, 0.22);
+  }
+
+  .header-location__popover::before {
+    display: none;
   }
 
   .header-location__buttons {
