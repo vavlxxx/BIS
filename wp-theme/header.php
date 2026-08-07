@@ -68,7 +68,7 @@ $document_description = bis_get_current_meta_description();
     <div class="site-loader__inner">
       <div class="site-loader__mark" aria-hidden="true">
         <span class="site-loader__ring"></span>
-        <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/LOGOLOGO11.png" alt="" class="site-loader__logo">
+        <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/removebg-preview.png" alt="" class="site-loader__logo">
       </div>
       <div class="site-loader__progress" aria-hidden="true">
         <span class="site-loader__line"></span>
@@ -82,7 +82,7 @@ $document_description = bis_get_current_meta_description();
     <div class="header-content">
       <div class="brand-block">
         <a href="<?php echo esc_url( home_url( '/#home' ) ); ?>" class="logo-link" aria-label="На главную">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.png" alt="БИС — Баланс Инженерных Систем" class="brand-mark">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/img/removebg-preview.png" alt="БИС — Баланс Инженерных Систем" class="brand-mark">
         </a>
         <div class="brand-text">
           <span class="brand-title">«БИС» — Баланс</span>
@@ -146,7 +146,7 @@ $document_description = bis_get_current_meta_description();
     <aside class="nav-drawer__panel">
       <div class="drawer-header">
         <div class="drawer-brand">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.png" alt="БИС — Баланс Инженерных Систем" class="drawer-mark">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/img/removebg-preview.png" alt="БИС — Баланс Инженерных Систем" class="drawer-mark">
         </div>
         <button class="drawer-close" id="drawerClose" aria-label="Закрыть меню">
           <span></span>

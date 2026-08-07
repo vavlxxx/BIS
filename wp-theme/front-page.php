@@ -624,7 +624,7 @@ if ($map_projects->have_posts()) {
         if (count($coords_arr) === 2 && is_numeric($coords_arr[0]) && is_numeric($coords_arr[1])) {
             $img = bis_get_project_preview_image_url($p_id);
             if (empty($img)) {
-                $img = get_template_directory_uri() . '/assets/img/LOGOLOGO11.png';
+                $img = get_template_directory_uri() . '/assets/img/removebg-preview.png';
             }
             $projects_data[] = array(
                 'id'          => $p_id,
