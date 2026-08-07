@@ -1422,6 +1422,24 @@
   z-index: 2;
 }
 
+.experience-project-type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-semibold);
+  width: fit-content;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 2;
+}
+
 .experience-card h3 {
   font-size: clamp(18px, 1.6vw, 22px);
   font-weight: var(--font-weight-semibold);
@@ -1432,15 +1450,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-}
-
-.experience-project-type {
-  margin: 0;
-  color: var(--primary-dark);
-  font-size: 12px;
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  min-height: 2.8em;
 }
 
 .experience-description {
@@ -1452,6 +1462,14 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   /* -webkit-line-clamp: 3; */
+  overflow: hidden;
+}
+
+.experience-card .experience-description,
+.all-case-card .experience-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   overflow: hidden;
 }
 
@@ -1581,10 +1599,7 @@
   height: 100%;
 }
 
-.equipment-content > .experience-description,
-.experience-content > .experience-description {
-  flex: 1 1 auto;
-}
+
 
 .experience-content .experience-more {
   margin-top: auto;
@@ -2177,12 +2192,12 @@
   color: var(--dark);
   margin: 0;
   line-height: 1.4;
-  flex-grow: 1;
   text-align: left;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  min-height: 2.8em;
 }
 
 .all-case-card .experience-content {

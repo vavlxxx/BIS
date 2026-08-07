@@ -111,12 +111,12 @@ if ($selected_type === '') {
                             <?php if ($is_featured) : ?>
                                 <span class="experience-badge">Ключевой проект</span>
                             <?php endif; ?>
+                            <?php if (!empty($project_type_names)) : ?>
+                                <span class="experience-project-type-badge"><?php echo esc_html(implode(', ', $project_type_names)); ?></span>
+                            <?php endif; ?>
                         </div>
                         <div class="experience-content">
                             <h3><?php the_title(); ?></h3>
-                            <?php if (!empty($project_type_names)) : ?>
-                                <p class="experience-project-type"><?php echo esc_html(implode(', ', $project_type_names)); ?></p>
-                            <?php endif; ?>
                             <?php if (!empty($description)) : ?>
                                 <p class="experience-description"><?php echo esc_html($description); ?></p>
                             <?php endif; ?>

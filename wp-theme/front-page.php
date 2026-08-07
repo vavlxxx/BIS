@@ -441,6 +441,14 @@ endif;
         $project_id = get_the_ID();
         $image_url = bis_get_project_image_url($project_id);
         $description = bis_get_project_description($project_id);
+        $project_type_terms = get_the_terms($project_id, 'bis_project_type');
+        $project_type_names = array();
+        if (is_array($project_type_terms) && !is_wp_error($project_type_terms)) {
+            $project_type_terms = bis_sort_project_type_terms($project_type_terms);
+            foreach ($project_type_terms as $project_type_term) {
+                $project_type_names[] = $project_type_term->name;
+            }
+        }
         ?>
         <div class="experience-card"
              data-image="<?php echo esc_url($image_url); ?>"
@@ -449,6 +457,9 @@ endif;
           <div class="experience-image">
             <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
             <span class="experience-badge">Ключевой проект</span>
+            <?php if (!empty($project_type_names)) : ?>
+              <span class="experience-project-type-badge"><?php echo esc_html(implode(', ', $project_type_names)); ?></span>
+            <?php endif; ?>
           </div>
           <div class="experience-content">
             <h3><?php the_title(); ?></h3>
@@ -531,6 +542,14 @@ endif;
           $image_url = bis_get_project_image_url($project_id);
           $description = bis_get_project_description($project_id);
           $is_featured = get_post_meta($project_id, 'bis_project_is_featured', true) === '1';
+          $project_type_terms = get_the_terms($project_id, 'bis_project_type');
+          $project_type_names = array();
+          if (is_array($project_type_terms) && !is_wp_error($project_type_terms)) {
+              $project_type_terms = bis_sort_project_type_terms($project_type_terms);
+              foreach ($project_type_terms as $project_type_term) {
+                  $project_type_names[] = $project_type_term->name;
+              }
+          }
           ?>
           <div class="all-case-card"
                data-image="<?php echo esc_url($image_url); ?>"
@@ -540,6 +559,9 @@ endif;
               <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
               <?php if ($is_featured) : ?>
                 <span class="experience-badge">Ключевой проект</span>
+              <?php endif; ?>
+              <?php if (!empty($project_type_names)) : ?>
+                <span class="experience-project-type-badge"><?php echo esc_html(implode(', ', $project_type_names)); ?></span>
               <?php endif; ?>
             </div>
             <div class="experience-content">
