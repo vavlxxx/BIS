@@ -150,7 +150,7 @@ body.site-loading {
   max-width: 78px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+  filter: brightness(0) invert(1) drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
 }
 
 .site-loader__progress {
@@ -330,7 +330,7 @@ select {
   max-width: 240px;
   object-fit: contain;
   transition: transform 0.2s ease, filter 0.25s ease;
-  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.25));
+  filter: brightness(0) invert(1) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.25));
 }
 
 .brand-mark:hover {
@@ -761,7 +761,7 @@ select {
 }
 
 .header.scrolled .brand-mark {
-  filter: invert(1) grayscale(1) brightness(0.15) contrast(2);
+  filter: none;
 }
 
 
@@ -916,10 +916,10 @@ select {
 }
 
 .drawer-mark {
-  height: 44px;
+  height: 64px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.35));
+  filter: brightness(0) invert(1) drop-shadow(0 8px 30px rgba(0, 0, 0, 0.35));
 }
 
 .drawer-brand-text {

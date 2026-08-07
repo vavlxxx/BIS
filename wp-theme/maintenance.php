@@ -32,7 +32,7 @@ if ($phone_href && '+' !== substr($phone_href, 0, 1)) {
         <div class="site-loader__inner">
             <div class="site-loader__mark" aria-hidden="true">
                 <span class="site-loader__ring"></span>
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/LOGOLOGO11.png" alt="" class="site-loader__logo">
+                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/removebg-preview.png" alt="" class="site-loader__logo">
             </div>
             <div class="site-loader__progress" aria-hidden="true">
                 <span class="site-loader__line"></span>
