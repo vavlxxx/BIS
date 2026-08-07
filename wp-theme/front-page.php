@@ -448,9 +448,9 @@ endif;
              data-featured="1">
           <div class="experience-image">
             <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
+            <span class="experience-badge">Ключевой проект</span>
           </div>
           <div class="experience-content">
-            <span class="experience-badge">Ключевой проект</span>
             <h3><?php the_title(); ?></h3>
             <?php if (!empty($description)) : ?>
               <p class="experience-description"><?php echo esc_html($description); ?></p>
@@ -538,11 +538,11 @@ endif;
                data-featured="<?php echo $is_featured ? '1' : '0'; ?>">
             <div class="all-case-image">
               <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
-            </div>
-            <div class="experience-content">
               <?php if ($is_featured) : ?>
                 <span class="experience-badge">Ключевой проект</span>
               <?php endif; ?>
+            </div>
+            <div class="experience-content">
               <h4><?php the_title(); ?></h4>
               <?php if (!empty($description)) : ?>
                 <p class="experience-description"><?php echo esc_html($description); ?></p>

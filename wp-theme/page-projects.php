@@ -108,11 +108,11 @@ if ($selected_type === '') {
                     <div class="experience-card">
                         <div class="experience-image">
                             <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
-                        </div>
-                        <div class="experience-content">
                             <?php if ($is_featured) : ?>
                                 <span class="experience-badge">Ключевой проект</span>
                             <?php endif; ?>
+                        </div>
+                        <div class="experience-content">
                             <h3><?php the_title(); ?></h3>
                             <?php if (!empty($project_type_names)) : ?>
                                 <p class="experience-project-type"><?php echo esc_html(implode(', ', $project_type_names)); ?></p>
