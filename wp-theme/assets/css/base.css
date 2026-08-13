@@ -150,7 +150,7 @@ body.site-loading {
   max-width: 78px;
   height: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1) drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+  /* filter: brightness(0) invert(1) drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45)); */
 }
 
 .site-loader__progress {
