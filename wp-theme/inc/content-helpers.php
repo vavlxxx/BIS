@@ -85,10 +85,10 @@ function bis_get_news_placeholder_image_url() {
 function bis_get_news_image_url($post_id) {
     $custom = get_post_meta($post_id, 'bis_news_image', true);
     if ($custom) {
-        return bis_get_optimized_image_url($custom, 'bis-card');
+        return bis_get_optimized_image_url($custom, 'full');
     }
 
-    $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'bis-card');
+    $thumb = bis_get_post_thumbnail_optimized_url($post_id, 'full');
     if ($thumb) {
         return $thumb;
     }
