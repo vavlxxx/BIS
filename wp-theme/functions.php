@@ -325,3 +325,21 @@ function bis_admin_enqueue_scripts($hook) {
     }
 }
 add_action('admin_enqueue_scripts', 'bis_admin_enqueue_scripts');
+
+function bis_calculators_template_include($template) {
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators' || is_page('calculators')) {
+        $calc_template = get_template_directory() . '/page-calculators.php';
+        if (file_exists($calc_template)) {
+            global $wp_query;
+            if (is_404()) {
+                $wp_query->is_404 = false;
+                status_header(200);
+            }
+            return $calc_template;
+        }
+    }
+    return $template;
+}
+add_filter('template_include', 'bis_calculators_template_include');
+

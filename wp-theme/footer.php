@@ -79,6 +79,7 @@
         <p><a href="#equipment">Оборудование</a></p>
         <p><a href="#experience">Опыт</a></p>
         <p><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></p>
+        <p><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></p>
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
         <p><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></p>
