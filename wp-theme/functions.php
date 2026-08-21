@@ -14,11 +14,12 @@ function bis_theme_scripts() {
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', array(), null);
 
     $css_files = array(
-        'bis-base'       => 'assets/css/base.css',
-        'bis-front-page' => 'assets/css/front-page.css',
-        'bis-news'       => 'assets/css/news.css',
-        'bis-team'       => 'assets/css/team.css',
-        'bis-content'    => 'assets/css/content.css',
+        'bis-base'        => 'assets/css/base.css',
+        'bis-front-page'  => 'assets/css/front-page.css',
+        'bis-news'        => 'assets/css/news.css',
+        'bis-team'        => 'assets/css/team.css',
+        'bis-content'     => 'assets/css/content.css',
+        'bis-calculators' => 'assets/css/calculators.css',
     );
 
     $style_deps = array();
@@ -40,7 +41,8 @@ function bis_theme_scripts() {
     wp_enqueue_script('bis-site-team', get_template_directory_uri() . '/assets/js/site-team.js', array(), bis_get_asset_version('assets/js/site-team.js'), true);
     wp_enqueue_script('bis-site-project', get_template_directory_uri() . '/assets/js/site-project.js', array('bis-site-forms'), bis_get_asset_version('assets/js/site-project.js'), true);
     wp_enqueue_script('bis-site-news-ajax', get_template_directory_uri() . '/assets/js/site-news-ajax.js', array(), bis_get_asset_version('assets/js/site-news-ajax.js'), true);
-    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax'), bis_get_asset_version('assets/js/site-app.js'), true);
+    wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array(), bis_get_asset_version('assets/js/site-calculators.js'), true);
+    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax', 'bis-site-calculators'), bis_get_asset_version('assets/js/site-app.js'), true);
 
     // Enqueue Slider Script
     if (is_front_page()) {
