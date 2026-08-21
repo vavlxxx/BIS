@@ -330,7 +330,7 @@ select {
   max-width: 240px;
   object-fit: contain;
   transition: transform 0.2s ease, filter 0.25s ease;
-  filter: brightness(0) invert(1) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.25));
+  /* filter: brightness(0) invert(1) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.25)); */
 }
 
 .brand-mark:hover {
@@ -443,28 +443,22 @@ select {
 }
 
 .header-location__popover {
-  position: absolute;
-  top: calc(100% + 16px);
-  right: 0;
-  z-index: 20;
-  width: min(320px, calc(100vw - 32px));
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+  width: min(340px, calc(100vw - 32px));
   padding: 26px 24px 22px;
   background: #ffffff;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+  box-shadow: 0 0 0 100vmax rgba(7, 10, 16, 0.6), 0 24px 64px rgba(15, 23, 42, 0.25);
 }
 
 .header-location__popover::before {
-  content: '';
-  position: absolute;
-  top: -9px;
-  right: 48px;
-  width: 18px;
-  height: 18px;
-  background: #ffffff;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  border-left: 1px solid rgba(15, 23, 42, 0.08);
-  transform: rotate(45deg);
+  display: none;
 }
 
 .header-location__popover[hidden] {
@@ -919,7 +913,7 @@ select {
   height: 64px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1) drop-shadow(0 8px 30px rgba(0, 0, 0, 0.35));
+  /* filter: brightness(0) invert(1) drop-shadow(0 8px 30px rgba(0, 0, 0, 0.35)); */
 }
 
 .drawer-brand-text {
@@ -2584,20 +2578,28 @@ select {
 
 @media (max-width: 640px) {
   .header-content {
-    padding: 0 20px;
+    padding: 10px 24px;
+    height: 68px;
   }
 
   .header-actions {
-    gap: 10px;
+    gap: 8px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
   }
 
   .header-location__trigger {
-    min-width: 124px;
-    padding: 8px 12px;
+    min-width: auto;
+    padding: 6px 10px;
   }
 
   .header-location__city {
-    font-size: 14px;
+    font-size: 13px;
+  }
+
+  .header-location__eyebrow {
+    font-size: 10px;
   }
 
   .header-location__popover {
@@ -2627,8 +2629,8 @@ select {
   }
 
   .brand-mark {
-    height: 48px;
-    max-width: 180px;
+    height: 42px;
+    max-width: 145px;
   }
 
   .hero {

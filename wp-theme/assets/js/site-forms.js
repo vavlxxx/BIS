@@ -416,22 +416,25 @@ function resolveManualLocation(query) {
 
 function initHeaderLocation() {
   const widget = document.querySelector('[data-location-widget]');
-  if (!widget) {
-    return;
-  }
+  if (!widget) return;
 
   const trigger = widget.querySelector('[data-location-trigger]');
   const popover = widget.querySelector('[data-location-popover]');
-  const closeButton = widget.querySelector('[data-location-close]');
-  const confirmButton = widget.querySelector('[data-location-confirm]');
-  const otherButton = widget.querySelector('[data-location-other]');
-  const saveButton = widget.querySelector('[data-location-save]');
-  const cancelButton = widget.querySelector('[data-location-cancel]');
-  const input = widget.querySelector('[data-location-input]');
-  const error = widget.querySelector('[data-location-error]');
+
+  if (popover && popover.parentElement !== document.body) {
+    document.body.appendChild(popover);
+  }
+
+  const closeButton = widget.querySelector('[data-location-close]') || popover?.querySelector('[data-location-close]');
+  const confirmButton = widget.querySelector('[data-location-confirm]') || popover?.querySelector('[data-location-confirm]');
+  const otherButton = widget.querySelector('[data-location-other]') || popover?.querySelector('[data-location-other]');
+  const saveButton = widget.querySelector('[data-location-save]') || popover?.querySelector('[data-location-save]');
+  const cancelButton = widget.querySelector('[data-location-cancel]') || popover?.querySelector('[data-location-cancel]');
+  const input = widget.querySelector('[data-location-input]') || popover?.querySelector('[data-location-input]');
+  const error = widget.querySelector('[data-location-error]') || popover?.querySelector('[data-location-error]');
   const steps = {
-    confirm: widget.querySelector('[data-location-step="confirm"]'),
-    custom: widget.querySelector('[data-location-step="custom"]')
+    confirm: widget.querySelector('[data-location-step="confirm"]') || popover?.querySelector('[data-location-step="confirm"]'),
+    custom: widget.querySelector('[data-location-step="custom"]') || popover?.querySelector('[data-location-step="custom"]')
   };
 
   let currentStep = 'confirm';
@@ -610,7 +613,7 @@ function initHeaderLocation() {
       return;
     }
 
-    if (!widget.contains(event.target)) {
+    if (!widget.contains(event.target) && (!popover || !popover.contains(event.target))) {
       closePopover();
     }
   });

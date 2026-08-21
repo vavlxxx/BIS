@@ -121,11 +121,6 @@ $document_description = bis_get_current_meta_description();
             </div>
           </div>
         </div>
-        <button class="menu-toggle" id="menuToggle" aria-label="Меню">
-          <span class="line line-top"></span>
-          <span class="line line-middle"></span>
-          <span class="line line-bottom"></span>
-        </button>
         <div class="header-lang" id="headerLang">
           <button class="lang-toggle" id="langToggle" aria-label="Смена языка" aria-haspopup="true" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -137,6 +132,11 @@ $document_description = bis_get_current_meta_description();
             <button class="lang-item" type="button" data-lang="en">EN</button>
           </div>
         </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Меню">
+          <span class="line line-top"></span>
+          <span class="line line-middle"></span>
+          <span class="line line-bottom"></span>
+        </button>
       </div>
     </div>
   </header>
@@ -191,7 +191,7 @@ $document_description = bis_get_current_meta_description();
         } else {
           if (locationWidget.parentElement !== headerActions) {
             headerActions.insertBefore(locationWidget, menuToggle);
-            headerActions.appendChild(langWidget);
+            headerActions.insertBefore(langWidget, menuToggle);
           }
         }
       }
