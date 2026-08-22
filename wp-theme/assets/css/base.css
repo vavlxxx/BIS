@@ -754,8 +754,20 @@ select {
   background: var(--header-fg);
 }
 
+.brand-mark--scrolled {
+  display: none;
+}
+
 .header.scrolled .brand-mark {
   filter: none;
+}
+
+.header.scrolled .brand-mark--default {
+  display: none;
+}
+
+.header.scrolled .brand-mark--scrolled {
+  display: block;
 }
 
 
