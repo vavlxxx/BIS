@@ -1,59 +1,29 @@
-/**
- * BIS Engineering Calculators Engine
- * - Clean corporate UI logic
- * - Exact formulas matching GOST 53300-2009, AVOK, and GOST 34060 (APK reverse engineered)
- * - 100% Reliable Standalone Print / PDF Engine (No blank pages)
- */
-
 (function () {
   'use strict';
 
   const state = {
     currentBlock: 'block1',
     currentAvok: 'du4_1',
-    
-    // Default Shaft Template for Block 1
-    b1Defaults: {
-      floorsCount: 42,
-      shaftA: 1.1,
-      shaftB: 0.8,
-      valveA: 1.0,
-      valveB: 0.5,
-      floorHeight: 4.3,
-      topFloorHeight: 20.8
-    },
-
-    // Block 1 Floors data
+    activeElementType: 'D1',
     block1Floors: [],
-
-    // Block 3 Elements
-    block3Elements: [
-      { id: 1, type: 'D1', name: 'Прямой круглый участок', params: { D: 0.5, L: 6.0 }, s: 9.42 },
-      { id: 2, type: 'D2', name: 'Прямой прямоугольный участок', params: { A: 0.6, B: 0.4, L: 8.0 }, s: 16.0 },
-      { id: 3, type: 'O1', name: 'Отвод круглый 90°', params: { D: 0.5, R: 0.5, A: 90 }, s: 1.23 },
-      { id: 4, type: 'A3', name: 'Переход прям-прям', params: { A: 0.6, B: 0.4, A1: 0.4, B1: 0.3, L: 0.5 }, s: 0.98 },
-      { id: 5, type: 'E2', name: 'Заглушка прямоугольная', params: { A: 0.4, B: 0.3 }, s: 0.12 }
-    ],
-
-    // Metadata for official Protocol
+    block3Elements: [],
     protocolMeta: {
       number: '1',
       date: new Date().toISOString().split('T')[0],
       objectName: 'ЖК «Симфония», Корпус 2',
       systemName: 'Система дымоудаления ДУ-1',
-      section: 'Вентиляционная шахта ШД-1 (этажи 2-42)',
+      section: 'Вентиляционная шахта ШД-1',
       instruments: 'Дифференциальный манометр Testo 510, Анемометр Testo 417',
       engineer: 'Иванов И.И.',
       approver: 'Петров П.П.'
     },
-
     lastResults: {}
   };
 
   const KMS_RATES = {
-    standard: 0.4, // Тройник на проход
-    complex: 4.6,  // Отводы + полуотводы + тройник
-    turns: 1.6     // Повороты
+    standard: 0.4,
+    complex: 4.6,
+    turns: 1.6
   };
 
   const LEAKAGE_CLASSES = {
@@ -65,25 +35,9 @@
   let dom = {};
 
   function init() {
-    initDefaultFloors(state.b1Defaults.floorsCount);
     cacheDom();
     bindEvents();
     renderAll();
-  }
-
-  function initDefaultFloors(count) {
-    state.block1Floors = [];
-    for (let f = count; f >= 1; f--) {
-      state.block1Floors.push({
-        floor: f,
-        li: f === count ? state.b1Defaults.topFloorHeight : state.b1Defaults.floorHeight,
-        a: state.b1Defaults.shaftA,
-        b: state.b1Defaults.shaftB,
-        kmsType: f === count ? 'complex' : 'standard',
-        val_a: state.b1Defaults.valveA,
-        val_b: state.b1Defaults.valveB
-      });
-    }
   }
 
   function cacheDom() {
@@ -97,11 +51,10 @@
 
     dom.protocolModal = document.getElementById('calcProtocolModal');
     dom.protocolPrintArea = document.getElementById('protocolPrintArea');
-    dom.btnAddElementModal = document.getElementById('addElementModal');
+    dom.calcElementModal = document.getElementById('calcElementModal');
   }
 
   function bindEvents() {
-    // Top Block Navigation
     dom.blockNavBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const block = btn.dataset.block;
@@ -109,7 +62,6 @@
       });
     });
 
-    // AVOK Tabs Navigation
     dom.avokTabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const avok = btn.dataset.avok;
@@ -117,24 +69,15 @@
       });
     });
 
-    // Auto-recalculation inputs
     document.addEventListener('input', e => {
       if (e.target.matches('.calc-auto-recalc')) {
         recalculateCurrent();
       }
     });
 
-    // Block 1 Floor Table Buttons
     const btnAddFloor = document.getElementById('b1BtnAddFloor');
     if (btnAddFloor) btnAddFloor.addEventListener('click', addBlock1Floor);
 
-    const btnGenFloors = document.getElementById('b1BtnGenFloors');
-    if (btnGenFloors) btnGenFloors.addEventListener('click', promptGenerateFloors);
-
-    const btnApplyDefaults = document.getElementById('b1BtnApplyDefaults');
-    if (btnApplyDefaults) btnApplyDefaults.addEventListener('click', applyDefaultsToAllFloors);
-
-    // Block 3 Element Builder Cards
     const elCards = document.querySelectorAll('.element-select-card');
     elCards.forEach(card => {
       card.addEventListener('click', () => {
@@ -172,16 +115,24 @@
     recalculateCurrent();
   }
 
-  /* ==========================================================================
-     BLOCK 1: GOST R 53300-2009 (Appendix B) Calculation
-     ========================================================================== */
   function recalculateBlock1() {
-    const Lpr = parseFloat(document.getElementById('b1_Lpr')?.value) || 34760;
-    const Psv = parseFloat(document.getElementById('b1_Psv')?.value) || 1550;
+    const rawLpr = document.getElementById('b1_Lpr')?.value;
+    const rawPsv = document.getElementById('b1_Psv')?.value;
+
+    if (!rawLpr || !rawPsv) {
+      updateSummaryMetric('b1_res_L0', '—', 'м³/ч');
+      updateSummaryMetric('b1_res_Psa', '—', 'Па');
+      updateSummaryMetric('b1_res_G0', '—', 'кг/с');
+      updateSummaryMetric('b1_res_Leak', '—', 'м³/ч');
+      return;
+    }
+
+    const Lpr = parseFloat(rawLpr) || 0;
+    const Psv = parseFloat(rawPsv) || 0;
     const Tpg = parseFloat(document.getElementById('b1_Tpg')?.value) || 400;
     const Tpom = parseFloat(document.getElementById('b1_Tpom')?.value) || 18;
-    const h_top = parseFloat(document.getElementById('b1_h_top')?.value) || 146.95;
-    const h_bot = parseFloat(document.getElementById('b1_h_bot')?.value) || 9.82;
+    const h_top = parseFloat(document.getElementById('b1_h_top')?.value) || 0;
+    const h_bot = parseFloat(document.getElementById('b1_h_bot')?.value) || 0;
 
     const Tv = Tpg - 62;
     const Ta = 273 + Tpom;
@@ -198,20 +149,20 @@
     let totalValveLeakage = 0;
     const floorResults = [];
 
-    state.block1Floors.forEach((f, idx) => {
+    state.block1Floors.forEach((f) => {
       const F_shaft = f.a * f.b;
       const P_shaft = 2 * (f.a + f.b);
       const de = P_shaft > 0 ? (4 * F_shaft / (f.a + f.b)) : 1.0;
       const kms = KMS_RATES[f.kmsType] || 0.4;
       const lambda = 0.016;
-      const li = f.li || 4.3;
+      const li = f.li || 3.0;
 
       const velocity_mass = (F_shaft > 0 && rho_a > 0) ? (currentG / (rho_a * F_shaft)) : 0;
       const deltaP = 0.5 * rho_a * (kms + (lambda * li / de)) * Math.pow(velocity_mass, 2);
       currentP = Math.max(0, currentP - deltaP);
 
       const F_val = Math.max(0, (f.val_a - 0.03) * (f.val_b - 0.05));
-      const G_leak = Math.sqrt(currentP / 39300) * F_val;
+      const G_leak = F_val > 0 ? Math.sqrt(currentP / 39300) * F_val : 0;
       totalValveLeakage += G_leak;
 
       currentG = Math.max(0, currentG - G_leak);
@@ -248,6 +199,13 @@
   function renderBlock1Table() {
     if (!dom.b1TableBody) return;
     dom.b1TableBody.innerHTML = '';
+
+    if (state.block1Floors.length === 0) {
+      const trEmpty = document.createElement('tr');
+      trEmpty.innerHTML = `<td colspan="9" style="padding: 20px; color: var(--text-light); text-align: center;">Этажи пока не добавлены. Нажмите «+ Добавить этаж», чтобы внести параметры шахты.</td>`;
+      dom.b1TableBody.appendChild(trEmpty);
+      return;
+    }
 
     state.block1Floors.forEach((f, idx) => {
       const tr = document.createElement('tr');
@@ -328,65 +286,17 @@
     const newFloorNum = lastFloor ? Math.max(1, lastFloor.floor - 1) : 1;
     state.block1Floors.push({
       floor: newFloorNum,
-      li: state.b1Defaults.floorHeight,
-      a: state.b1Defaults.shaftA,
-      b: state.b1Defaults.shaftB,
+      li: 3.0,
+      a: 1.0,
+      b: 0.8,
       kmsType: 'standard',
-      val_a: state.b1Defaults.valveA,
-      val_b: state.b1Defaults.valveB
+      val_a: 0.8,
+      val_b: 0.5
     });
     renderBlock1Table();
     recalculateBlock1();
   }
 
-  function promptGenerateFloors() {
-    const countInput = document.getElementById('b1_floor_count_input');
-    const count = parseInt(countInput ? countInput.value : '20', 10) || 20;
-    if (count < 1 || count > 100) return;
-    initDefaultFloors(count);
-    renderBlock1Table();
-    recalculateBlock1();
-  }
-
-  function applyDefaultsToAllFloors() {
-    const shaftA = parseFloat(document.getElementById('b1_def_shaftA')?.value) || 1.1;
-    const shaftB = parseFloat(document.getElementById('b1_def_shaftB')?.value) || 0.8;
-    const valveA = parseFloat(document.getElementById('b1_def_valveA')?.value) || 1.0;
-    const valveB = parseFloat(document.getElementById('b1_def_valveB')?.value) || 0.5;
-    const floorH = parseFloat(document.getElementById('b1_def_floorH')?.value) || 4.3;
-
-    state.b1Defaults.shaftA = shaftA;
-    state.b1Defaults.shaftB = shaftB;
-    state.b1Defaults.valveA = valveA;
-    state.b1Defaults.valveB = valveB;
-    state.b1Defaults.floorHeight = floorH;
-
-    state.block1Floors.forEach((f, idx) => {
-      f.a = shaftA;
-      f.b = shaftB;
-      f.val_a = valveA;
-      f.val_b = valveB;
-      if (idx > 0) f.li = floorH;
-    });
-
-    renderBlock1Table();
-    recalculateBlock1();
-
-    const btn = document.getElementById('b1BtnApplyDefaults');
-    if (btn) {
-      const origText = btn.innerText;
-      btn.innerText = '✓ Параметры применены';
-      btn.style.color = '#16a34a';
-      setTimeout(() => {
-        btn.innerText = origText;
-        btn.style.color = '';
-      }, 1800);
-    }
-  }
-
-  /* ==========================================================================
-     BLOCK 2: AVOK Recommendations Calculations
-     ========================================================================== */
   function recalculateBlock2() {
     switch (state.currentAvok) {
       case 'du4_1': calcAvokDU4_1(); break;
@@ -399,23 +309,32 @@
   }
 
   function calcAvokDU4_1() {
-    const Lk = parseFloat(document.getElementById('du4_1_Lk')?.value) || 24;
+    const rawLk = document.getElementById('du4_1_Lk')?.value;
+    const rawQ = document.getElementById('du4_1_Q')?.value;
+
+    if (!rawLk || !rawQ) {
+      updateSummaryMetric('avok_res_main_val', '—', 'м³/ч');
+      updateSummaryMetric('avok_res_sub1_val', '—', 'Па');
+      updateSummaryMetric('avok_res_sub2_val', '—', '');
+      return;
+    }
+
+    const Lk = parseFloat(rawLk) || 0;
     const Bk = parseFloat(document.getElementById('du4_1_Bk')?.value) || 2.4;
     const Hk = parseFloat(document.getElementById('du4_1_Hk')?.value) || 2.8;
-    const Q = parseFloat(document.getElementById('du4_1_Q')?.value) || 1200;
-    const Ta = parseFloat(document.getElementById('du4_1_Ta')?.value) || 24;
+    const Q = parseFloat(rawQ) || 0;
+    const Ta = 24;
 
     const smoke_layer_h = 0.5 * Hk;
-    const G_smoke = 0.071 * Math.pow(Q, 1/3) * Math.pow(Hk - smoke_layer_h, 5/3) + 0.0018 * Q;
-    const T_smoke = Ta + (Q / (1.005 * G_smoke));
+    const G_smoke = 0.071 * Math.pow(Q, 1/3) * Math.pow(Math.max(0.1, Hk - smoke_layer_h), 5/3) + 0.0018 * Q;
+    const T_smoke = Ta + (G_smoke > 0 ? (Q / (1.005 * G_smoke)) : 0);
     const rho_smoke = 353 / (273 + Math.min(600, T_smoke));
     const L_smoke = (G_smoke / rho_smoke) * 3600;
-
-    const P_fan = 380; // Pa
+    const P_fan = 380;
 
     updateSummaryMetric('avok_res_main_val', Math.round(L_smoke).toLocaleString('ru-RU'), 'м³/ч');
     updateSummaryMetric('avok_res_sub1_val', P_fan, 'Па');
-    updateSummaryMetric('avok_res_sub2_val', Math.round(T_smoke), '°C');
+    updateSummaryMetric('avok_res_sub2_val', Math.round(T_smoke) + ' °C', '');
 
     state.lastResults.avok = {
       type: 'ДУ4-1 (Дымоудаление из коридора)',
@@ -434,7 +353,15 @@
   }
 
   function calcAvokPD4_1() {
-    const floors = parseFloat(document.getElementById('pd4_1_floors')?.value) || 16;
+    const rawFloors = document.getElementById('pd4_1_floors')?.value;
+    if (!rawFloors) {
+      updateSummaryMetric('avok_res_main_val', '—', 'м³/ч');
+      updateSummaryMetric('avok_res_sub1_val', '—', 'Па');
+      updateSummaryMetric('avok_res_sub2_val', '—', '');
+      return;
+    }
+
+    const floors = parseFloat(rawFloors) || 0;
     const b_door = parseFloat(document.getElementById('pd4_1_b_door')?.value) || 0.9;
     const h_door = parseFloat(document.getElementById('pd4_1_h_door')?.value) || 2.1;
     const b_type = document.getElementById('pd4_1_building_type')?.value || 'living';
@@ -443,13 +370,13 @@
     const F_door = b_door * h_door;
     const rho = 1.25;
     const G_door = v_min * F_door * rho;
-    const G_leaks = (floors - 1) * Math.sqrt(35 / 196000);
+    const G_leaks = Math.max(0, floors - 1) * Math.sqrt(35 / 196000);
     const G_total = G_door + G_leaks;
     const L_total = (G_total * 3600) / rho;
 
     updateSummaryMetric('avok_res_main_val', Math.round(L_total).toLocaleString('ru-RU'), 'м³/ч');
     updateSummaryMetric('avok_res_sub1_val', '45', 'Па');
-    updateSummaryMetric('avok_res_sub2_val', G_total.toFixed(2), 'кг/с');
+    updateSummaryMetric('avok_res_sub2_val', G_total.toFixed(2) + ' кг/с', '');
 
     state.lastResults.avok = {
       type: 'ПД4-1 (Подпор в лестничную клетку)',
@@ -468,7 +395,15 @@
   }
 
   function calcAvokPD4_2() {
-    const floors = parseFloat(document.getElementById('pd4_2_floors')?.value) || 16;
+    const rawFloors = document.getElementById('pd4_2_floors')?.value;
+    if (!rawFloors) {
+      updateSummaryMetric('avok_res_main_val', '—', 'м³/ч');
+      updateSummaryMetric('avok_res_sub1_val', '—', 'Па');
+      updateSummaryMetric('avok_res_sub2_val', '—', '');
+      return;
+    }
+
+    const floors = parseFloat(rawFloors) || 0;
     const elevators = parseFloat(document.getElementById('pd4_2_elevators')?.value) || 1;
     const rho = 1.25;
 
@@ -477,7 +412,7 @@
 
     updateSummaryMetric('avok_res_main_val', Math.round(L_total).toLocaleString('ru-RU'), 'м³/ч');
     updateSummaryMetric('avok_res_sub1_val', '35', 'Па');
-    updateSummaryMetric('avok_res_sub2_val', (L_total * rho / 3600).toFixed(2), 'кг/с');
+    updateSummaryMetric('avok_res_sub2_val', (L_total * rho / 3600).toFixed(2) + ' кг/с', '');
 
     state.lastResults.avok = {
       type: 'ПД4-2 (Подпор в шахту лифта)',
@@ -495,7 +430,15 @@
   }
 
   function calcAvokPD4_7() {
-    const w = parseFloat(document.getElementById('pd4_7_w')?.value) || 1.0;
+    const rawW = document.getElementById('pd4_7_w')?.value;
+    if (!rawW) {
+      updateSummaryMetric('avok_res_main_val', '—', 'м³/ч');
+      updateSummaryMetric('avok_res_sub1_val', '—', 'Па');
+      updateSummaryMetric('avok_res_sub2_val', '—', '');
+      return;
+    }
+
+    const w = parseFloat(rawW) || 0;
     const h = parseFloat(document.getElementById('pd4_7_h')?.value) || 2.1;
     const v = parseFloat(document.getElementById('pd4_7_v')?.value) || 1.3;
     const rho = 1.25;
@@ -506,7 +449,7 @@
 
     updateSummaryMetric('avok_res_main_val', Math.round(L).toLocaleString('ru-RU'), 'м³/ч');
     updateSummaryMetric('avok_res_sub1_val', '25', 'Па');
-    updateSummaryMetric('avok_res_sub2_val', v.toFixed(2), 'м/с');
+    updateSummaryMetric('avok_res_sub2_val', v.toFixed(2) + ' м/с', '');
 
     state.lastResults.avok = {
       type: 'ПД4-7 (Зона ПБЗ - открытая дверь)',
@@ -524,7 +467,15 @@
   }
 
   function calcAvokPD4_8() {
-    const w = parseFloat(document.getElementById('pd4_8_w')?.value) || 0.9;
+    const rawW = document.getElementById('pd4_8_w')?.value;
+    if (!rawW) {
+      updateSummaryMetric('avok_res_main_val', '—', 'м³/ч');
+      updateSummaryMetric('avok_res_sub1_val', '—', 'Па');
+      updateSummaryMetric('avok_res_sub2_val', '—', '');
+      return;
+    }
+
+    const w = parseFloat(rawW) || 0;
     const h = parseFloat(document.getElementById('pd4_8_h')?.value) || 2.1;
     const rho = 1.25;
 
@@ -534,7 +485,7 @@
 
     updateSummaryMetric('avok_res_main_val', Math.round(L).toLocaleString('ru-RU'), 'м³/ч');
     updateSummaryMetric('avok_res_sub1_val', '30', 'Па');
-    updateSummaryMetric('avok_res_sub2_val', G.toFixed(2), 'кг/с');
+    updateSummaryMetric('avok_res_sub2_val', G.toFixed(2) + ' кг/с', '');
 
     state.lastResults.avok = {
       type: 'ПД4-8 (Тамбур-шлюз перед ЛК)',
@@ -551,7 +502,15 @@
   }
 
   function calcAvokPD7_a() {
-    const doors = parseFloat(document.getElementById('pd7_a_doors')?.value) || 2;
+    const rawDoors = document.getElementById('pd7_a_doors')?.value;
+    if (!rawDoors) {
+      updateSummaryMetric('avok_res_main_val', '—', 'м³/ч');
+      updateSummaryMetric('avok_res_sub1_val', '—', 'Па');
+      updateSummaryMetric('avok_res_sub2_val', '—', '');
+      return;
+    }
+
+    const doors = parseFloat(rawDoors) || 0;
     const reqP = parseFloat(document.getElementById('pd7_a_reqP')?.value) || 20;
     const rho = 1.25;
 
@@ -560,7 +519,7 @@
 
     updateSummaryMetric('avok_res_main_val', Math.round(L_total).toLocaleString('ru-RU'), 'м³/ч');
     updateSummaryMetric('avok_res_sub1_val', reqP, 'Па');
-    updateSummaryMetric('avok_res_sub2_val', (G_leak * 1000).toFixed(1), 'г/с');
+    updateSummaryMetric('avok_res_sub2_val', (G_leak * 1000).toFixed(1) + ' г/с', '');
 
     state.lastResults.avok = {
       type: 'ПД7-а (Зона ПБЗ - закрытая дверь)',
@@ -576,9 +535,6 @@
     };
   }
 
-  /* ==========================================================================
-     BLOCK 3: GOST 34060 Duct Network & Leakage Engine (from APK)
-     ========================================================================== */
   function recalculateBlock3() {
     const factP = parseFloat(document.getElementById('b3_factP')?.value) || 400;
     const factL = parseFloat(document.getElementById('b3_factL')?.value) || 25;
@@ -656,6 +612,7 @@
       case 'D2': return `Сечение ${p.A} × ${p.B} м, Длина L = ${p.L} м`;
       case 'O1': return `Диаметр D = ${p.D} м, Радиус R = ${p.R} м, Угол = ${p.A}°`;
       case 'O2': return `Сечение ${p.A} × ${p.B} м, Радиус R = ${p.R} м, Угол = ${p.A}°`;
+      case 'A1': return `D1 = ${p.D1} м → D2 = ${p.D2} м, L = ${p.L} м`;
       case 'A3': return `Сечение ${p.A} × ${p.B} м → ${p.A1} × ${p.B1} м, Длина L = ${p.L} м`;
       case 'E1': return `Круг диаметром D = ${p.D} м`;
       case 'E2': return `Прямоугольник ${p.A} × ${p.B} м`;
@@ -768,7 +725,6 @@
         fieldsContainer.appendChild(group);
       });
 
-      // Bind live recalculation of area inside modal
       fieldsContainer.querySelectorAll('.el-modal-input').forEach(inp => {
         inp.addEventListener('input', updateModalLiveArea);
       });
@@ -857,10 +813,6 @@
     }
   }
 
-
-  /* ==========================================================================
-     RELIABLE STANDALONE PROTOCOL GENERATION & PRINT ENGINE
-     ========================================================================== */
   function generateProtocolHTML() {
     const meta = state.protocolMeta;
     let tableHtml = '';
@@ -902,7 +854,7 @@
         <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Распределение параметров по контрольным этажам (выборка):</h4>
         <table class="protocol-grid-data">
           <tr><th>Этаж</th><th>Давление в шахте Psi</th><th>Утечка клапана Gdpn</th><th>Расход на участке Li</th></tr>
-          ${rows}
+          ${rows || '<tr><td colspan="4">Данные по этажам отсутствуют</td></tr>'}
         </table>
       `;
       conclusionText = `Заключение: Система противодымной вентиляции ${meta.systemName} обеспечивает расчетный расход воздуха ${res.L0 || 0} м³/ч при напоре вентилятора ${res.Psa || 0} Па в соответствии с требованиями ГОСТ Р 53300-2009.`;
@@ -924,62 +876,13 @@
         </table>
         <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Результаты расчета параметров противодымной вентиляции:</h4>
         <table class="protocol-table-info">
-          <tr><td class="field-name">${res.mainLabel}:</td><td><b style="font-size:14px;">${res.mainVal}</b></td></tr>
-          <tr><td class="field-name">${res.sub1Label}:</td><td><b>${res.sub1Val}</b></td></tr>
-          <tr><td class="field-name">${res.sub2Label}:</td><td><b>${res.sub2Val}</b></td></tr>
+          <tr><td class="field-name">${res.mainLabel || 'Расход воздуха'}:</td><td><b style="font-size:14px;">${res.mainVal || '—'}</b></td></tr>
+          <tr><td class="field-name">${res.sub1Label || 'Давление'}:</td><td><b>${res.sub1Val || '—'}</b></td></tr>
+          <tr><td class="field-name">${res.sub2Label || 'Показатель'}:</td><td><b>${res.sub2Val || '—'}</b></td></tr>
           ${detailsRows}
         </table>
       `;
       conclusionText = `Заключение: Расчетные параметры системы противодымной вентиляции ${meta.systemName} соответствуют требованиям нормативов АВОК и СП 7.13130.`;
-
-    } else {
-      const res = state.lastResults.block3 || {};
-      protocolTitle = 'ПРОТОКОЛ ИСПЫТАНИЯ ВОЗДУХОВОДА НА ГЕРМЕТИЧНОСТЬ (ГОСТ 34060)';
-      
-      let elemRows = '';
-      (res.elements || []).forEach((el, idx) => {
-        elemRows += `<tr><td>${idx + 1}</td><td style="text-align:left;">${el.name}</td><td>${el.type}</td><td>${el.s.toFixed(2)} м²</td></tr>`;
-      });
-
-      tableHtml = `
-        <table class="protocol-table-info">
-          <tr><td class="field-name">Объект / Зона:</td><td>${meta.objectName}</td><td class="field-name">Дата испытания:</td><td>${meta.date}</td></tr>
-          <tr><td class="field-name">Наименование системы:</td><td>${meta.systemName}</td><td class="field-name">Номер протокола:</td><td>№ ${meta.number}</td></tr>
-          <tr><td class="field-name">Испытываемый участок:</td><td>${meta.section}</td><td class="field-name">Приборы измерений:</td><td>${meta.instruments}</td></tr>
-        </table>
-
-        <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Спецификация испытываемых элементов воздуховода:</h4>
-        <table class="protocol-grid-data">
-          <tr><th>№</th><th>Наименование элемента</th><th>Тип</th><th>Развернутая площадь S</th></tr>
-          ${elemRows}
-          <tr style="background:#f1f5f9; font-weight:bold;">
-            <td colspan="3" style="text-align:right;">ИТОГО РАЗВЕРНУТАЯ ПЛОЩАДЬ СЕТИ S:</td>
-            <td>${res.totalS || 0} м²</td>
-          </tr>
-        </table>
-
-        <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Показатели герметичности сети:</h4>
-        <table class="protocol-grid-data">
-          <tr>
-            <th>Фактическое давление Pф</th>
-            <th>Фактический расход утечки Lф</th>
-            <th>Фактическая утечка Lф.ут</th>
-            <th>Требуемый класс</th>
-            <th>Допустимая утечка Lдоп</th>
-          </tr>
-          <tr>
-            <td>${res.factP || 0} Па</td>
-            <td>${res.factL || 0} м³/ч</td>
-            <td><b>${res.factLeak || 0} м³/(ч·м²)</b></td>
-            <td>Класс ${res.reqClass || 'B'}</td>
-            <td><b>${res.allowLeak || 0} м³/(ч·м²)</b></td>
-          </tr>
-        </table>
-      `;
-
-      conclusionText = res.isPassed
-        ? `Заключение: Испытываемый воздуховод ОБЕСПЕЧИВАЕТ требуемую герметичность по классу ${res.reqClass} (ГОСТ 34060).`
-        : `Заключение: Испытываемый воздуховод НЕ ОБЕСПЕЧИВАЕТ требуемую герметичность по классу ${res.reqClass} (ГОСТ 34060). Требуется дополнительная герметизация стыков.`;
     }
 
     return `
@@ -1022,7 +925,6 @@
     `;
   }
 
-  // Open modal and render preview
   window.calcEngineOpenProtocol = function () {
     recalculateCurrent();
     const html = generateProtocolHTML();
@@ -1048,7 +950,6 @@
     }
   };
 
-  // Robust Native Print in Dedicated Window (100% reliable, zero blank pages)
   window.calcEngineDirectPrint = function () {
     recalculateCurrent();
     const bodyContent = generateProtocolHTML();
@@ -1115,7 +1016,7 @@
   function updateSummaryMetric(id, val, unit) {
     const el = document.getElementById(id);
     if (el) {
-      el.innerHTML = `${val} <span class="unit">${unit}</span>`;
+      el.innerHTML = `${val} ${unit ? `<span class="unit">${unit}</span>` : ''}`;
     }
   }
 
@@ -1124,5 +1025,4 @@
   } else {
     init();
   }
-
 })();
