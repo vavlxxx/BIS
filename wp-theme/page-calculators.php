@@ -17,50 +17,53 @@ $banner_image = bis_get_page_banner_image_url($page_id);
 ?>
 
 <main class="calculators-page">
-    <!-- Hero Banner -->
-    <section class="calc-hero-wrap">
-        <div class="calc-hero-grid-pattern"></div>
-        <div class="calc-hero-inner">
-            <div class="calc-badge">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="16" y1="18" x2="16" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/><line x1="8" y1="18" x2="8" y2="18.01"/></svg>
-                Расчетный комплекс БИС
+    <!-- Standard Hero Section -->
+    <section class="news-hero" style="padding-inline: 8vw;">
+        <?php if ($banner_image) : ?>
+            <div class="news-hero__media">
+                <img src="<?php echo esc_url($banner_image); ?>" alt="<?php echo esc_attr($banner_title); ?>" decoding="async">
             </div>
-            <h1 class="calc-hero-title bis-condensed"><?php echo esc_html($banner_title); ?></h1>
-            <p class="calc-hero-text"><?php echo nl2br(esc_html($banner_subtitle)); ?></p>
+        <?php endif; ?>
+        <div class="news-hero__overlay mw-1400px">
+            <h1 class="news-hero__title bis-condensed"><?php echo esc_html($banner_title); ?></h1>
+            <?php if (!empty($banner_subtitle)) : ?>
+                <p class="news-hero__text"><?php echo nl2br(esc_html($banner_subtitle)); ?></p>
+            <?php endif; ?>
         </div>
     </section>
 
-    <!-- Breadcrumbs -->
-    <section class="calc-breadcrumbs-bar">
-        <nav class="calc-breadcrumbs-nav">
+    <!-- Standard Breadcrumbs Section -->
+    <section class="breadcrumbs-section">
+        <nav class="project-breadcrumbs mw-1400px">
             <a href="<?php echo esc_url(home_url('/')); ?>">Главная</a>
-            <span class="delimiter">/</span>
-            <span class="current"><?php echo esc_html($banner_title); ?></span>
+            <span class="breadcrumbs-delimiter">/</span>
+            <span><?php echo esc_html($banner_title); ?></span>
         </nav>
     </section>
 
-    <!-- Main Container -->
-    <div class="calc-body-wrap">
-        <!-- 3 Main Block Selectors -->
-        <div class="calc-nav-grid">
-            <div class="calc-nav-card active" data-block="block1">
-                <span class="calc-nav-card__tag">Блок 1 • ГОСТ Р 53300-2009</span>
-                <span class="calc-nav-card__title">Аэродинамика и утечки шахты</span>
-                <span class="calc-nav-card__desc">Поэтажный расчет потерь давления и утечек через закрытые дымовые клапаны (Приложение Б)</span>
-            </div>
+    <!-- Main Calculators Section -->
+    <section class="calculators-section">
+        <div class="calculators-section__container mw-1400px">
+            <!-- 3 Main Block Selectors -->
+            <div class="calc-nav-grid">
+                <div class="calc-nav-card active" data-block="block1">
+                    <span class="calc-nav-card__tag">Блок 1 • ГОСТ Р 53300-2009</span>
+                    <span class="calc-nav-card__title">Аэродинамика и утечки шахты</span>
+                    <span class="calc-nav-card__desc">Поэтажный расчет потерь давления и утечек через закрытые дымовые клапаны (Приложение Б)</span>
+                </div>
 
-            <div class="calc-nav-card" data-block="block2">
-                <span class="calc-nav-card__tag">Блок 2 • Рекомендации АВОК</span>
-                <span class="calc-nav-card__title">Противодымная вентиляция (6 видов)</span>
-                <span class="calc-nav-card__desc">Расчет дымоудаления из коридоров, подпора в ЛК, шахты лифтов, зоны ПБЗ и тамбур-шлюзы</span>
-            </div>
+                <div class="calc-nav-card" data-block="block2">
+                    <span class="calc-nav-card__tag">Блок 2 • Рекомендации АВОК</span>
+                    <span class="calc-nav-card__title">Противодымная вентиляция (6 видов)</span>
+                    <span class="calc-nav-card__desc">Расчет дымоудаления из коридоров, подпора в ЛК, шахты лифтов, зоны ПБЗ и тамбур-шлюзы</span>
+                </div>
 
-            <div class="calc-nav-card" data-block="block3">
-                <span class="calc-nav-card__tag">Блок 3 • ГОСТ 34060</span>
-                <span class="calc-nav-card__title">Конструктор и герметичность сети</span>
-                <span class="calc-nav-card__desc">Развернутая площадь фасонных элементов и проверка классов герметичности (A, B, C)</span>
+                <div class="calc-nav-card" data-block="block3">
+                    <span class="calc-nav-card__tag">Блок 3 • ГОСТ 34060</span>
+                    <span class="calc-nav-card__title">Конструктор и герметичность сети</span>
+                    <span class="calc-nav-card__desc">Развернутая площадь фасонных элементов и проверка классов герметичности (A, B, C)</span>
+                </div>
             </div>
-        </div>
 
         <!-- ====================================================================
              BLOCK 1: GOST R 53300-2009 (Appendix B)
@@ -193,13 +196,17 @@ $banner_image = bis_get_page_banner_image_url($page_id);
                             </table>
                         </div>
 
-                        <div class="calc-table-btns">
+                        <div class="calc-table-btns" style="align-items:center;">
                             <button type="button" id="b1BtnAddFloor" class="btn btn-outline btn--small">
                                 + Добавить этаж
                             </button>
-                            <button type="button" id="b1BtnGenFloors" class="btn btn-ghost btn--small">
-                                ⚡ Задать количество этажей (N)
-                            </button>
+                            <div style="display:inline-flex; align-items:center; gap:6px; margin-left:auto;">
+                                <label for="b1_floor_count_input" style="font-size:12px; color:var(--text-light); white-space:nowrap;">Кол-во этажей:</label>
+                                <input type="number" id="b1_floor_count_input" value="20" min="1" max="100" class="calc-field-input" style="width:65px; height:34px; text-align:center; padding:4px;">
+                                <button type="button" id="b1BtnGenFloors" class="btn btn-ghost btn--small">
+                                    Сгенерировать
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -642,6 +649,49 @@ $banner_image = bis_get_page_banner_image_url($page_id);
                         </button>
                     </div>
                 </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         IN-PAGE MODAL: ADD / EDIT DUCT ELEMENT (BLOCK 3)
+         ==================================================================== -->
+    <div id="calcElementModal" class="calc-modal-overlay">
+        <div class="calc-modal-box calc-modal-box--medium">
+            <div class="calc-modal-box__head">
+                <h3 id="calcElementModalTitle" class="calc-modal-box__title">Добавление элемента воздуховода</h3>
+                <button type="button" class="calc-modal-box__close" onclick="window.calcEngineCloseElementModal()">&times;</button>
+            </div>
+
+            <div class="calc-modal-box__body">
+                <div class="element-modal-type-badge">
+                    <span id="elModalIcon" class="icon">⭕</span>
+                    <div>
+                        <div id="elModalTypeName" class="name">Прямой круглый участок</div>
+                        <span id="elModalTypeTag" class="tag">D1</span>
+                    </div>
+                </div>
+
+                <form id="calcElementForm" onsubmit="event.preventDefault(); window.calcEngineSaveElement();">
+                    <div id="elModalFieldsContainer" class="calc-grid-fields">
+                        <!-- Populated dynamically based on element type -->
+                    </div>
+
+                    <div class="element-modal-preview">
+                        <span class="label">Развернутая площадь элемента S:</span>
+                        <span id="elModalCalculatedArea" class="value">0.00 <span class="unit">м²</span></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="calc-modal-box__foot">
+                <button type="button" class="btn btn-outline" onclick="window.calcEngineCloseElementModal()">
+                    Отмена
+                </button>
+                <button type="button" class="btn btn-primary" onclick="window.calcEngineSaveElement()">
+                    Добавить в спецификацию
+                </button>
             </div>
         </div>
     </div>
@@ -691,7 +741,9 @@ $banner_image = bis_get_page_banner_image_url($page_id);
                 </div>
 
                 <!-- On-Screen Live Preview Container -->
-                <div id="protocolPrintArea"></div>
+                <div class="protocol-preview-scroll-wrapper">
+                    <div id="protocolPrintArea"></div>
+                </div>
             </div>
 
             <div class="calc-modal-box__foot">

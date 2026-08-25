@@ -340,8 +340,9 @@
   }
 
   function promptGenerateFloors() {
-    const count = parseInt(prompt('Введите общее количество этажей в шахте:', '20'), 10);
-    if (!count || count < 1 || count > 100) return;
+    const countInput = document.getElementById('b1_floor_count_input');
+    const count = parseInt(countInput ? countInput.value : '20', 10) || 20;
+    if (count < 1 || count > 100) return;
     initDefaultFloors(count);
     renderBlock1Table();
     recalculateBlock1();
@@ -370,7 +371,17 @@
 
     renderBlock1Table();
     recalculateBlock1();
-    alert('Базовые параметры успешно применены ко всем участкам шахты!');
+
+    const btn = document.getElementById('b1BtnApplyDefaults');
+    if (btn) {
+      const origText = btn.innerText;
+      btn.innerText = '✓ Параметры применены';
+      btn.style.color = '#16a34a';
+      setTimeout(() => {
+        btn.innerText = origText;
+        btn.style.color = '';
+      }, 1800);
+    }
   }
 
   /* ==========================================================================
@@ -652,92 +663,200 @@
     }
   }
 
-  function openAddElementDialog(type) {
-    let name = 'Элемент сети';
-    let params = {};
+  const ELEMENT_DEFS = {
+    D1: {
+      name: 'Прямой круглый участок',
+      icon: '⭕',
+      fields: [
+        { key: 'D', label: 'Диаметр воздуховода D', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'L', label: 'Длина участка L', unit: 'м', def: 4.0, step: 0.5 }
+      ]
+    },
+    D2: {
+      name: 'Прямой прямоугольный участок',
+      icon: '⏹️',
+      fields: [
+        { key: 'A', label: 'Ширина стороны A', unit: 'м', def: 0.5, step: 0.05 },
+        { key: 'B', label: 'Высота стороны B', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'L', label: 'Длина участка L', unit: 'м', def: 5.0, step: 0.5 }
+      ]
+    },
+    O1: {
+      name: 'Отвод круглый',
+      icon: '↪️',
+      fields: [
+        { key: 'D', label: 'Диаметр воздуховода D', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'R', label: 'Радиус поворота R', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'A', label: 'Угол поворота α', unit: '°', def: 90, step: 15 }
+      ]
+    },
+    O2: {
+      name: 'Отвод прямоугольный',
+      icon: '🔄',
+      fields: [
+        { key: 'A', label: 'Размер стороны A', unit: 'м', def: 0.5, step: 0.05 },
+        { key: 'B', label: 'Размер стороны B', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'R', label: 'Радиус поворота R', unit: 'м', def: 0.5, step: 0.05 },
+        { key: 'A', label: 'Угол поворота α', unit: '°', def: 90, step: 15 }
+      ]
+    },
+    A1: {
+      name: 'Переход круглый (D1 → D2)',
+      icon: '🔻',
+      fields: [
+        { key: 'D1', label: 'Начальный диаметр D1', unit: 'м', def: 0.5, step: 0.05 },
+        { key: 'D2', label: 'Конечный диаметр D2', unit: 'м', def: 0.3, step: 0.05 },
+        { key: 'L', label: 'Длина перехода L', unit: 'м', def: 0.5, step: 0.1 }
+      ]
+    },
+    A3: {
+      name: 'Переход прямоугольный',
+      icon: '🔻',
+      fields: [
+        { key: 'A', label: 'Начальная ширина A', unit: 'м', def: 0.6, step: 0.05 },
+        { key: 'B', label: 'Начальная высота B', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'A1', label: 'Конечная ширина A1', unit: 'м', def: 0.4, step: 0.05 },
+        { key: 'B1', label: 'Конечная высота B1', unit: 'м', def: 0.3, step: 0.05 },
+        { key: 'L', label: 'Длина перехода L', unit: 'м', def: 0.5, step: 0.1 }
+      ]
+    },
+    E1: {
+      name: 'Заглушка круглая',
+      icon: '🔵',
+      fields: [
+        { key: 'D', label: 'Диаметр заглушки D', unit: 'м', def: 0.4, step: 0.05 }
+      ]
+    },
+    E2: {
+      name: 'Заглушка прямоугольная',
+      icon: '⬛',
+      fields: [
+        { key: 'A', label: 'Ширина заглушки A', unit: 'м', def: 0.5, step: 0.05 },
+        { key: 'B', label: 'Высота заглушки B', unit: 'м', def: 0.4, step: 0.05 }
+      ]
+    }
+  };
 
-    switch (type) {
-      case 'D1':
-        const d = parseFloat(prompt('Диаметр воздуховода D (м):', '0.4')) || 0.4;
-        const l = parseFloat(prompt('Длина участка L (м):', '4.0')) || 4.0;
-        name = 'Прямой круглый участок';
-        params = { D: d, L: l };
-        break;
-      case 'D2':
-        const a = parseFloat(prompt('Ширина стороны A (м):', '0.5')) || 0.5;
-        const b = parseFloat(prompt('Высота стороны B (м):', '0.4')) || 0.4;
-        const l2 = parseFloat(prompt('Длина участка L (м):', '5.0')) || 5.0;
-        name = 'Прямой прямоугольный участок';
-        params = { A: a, B: b, L: l2 };
-        break;
-      case 'O1':
-        const od = parseFloat(prompt('Диаметр D (м):', '0.4')) || 0.4;
-        const or = parseFloat(prompt('Радиус поворота R (м):', '0.4')) || 0.4;
-        const oa = parseFloat(prompt('Угол отвода (градусы):', '90')) || 90;
-        name = 'Отвод круглый';
-        params = { D: od, R: or, A: oa };
-        break;
-      case 'O2':
-        const oa2 = parseFloat(prompt('Размер стороны A (м):', '0.5')) || 0.5;
-        const ob2 = parseFloat(prompt('Размер стороны B (м):', '0.4')) || 0.4;
-        const or2 = parseFloat(prompt('Радиус поворота R (м):', '0.5')) || 0.5;
-        const oang2 = parseFloat(prompt('Угол отвода (градусы):', '90')) || 90;
-        name = 'Отвод прямоугольный';
-        params = { A: oa2, B: ob2, R: or2, A: oang2 };
-        break;
-      case 'A3':
-        const a1 = parseFloat(prompt('Начальная ширина A (м):', '0.6')) || 0.6;
-        const b1 = parseFloat(prompt('Начальная высота B (м):', '0.4')) || 0.4;
-        const a2 = parseFloat(prompt('Конечная ширина A1 (м):', '0.4')) || 0.4;
-        const b2 = parseFloat(prompt('Конечная высота B1 (м):', '0.3')) || 0.3;
-        const al = parseFloat(prompt('Длина перехода L (м):', '0.5')) || 0.5;
-        name = 'Переход прямоугольный';
-        params = { A: a1, B: b1, A1: a2, B1: b2, L: al };
-        break;
-      case 'E1':
-        const ed = parseFloat(prompt('Диаметр заглушки D (м):', '0.4')) || 0.4;
-        name = 'Заглушка круглая';
-        params = { D: ed };
-        break;
-      case 'E2':
-        const ea = parseFloat(prompt('Ширина заглушки A (м):', '0.5')) || 0.5;
-        const eb = parseFloat(prompt('Высота заглушки B (м):', '0.4')) || 0.4;
-        name = 'Заглушка прямоугольная';
-        params = { A: ea, B: eb };
-        break;
-      default:
-        return;
+  function openAddElementDialog(type) {
+    const config = ELEMENT_DEFS[type] || ELEMENT_DEFS.D1;
+    state.activeElementType = type;
+
+    const modal = document.getElementById('calcElementModal');
+    const titleEl = document.getElementById('calcElementModalTitle');
+    const typeNameEl = document.getElementById('elModalTypeName');
+    const typeTagEl = document.getElementById('elModalTypeTag');
+    const iconEl = document.getElementById('elModalIcon');
+    const fieldsContainer = document.getElementById('elModalFieldsContainer');
+
+    if (titleEl) titleEl.innerText = `Добавление элемента: ${config.name}`;
+    if (typeNameEl) typeNameEl.innerText = config.name;
+    if (typeTagEl) typeTagEl.innerText = type;
+    if (iconEl) iconEl.innerText = config.icon;
+
+    if (fieldsContainer) {
+      fieldsContainer.innerHTML = '';
+      config.fields.forEach(f => {
+        const group = document.createElement('div');
+        group.className = 'calc-form-group';
+        group.innerHTML = `
+          <label for="el_param_${f.key}">${f.label}</label>
+          <div class="calc-field-wrap">
+            <input type="number" id="el_param_${f.key}" data-key="${f.key}" class="calc-field-input calc-field-input--with-unit el-modal-input" value="${f.def}" step="${f.step || '0.1'}">
+            <span class="calc-field-unit">${f.unit}</span>
+          </div>
+        `;
+        fieldsContainer.appendChild(group);
+      });
+
+      // Bind live recalculation of area inside modal
+      fieldsContainer.querySelectorAll('.el-modal-input').forEach(inp => {
+        inp.addEventListener('input', updateModalLiveArea);
+      });
     }
 
+    updateModalLiveArea();
+
+    if (modal) {
+      modal.classList.add('active');
+    }
+  }
+
+  function getModalCurrentParams() {
+    const type = state.activeElementType || 'D1';
+    const config = ELEMENT_DEFS[type] || ELEMENT_DEFS.D1;
+    const params = {};
+    config.fields.forEach(f => {
+      const el = document.getElementById(`el_param_${f.key}`);
+      params[f.key] = el ? (parseFloat(el.value) || f.def) : f.def;
+    });
+    return params;
+  }
+
+  function updateModalLiveArea() {
+    const type = state.activeElementType || 'D1';
+    const params = getModalCurrentParams();
+    const area = calculateArea(type, params);
+    const areaEl = document.getElementById('elModalCalculatedArea');
+    if (areaEl) {
+      areaEl.innerHTML = `${area.toFixed(2)} <span class="unit">м²</span>`;
+    }
+  }
+
+  window.calcEngineCloseElementModal = function() {
+    const modal = document.getElementById('calcElementModal');
+    if (modal) {
+      modal.classList.remove('active');
+    }
+  };
+
+  window.calcEngineSaveElement = function() {
+    const type = state.activeElementType || 'D1';
+    const config = ELEMENT_DEFS[type] || ELEMENT_DEFS.D1;
+    const params = getModalCurrentParams();
     const s = calculateArea(type, params);
+
     state.block3Elements.push({
       id: Date.now(),
       type,
-      name,
+      name: config.name,
       params,
       s
     });
 
     renderBlock3Table();
     recalculateBlock3();
-  }
+    window.calcEngineCloseElementModal();
+  };
 
   function calculateArea(type, p) {
     const pi = Math.PI;
     switch (type) {
-      case 'D1': return pi * p.D * p.L;
-      case 'D2': return 2 * (p.A + p.B) * p.L;
-      case 'O1': return pi * p.D * (pi * p.R * (p.A / 180));
-      case 'O2': return 2 * (p.A + p.B) * (pi * p.R * (p.A / 180));
-      case 'A3':
-        const h1 = Math.sqrt(Math.pow(p.L, 2) + Math.pow((p.B - p.B1)/2, 2));
-        const h2 = Math.sqrt(Math.pow(p.L, 2) + Math.pow((p.A - p.A1)/2, 2));
-        return (p.A + p.A1) * h1 + (p.B + p.B1) * h2;
-      case 'E1': return (pi * Math.pow(p.D, 2)) / 4;
-      case 'E2': return p.A * p.B;
+      case 'D1': return pi * (p.D || 0.4) * (p.L || 4.0);
+      case 'D2': return 2 * ((p.A || 0.5) + (p.B || 0.4)) * (p.L || 5.0);
+      case 'O1': return pi * (p.D || 0.4) * (pi * (p.R || 0.4) * ((p.A || 90) / 180));
+      case 'O2': return 2 * ((p.A || 0.5) + (p.B || 0.4)) * (pi * (p.R || 0.5) * ((p.A || 90) / 180));
+      case 'A1': {
+        const d1 = p.D1 || 0.5;
+        const d2 = p.D2 || 0.3;
+        const l = p.L || 0.5;
+        return pi * ((d1 + d2) / 2) * Math.sqrt(Math.pow(l, 2) + Math.pow((d1 - d2) / 2, 2));
+      }
+      case 'A3': {
+        const a = p.A || 0.6;
+        const b = p.B || 0.4;
+        const a1 = p.A1 || 0.4;
+        const b1 = p.B1 || 0.3;
+        const l = p.L || 0.5;
+        const h1 = Math.sqrt(Math.pow(l, 2) + Math.pow((b - b1)/2, 2));
+        const h2 = Math.sqrt(Math.pow(l, 2) + Math.pow((a - a1)/2, 2));
+        return (a + a1) * h1 + (b + b1) * h2;
+      }
+      case 'E1': return (pi * Math.pow(p.D || 0.4, 2)) / 4;
+      case 'E2': return (p.A || 0.5) * (p.B || 0.4);
       default: return 1.0;
     }
   }
+
 
   /* ==========================================================================
      RELIABLE STANDALONE PROTOCOL GENERATION & PRINT ENGINE
