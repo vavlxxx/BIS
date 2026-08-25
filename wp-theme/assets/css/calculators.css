@@ -1,0 +1,985 @@
+/* ==========================================================================
+   BIS Engineering Calculators Styles (calculators.css)
+   Clean, authentic corporate design (White & Cyan palette) strictly conforming to AGENTS.md
+   ========================================================================== */
+
+.calculators-page {
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* --------------------------------------------------------------------------
+   Section & Container Spacing (Matching standard breadcrumbs and other pages)
+   -------------------------------------------------------------------------- */
+.calculators-section {
+  padding: 32px 8vw 80px 8vw;
+  background: var(--bg);
+}
+
+@media (max-width: 768px) {
+  .calculators-section {
+    padding: 20px 4vw 60px 4vw;
+  }
+}
+
+.calculators-section__container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   3 Main Blocks Selector Cards
+   -------------------------------------------------------------------------- */
+.calc-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 991px) {
+  .calc-nav-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.calc-nav-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 24px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-radius: 0 !important;
+  position: relative;
+}
+
+.calc-nav-card:hover {
+  border-left-color: var(--primary);
+  background: #f8fafc;
+}
+
+.calc-nav-card.active {
+  background: var(--bg);
+  border-color: var(--border);
+  border-left: 4px solid var(--primary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.calc-nav-card__tag {
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.calc-nav-card__title {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.calc-nav-card__desc {
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   Subtabs for AVOK 6 Calculators (Block 2)
+   -------------------------------------------------------------------------- */
+.avok-tabs-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  border-radius: 0 !important;
+}
+
+.avok-tabs-header {
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.avok-tabs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .avok-tabs-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.avok-tab-item {
+  padding: 10px 12px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 0 !important;
+}
+
+.avok-tab-item span.code {
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+}
+
+.avok-tab-item:hover {
+  border-color: var(--primary);
+  background: var(--bg);
+}
+
+.avok-tab-item.active {
+  background: #f0f9fa;
+  border-color: var(--primary);
+  color: var(--dark);
+}
+
+.avok-tab-item.active span.code {
+  color: var(--primary-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Layout Grid: Main column + Light Sidebar
+   -------------------------------------------------------------------------- */
+.calc-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 991px) {
+  .calc-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.calc-main-column {
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Card Panels & Form Groups
+   -------------------------------------------------------------------------- */
+.calc-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 20px;
+  border-radius: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .calc-card {
+    padding: 16px 14px;
+    margin-bottom: 16px;
+  }
+}
+
+.calc-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.calc-card__title {
+  font-size: 17px;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calc-card__title svg {
+  color: var(--primary-dark);
+  flex-shrink: 0;
+}
+
+.calc-norm-pill {
+  font-size: 11px;
+  color: var(--primary-dark);
+  background: rgba(112, 198, 212, 0.12);
+  padding: 4px 10px;
+  font-weight: var(--font-weight-semibold);
+  border-left: 2px solid var(--primary);
+  border-radius: 0 !important;
+}
+
+/* Form Fields Grid */
+.calc-grid-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 18px;
+}
+
+.calc-grid-fields--3cols {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 900px) {
+  .calc-grid-fields--3cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .calc-grid-fields,
+  .calc-grid-fields--3cols {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.calc-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.calc-form-group--full {
+  grid-column: 1 / -1;
+}
+
+.calc-form-group label {
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.calc-form-group label small {
+  color: var(--text-light);
+  font-weight: normal;
+  display: block;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.calc-field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.calc-field-input,
+.calc-field-select {
+  width: 100%;
+  height: 42px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--font-base);
+  transition: all 0.2s ease;
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
+
+.calc-field-input:focus,
+.calc-field-select:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(112, 198, 212, 0.2);
+}
+
+.calc-field-unit {
+  position: absolute;
+  right: 12px;
+  font-size: 12px;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.calc-field-input--with-unit {
+  padding-right: 48px;
+}
+
+/* Quick Bar for Shaft Defaults (Block 1) */
+.shaft-quick-bar {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border-radius: 0 !important;
+}
+
+.shaft-quick-bar__title {
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Clean Table for Floors and Duct Elements
+   -------------------------------------------------------------------------- */
+.calc-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  margin: 14px 0 18px;
+  background: #ffffff;
+}
+
+.calc-clean-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  min-width: 680px;
+}
+
+.calc-clean-table th {
+  background: var(--bg-alt);
+  color: var(--text);
+  font-weight: var(--font-weight-semibold);
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  border-right: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.calc-clean-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: middle;
+  text-align: center;
+}
+
+.calc-clean-table tr:hover td {
+  background-color: var(--bg-alt);
+}
+
+.calc-table-input {
+  height: 34px;
+  padding: 4px 6px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  text-align: center;
+  border-radius: 0 !important;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.calc-table-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(112, 198, 212, 0.2);
+}
+
+.calc-table-select {
+  height: 34px;
+  padding: 4px 6px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  border-radius: 0 !important;
+  width: 100%;
+}
+
+.calc-table-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .calc-table-btns {
+    flex-direction: column;
+  }
+  .calc-table-btns .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Block 3 Elements Builder Grid
+   -------------------------------------------------------------------------- */
+.elements-grid-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .elements-grid-selector {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.element-select-card {
+  padding: 14px 10px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-radius: 0 !important;
+}
+
+.element-select-card:hover {
+  border-color: var(--primary);
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(112, 198, 212, 0.15);
+}
+
+.element-select-card .icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+}
+
+.element-select-card .name {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   Right Summary Sidebar (Clean White & Cyan Style)
+   -------------------------------------------------------------------------- */
+.calc-results-sidebar {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 991px) {
+  .calc-results-sidebar {
+    position: static;
+    top: auto;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+.calc-summary-panel {
+  background: #ffffff;
+  color: var(--text);
+  padding: 24px 22px;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 0 !important;
+}
+
+.calc-summary-panel__header {
+  font-size: 17px;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.calc-summary-panel__header svg {
+  color: var(--primary);
+}
+
+.calc-metric-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.calc-metric-row:last-of-type {
+  border-bottom: none;
+}
+
+.calc-metric-row__label {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.35;
+}
+
+.calc-metric-row__value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #56b9c9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 480px) {
+  .calc-metric-row__value {
+    font-size: 22px;
+  }
+}
+
+.calc-metric-row__value span.unit {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--text);
+  margin-left: 4px;
+}
+
+/* Status Badge */
+.calc-status-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-weight: var(--font-weight-bold);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 16px;
+  border: 1px solid transparent;
+  border-radius: 0 !important;
+}
+
+.calc-status-badge--success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border-color: #86efac;
+}
+
+.calc-status-badge--danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* CTA Button matching primary blue-cyan button in screenshot */
+.btn-calc-cta {
+  width: 100%;
+  padding: 14px 18px;
+  background: #70C6D4;
+  color: #ffffff;
+  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+  border: 1px solid #70C6D4;
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  border-radius: 0 !important;
+  margin-top: 18px;
+}
+
+.btn-calc-cta:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Modal Dialogs (Light theme & responsive)
+   -------------------------------------------------------------------------- */
+.calc-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 17, 24, 0.65);
+  backdrop-filter: blur(2px);
+  z-index: 100000;
+  overflow-y: auto;
+  padding: 20px 12px;
+}
+
+.calc-modal-overlay.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calc-modal-box {
+  background: #ffffff;
+  max-width: 920px;
+  width: 100%;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  border-radius: 0 !important;
+}
+
+.calc-modal-box--medium {
+  max-width: 540px;
+}
+
+@media (max-width: 768px) {
+  .calc-modal-box {
+    max-height: 94vh;
+    width: 96vw;
+  }
+}
+
+.calc-modal-box__head {
+  padding: 16px 22px;
+  background: #ffffff;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--primary);
+}
+
+.calc-modal-box__title {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  color: var(--dark);
+}
+
+.calc-modal-box__close {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  transition: color 0.2s ease;
+}
+
+.calc-modal-box__close:hover {
+  color: var(--dark);
+}
+
+.calc-modal-box__body {
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .calc-modal-box__body {
+    padding: 14px;
+  }
+}
+
+.calc-modal-box__foot {
+  padding: 14px 22px;
+  background: var(--bg-alt);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .calc-modal-box__foot {
+    flex-direction: column;
+  }
+  .calc-modal-box__foot .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Element Modal Specific Styles (Block 3 in-page dialog)
+   -------------------------------------------------------------------------- */
+.element-modal-type-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f0f9fa;
+  border: 1px solid #c7ebf0;
+  margin-bottom: 18px;
+}
+
+.element-modal-type-badge .icon {
+  font-size: 24px;
+}
+
+.element-modal-type-badge .name {
+  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+  color: var(--dark);
+}
+
+.element-modal-type-badge .tag {
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-dark);
+  background: #ffffff;
+  border: 1px solid #70C6D4;
+  padding: 1px 6px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.element-modal-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  margin-top: 16px;
+}
+
+.element-modal-preview .label {
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+}
+
+.element-modal-preview .value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.element-modal-preview .value .unit {
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--text-light);
+}
+
+/* --------------------------------------------------------------------------
+   Official Protocol Preview & Print (Screen & Print)
+   -------------------------------------------------------------------------- */
+.protocol-preview-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+}
+
+.protocol-sheet-container {
+  background: #ffffff;
+  color: #000000;
+  font-family: 'Calibri', 'Arial', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 24px;
+  min-width: 620px;
+}
+
+@media (max-width: 600px) {
+  .protocol-sheet-container {
+    padding: 14px;
+    font-size: 11px;
+  }
+}
+
+.protocol-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.protocol-org-name {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+}
+
+.protocol-org-sub {
+  font-size: 11px;
+  font-weight: normal;
+  color: #475569;
+  margin-top: 2px;
+}
+
+.protocol-stamp-box {
+  text-align: right;
+  font-size: 11px;
+}
+
+.protocol-main-title {
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  margin: 14px 0 4px;
+  text-transform: uppercase;
+}
+
+.protocol-number-date {
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 16px;
+  color: #334155;
+}
+
+.protocol-table-info {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.protocol-table-info td {
+  padding: 5px 8px;
+  border: 1px solid #000;
+  font-size: 12px;
+}
+
+.protocol-table-info td.field-name {
+  font-weight: bold;
+  background: #f8fafc;
+  width: 32%;
+}
+
+.protocol-grid-data {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.protocol-grid-data th,
+.protocol-grid-data td {
+  border: 1px solid #000;
+  padding: 5px 6px;
+  font-size: 11px;
+  text-align: center;
+}
+
+.protocol-grid-data th {
+  background: #f1f5f9;
+  font-weight: bold;
+}
+
+.protocol-conclusion-box {
+  margin: 16px 0;
+  padding: 10px 12px;
+  border: 2px solid #000;
+  background: #f8fafc;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.protocol-signs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 28px;
+  padding-top: 8px;
+}
+
+.sign-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.sign-underline {
+  border-bottom: 1px solid #000;
+  height: 20px;
+}
+
+/* Native Print Setup */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #calcProtocolModal,
+  #calcProtocolModal *,
+  #protocolPrintArea,
+  #protocolPrintArea * {
+    visibility: visible;
+  }
+  #calcProtocolModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: #ffffff !important;
+  }
+  .calc-modal-box {
+    border: none !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .calc-modal-box__head,
+  .calc-modal-box__foot,
+  .calc-card,
+  .protocol-preview-scroll-wrapper {
+    border: none !important;
+  }
+  .calc-modal-box__head,
+  .calc-modal-box__foot,
+  .calc-card {
+    display: none !important;
+  }
+  .protocol-sheet-container {
+    border: none !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+  }
+}
+
+

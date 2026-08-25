@@ -14,11 +14,12 @@ function bis_theme_scripts() {
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', array(), null);
 
     $css_files = array(
-        'bis-base'       => 'assets/css/base.css',
-        'bis-front-page' => 'assets/css/front-page.css',
-        'bis-news'       => 'assets/css/news.css',
-        'bis-team'       => 'assets/css/team.css',
-        'bis-content'    => 'assets/css/content.css',
+        'bis-base'        => 'assets/css/base.css',
+        'bis-front-page'  => 'assets/css/front-page.css',
+        'bis-news'        => 'assets/css/news.css',
+        'bis-team'        => 'assets/css/team.css',
+        'bis-content'     => 'assets/css/content.css',
+        'bis-calculators' => 'assets/css/calculators.css',
     );
 
     $style_deps = array();
@@ -40,7 +41,8 @@ function bis_theme_scripts() {
     wp_enqueue_script('bis-site-team', get_template_directory_uri() . '/assets/js/site-team.js', array(), bis_get_asset_version('assets/js/site-team.js'), true);
     wp_enqueue_script('bis-site-project', get_template_directory_uri() . '/assets/js/site-project.js', array('bis-site-forms'), bis_get_asset_version('assets/js/site-project.js'), true);
     wp_enqueue_script('bis-site-news-ajax', get_template_directory_uri() . '/assets/js/site-news-ajax.js', array(), bis_get_asset_version('assets/js/site-news-ajax.js'), true);
-    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax'), bis_get_asset_version('assets/js/site-app.js'), true);
+    wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array(), bis_get_asset_version('assets/js/site-calculators.js'), true);
+    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax', 'bis-site-calculators'), bis_get_asset_version('assets/js/site-app.js'), true);
 
     // Enqueue Slider Script
     if (is_front_page()) {
@@ -326,20 +328,39 @@ function bis_admin_enqueue_scripts($hook) {
 }
 add_action('admin_enqueue_scripts', 'bis_admin_enqueue_scripts');
 
+function bis_calculators_rewrite_rules() {
+    add_rewrite_rule('^calculators/?$', 'index.php?bis_calculators=1', 'top');
+}
+add_action('init', 'bis_calculators_rewrite_rules');
+
+function bis_calculators_query_vars($vars) {
+    $vars[] = 'bis_calculators';
+    return $vars;
+}
+add_filter('query_vars', 'bis_calculators_query_vars');
+
+function bis_calculators_pre_handle_404($preempt, $wp_query) {
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators') {
+        return true;
+    }
+    return $preempt;
+}
+add_filter('pre_handle_404', 'bis_calculators_pre_handle_404', 10, 2);
+
 function bis_calculators_template_include($template) {
     $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-    if ($path === 'calculators' || is_page('calculators')) {
+    if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
         $calc_template = get_template_directory() . '/page-calculators.php';
         if (file_exists($calc_template)) {
             global $wp_query;
-            if (is_404()) {
-                $wp_query->is_404 = false;
-                status_header(200);
-            }
+            $wp_query->is_404 = false;
+            status_header(200);
             return $calc_template;
         }
     }
     return $template;
 }
 add_filter('template_include', 'bis_calculators_template_include');
+
 
