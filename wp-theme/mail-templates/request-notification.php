@@ -32,7 +32,7 @@ $footer_note = isset($footer_note) ? (string) $footer_note : '';
                                         <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                             <tr>
                                                 <td style="height:56px;">
-                                                    <img style="max-height:56px; filter: brightness(0) invert(1);" src="<?php echo get_template_directory_uri(); ?>/assets/img/removebg-preview.png"/>
+                                                    <img style="max-height:56px;" src="<?php echo get_template_directory_uri(); ?>/assets/img/bis-logo-white.png"/>
                                                 </td>
                                             </tr>
                                         </table>
