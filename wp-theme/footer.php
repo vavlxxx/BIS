@@ -3,11 +3,11 @@
     <?php
     $documents = array(
       array(
-        'label' => 'Сертификат соответствия ГОСТ Р ИСО 9001-2015 (ISO 9001:2015)',
+        'label' => 'Сертификат соответствия ГОСТ Р ИСО 14644-1-2017 (14644-1-2017)',
         'file' => 'Сертификат ИСО 14 644-1 Чистые помещения.pdf',
       ),
       array(
-        'label' => 'Сертификат ИСО 9001-2015',
+        'label' => 'Сертификат соответствия ГОСТ Р ИСО 9001-2015 (ISO 9001:2015)',
         'file' => 'Сертификат ИСО 9001-2015.pdf',
       ),
       array(
@@ -79,7 +79,9 @@
         <p><a href="#equipment">Оборудование</a></p>
         <p><a href="#experience">Опыт</a></p>
         <p><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></p>
-        <p><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></p>
+        <?php if (is_user_logged_in()) : ?>
+          <p><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></p>
+        <?php endif; ?>
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
         <p><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></p>

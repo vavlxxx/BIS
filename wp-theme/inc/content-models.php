@@ -1825,4 +1825,135 @@ function bis_gratitude_custom_column($column, $post_id) {
 }
 add_action('manage_bis_gratitude_posts_custom_column', 'bis_gratitude_custom_column', 10, 2);
 
+/**
+ * Service admin list columns & ordering.
+ */
+function bis_service_columns($columns) {
+    $new_columns = array();
+    foreach ($columns as $key => $label) {
+        if ('date' === $key) {
+            $new_columns['menu_order'] = 'Порядок';
+        }
+        $new_columns[$key] = $label;
+    }
+    if (!isset($new_columns['menu_order'])) {
+        $new_columns['menu_order'] = 'Порядок';
+    }
+    return $new_columns;
+}
+add_filter('manage_bis_service_posts_columns', 'bis_service_columns');
+
+function bis_service_sortable_columns($columns) {
+    $columns['menu_order'] = 'menu_order';
+    return $columns;
+}
+add_filter('manage_edit-bis_service_sortable_columns', 'bis_service_sortable_columns');
+
+function bis_service_custom_column($column, $post_id) {
+    if ('menu_order' === $column) {
+        $order = (int) get_post_field('menu_order', $post_id);
+        ?>
+        <div class="bis-service-order-cell" data-post-id="<?php echo esc_attr($post_id); ?>">
+            <span class="dashicons dashicons-menu bis-service-drag-handle" title="Перетащите для изменения порядка"></span>
+            <div class="bis-service-order-input-wrap">
+                <input type="number" class="bis-service-order-input" value="<?php echo esc_attr($order); ?>" min="0" step="1" title="Порядок (меньшее значение отображается раньше)">
+                <div class="bis-service-order-btns">
+                    <button type="button" class="bis-order-btn bis-order-btn--up" title="Переместить выше">▲</button>
+                    <button type="button" class="bis-order-btn bis-order-btn--down" title="Переместить ниже">▼</button>
+                </div>
+            </div>
+            <span class="bis-service-order-status dashicons" style="display:none;"></span>
+        </div>
+        <?php
+    }
+}
+add_action('manage_bis_service_posts_custom_column', 'bis_service_custom_column', 10, 2);
+
+function bis_service_admin_order($query) {
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    if ('bis_service' === $query->get('post_type') && !$query->get('orderby')) {
+        $query->set('orderby', 'menu_order');
+        $query->set('order', 'ASC');
+    }
+}
+add_action('pre_get_posts', 'bis_service_admin_order');
+
+/**
+ * AJAX handler for updating a single service's order.
+ */
+function bis_ajax_update_service_order() {
+    check_ajax_referer('bis_service_order_nonce', 'nonce');
+
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(array('message' => 'Недостаточно прав.'));
+    }
+
+    $post_id = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
+    $menu_order = isset($_POST['menu_order']) ? (int) $_POST['menu_order'] : 0;
+
+    if ($post_id <= 0 || 'bis_service' !== get_post_type($post_id) || !current_user_can('edit_post', $post_id)) {
+        wp_send_json_error(array('message' => 'Некорректная запись.'));
+    }
+
+    global $wpdb;
+    $wpdb->update(
+        $wpdb->posts,
+        array('menu_order' => $menu_order),
+        array('ID' => $post_id),
+        array('%d'),
+        array('%d')
+    );
+
+    clean_post_cache($post_id);
+
+    wp_send_json_success(array(
+        'post_id'    => $post_id,
+        'menu_order' => $menu_order,
+    ));
+}
+add_action('wp_ajax_bis_update_service_order', 'bis_ajax_update_service_order');
+
+/**
+ * AJAX handler for batch reordering services (e.g. after drag-and-drop).
+ */
+function bis_ajax_reorder_services() {
+    check_ajax_referer('bis_service_order_nonce', 'nonce');
+
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(array('message' => 'Недостаточно прав.'));
+    }
+
+    $orders = isset($_POST['orders']) && is_array($_POST['orders']) ? $_POST['orders'] : array();
+
+    if (empty($orders)) {
+        wp_send_json_error(array('message' => 'Нет данных для обновления.'));
+    }
+
+    global $wpdb;
+    $updated_count = 0;
+
+    foreach ($orders as $post_id => $menu_order) {
+        $post_id = (int) $post_id;
+        $menu_order = (int) $menu_order;
+
+        if ($post_id > 0 && current_user_can('edit_post', $post_id)) {
+            $wpdb->update(
+                $wpdb->posts,
+                array('menu_order' => $menu_order),
+                array('ID' => $post_id),
+                array('%d'),
+                array('%d')
+            );
+            clean_post_cache($post_id);
+            $updated_count++;
+        }
+    }
+
+    wp_send_json_success(array('updated' => $updated_count));
+}
+add_action('wp_ajax_bis_reorder_services', 'bis_ajax_reorder_services');
+
 
