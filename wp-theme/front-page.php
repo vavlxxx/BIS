@@ -48,7 +48,9 @@ $has_hero_slider = !empty($hero_images);
         <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
         <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li>
-        <li><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></li>
+        <?php if (is_user_logged_in()) : ?>
+          <li><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></li>
+        <?php endif; ?>
         <li><a href="#contact">Контакты</a></li>
         <li><a href="#faq">F.A.Q</a></li>
       </ul>

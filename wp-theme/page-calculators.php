@@ -2,18 +2,40 @@
 /*
 Template Name: Калькуляторы
 */
+
+if (!is_user_logged_in()) {
+    auth_redirect();
+    exit;
+}
+
 get_header();
 
 $page_id = get_the_ID();
-$banner_title = get_post_meta($page_id, 'bis_page_banner_title', true);
-$banner_subtitle = get_post_meta($page_id, 'bis_page_banner_subtitle', true);
-$banner_title = $banner_title ? $banner_title : 'Инженерные калькуляторы';
+if (!$page_id || 'page' !== get_post_type($page_id)) {
+    $calc_pages = get_pages(array(
+        'meta_key'   => '_wp_page_template',
+        'meta_value' => 'page-calculators.php',
+        'number'     => 1,
+    ));
+    if (!empty($calc_pages)) {
+        $page_id = $calc_pages[0]->ID;
+    } else {
+        $calc_page = get_page_by_path('calculators');
+        if ($calc_page) {
+            $page_id = $calc_page->ID;
+        }
+    }
+}
+
+$banner_title = $page_id ? get_post_meta($page_id, 'bis_page_banner_title', true) : '';
+$banner_subtitle = $page_id ? get_post_meta($page_id, 'bis_page_banner_subtitle', true) : '';
+$banner_title = $banner_title ? $banner_title : ($page_id ? get_the_title($page_id) : 'Инженерные калькуляторы');
 
 if (!$banner_subtitle) {
     $banner_subtitle = 'Профессиональный комплекс онлайн-расчетов противодымной вентиляции, подпора воздуха и проверки герметичности воздуховодов по нормативам ГОСТ и АВОК.';
 }
 
-$banner_image = bis_get_page_banner_image_url($page_id);
+$banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
 ?>
 
 <main class="calculators-page">
@@ -46,8 +68,8 @@ $banner_image = bis_get_page_banner_image_url($page_id);
             <div class="calc-nav-grid" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="calc-nav-card active" data-block="block1">
                     <span class="calc-nav-card__tag">Блок 1 • ГОСТ Р 53300-2009</span>
-                    <span class="calc-nav-card__title">Аэродинамика и утечки шахты</span>
-                    <span class="calc-nav-card__desc">Поэтажный расчет потерь давления и утечек через закрытые дымовые клапаны (Приложение Б)</span>
+                    <span class="calc-nav-card__title">Расчётное определение значений требуемого расхода воздуха через открытое дымоприёмное устройство при приёмо-сдаточных и периодических испытаниях противодымной вентиляции</span>
+                    <!-- <span class="calc-nav-card__desc">Расчётное определение значений требуемого расхода воздуха через открытое дымоприёмное устройство при приёмо-сдаточных и периодических испытаниях противодымной вентиляции</span> -->
                 </div>
 
                 <div class="calc-nav-card" data-block="block2">

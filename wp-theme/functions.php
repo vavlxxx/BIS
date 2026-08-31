@@ -19,8 +19,11 @@ function bis_theme_scripts() {
         'bis-news'        => 'assets/css/news.css',
         'bis-team'        => 'assets/css/team.css',
         'bis-content'     => 'assets/css/content.css',
-        'bis-calculators' => 'assets/css/calculators.css',
     );
+
+    if (is_user_logged_in()) {
+        $css_files['bis-calculators'] = 'assets/css/calculators.css';
+    }
 
     $style_deps = array();
     foreach ($css_files as $handle => $file) {
@@ -41,8 +44,13 @@ function bis_theme_scripts() {
     wp_enqueue_script('bis-site-team', get_template_directory_uri() . '/assets/js/site-team.js', array(), bis_get_asset_version('assets/js/site-team.js'), true);
     wp_enqueue_script('bis-site-project', get_template_directory_uri() . '/assets/js/site-project.js', array('bis-site-forms'), bis_get_asset_version('assets/js/site-project.js'), true);
     wp_enqueue_script('bis-site-news-ajax', get_template_directory_uri() . '/assets/js/site-news-ajax.js', array(), bis_get_asset_version('assets/js/site-news-ajax.js'), true);
-    wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array(), bis_get_asset_version('assets/js/site-calculators.js'), true);
-    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax', 'bis-site-calculators'), bis_get_asset_version('assets/js/site-app.js'), true);
+
+    $app_deps = array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax');
+    if (is_user_logged_in()) {
+        wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array(), bis_get_asset_version('assets/js/site-calculators.js'), true);
+        $app_deps[] = 'bis-site-calculators';
+    }
+    wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', $app_deps, bis_get_asset_version('assets/js/site-app.js'), true);
 
     // Enqueue Slider Script
     if (is_front_page()) {
@@ -348,9 +356,24 @@ function bis_calculators_pre_handle_404($preempt, $wp_query) {
 }
 add_filter('pre_handle_404', 'bis_calculators_pre_handle_404', 10, 2);
 
+function bis_protect_calculators_page() {
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
+        if (!is_user_logged_in()) {
+            auth_redirect();
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'bis_protect_calculators_page');
+
 function bis_calculators_template_include($template) {
     $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
     if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
+        if (!is_user_logged_in()) {
+            auth_redirect();
+            exit;
+        }
         $calc_template = get_template_directory() . '/page-calculators.php';
         if (file_exists($calc_template)) {
             global $wp_query;
@@ -362,5 +385,35 @@ function bis_calculators_template_include($template) {
     return $template;
 }
 add_filter('template_include', 'bis_calculators_template_include');
+
+function bis_ensure_calculators_page() {
+    if (get_option('bis_calculators_page_created_v2')) {
+        return;
+    }
+
+    $existing = get_page_by_path('calculators');
+    if (!$existing) {
+        $existing_by_tpl = get_pages(array(
+            'meta_key'   => '_wp_page_template',
+            'meta_value' => 'page-calculators.php',
+            'number'     => 1,
+        ));
+        if (empty($existing_by_tpl)) {
+            $page_id = wp_insert_post(array(
+                'post_title'     => 'Калькуляторы',
+                'post_name'      => 'calculators',
+                'post_status'    => 'publish',
+                'post_type'      => 'page',
+                'comment_status' => 'closed',
+            ));
+            if ($page_id && !is_wp_error($page_id)) {
+                update_post_meta($page_id, '_wp_page_template', 'page-calculators.php');
+            }
+        }
+    }
+
+    update_option('bis_calculators_page_created_v2', 1);
+}
+add_action('init', 'bis_ensure_calculators_page');
 
 

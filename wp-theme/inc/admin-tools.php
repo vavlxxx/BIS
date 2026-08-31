@@ -73,6 +73,25 @@ function bis_admin_scripts($hook) {
             ');
         }
     }
+
+    if ('edit.php' === $hook) {
+        $screen = get_current_screen();
+        if ($screen && 'bis_service' === $screen->post_type) {
+            wp_enqueue_script('jquery-ui-sortable');
+
+            $admin_services_js = get_template_directory() . '/assets/js/admin-services.js';
+            $admin_services_css = get_template_directory() . '/assets/css/admin-services.css';
+            $js_ver = file_exists($admin_services_js) ? (string) filemtime($admin_services_js) : '1.0';
+            $css_ver = file_exists($admin_services_css) ? (string) filemtime($admin_services_css) : '1.0';
+
+            wp_enqueue_style('bis-admin-services', get_template_directory_uri() . '/assets/css/admin-services.css', array(), $css_ver);
+            wp_enqueue_script('bis-admin-services', get_template_directory_uri() . '/assets/js/admin-services.js', array('jquery', 'jquery-ui-sortable'), $js_ver, true);
+            wp_localize_script('bis-admin-services', 'bisServiceOrderConfig', array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('bis_service_order_nonce'),
+            ));
+        }
+    }
 }
 add_action('admin_enqueue_scripts', 'bis_admin_scripts');
 
