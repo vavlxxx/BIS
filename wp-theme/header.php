@@ -4,41 +4,9 @@
   <meta charset="<?php bloginfo( 'charset' ); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <?php
-$document_title = get_bloginfo('name');
-
-if (!is_front_page()) {
-    $queried_object = get_queried_object();
-
-    if (is_home()) {
-        $posts_page_id = (int) get_option('page_for_posts');
-        if ($posts_page_id > 0) {
-            $posts_page = get_post($posts_page_id);
-            if ($posts_page instanceof WP_Post && !empty($posts_page->post_title)) {
-                $document_title = $posts_page->post_title;
-            }
-        }
-    } elseif ($queried_object instanceof WP_Post && !empty($queried_object->post_title)) {
-        $document_title = $queried_object->post_title;
-    } elseif (is_category() || is_tag() || is_tax()) {
-        $document_title = single_term_title('', false);
-    } elseif (is_post_type_archive()) {
-        $document_title = post_type_archive_title('', false);
-    } elseif (is_search()) {
-        $document_title = 'Поиск';
-    } elseif (is_404()) {
-        $document_title = 'Страница не найдена';
-    }
-}
-
-$meta_title = $document_title;
-if (is_singular(bis_get_seo_enabled_post_types())) {
-    $seo_title = bis_get_post_seo_title(get_queried_object_id());
-    if ($seo_title !== '') {
-        $meta_title = $seo_title;
-    }
-}
-$document_description = bis_get_current_meta_description();
-?>
+  $meta_title = bis_get_current_meta_title();
+  $document_description = bis_get_current_meta_description();
+  ?>
   <meta name="title" content="<?php echo esc_attr($meta_title); ?>">
   <meta name="description" content="<?php echo esc_attr($document_description); ?>">
   <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.ico">
