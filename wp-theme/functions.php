@@ -251,6 +251,51 @@ function bis_noindex_project_single_pages($robots) {
 }
 add_filter('wp_robots', 'bis_noindex_project_single_pages');
 
+function bis_get_current_meta_title() {
+    $site_name = get_bloginfo('name');
+    $document_title = $site_name;
+
+    if (is_front_page()) {
+        $tagline = get_bloginfo('description');
+        if (!empty($tagline)) {
+            $document_title = $site_name . ' — ' . $tagline;
+        }
+    } else {
+        $queried_object = get_queried_object();
+
+        if (is_home()) {
+            $posts_page_id = (int) get_option('page_for_posts');
+            if ($posts_page_id > 0) {
+                $posts_page = get_post($posts_page_id);
+                if ($posts_page instanceof WP_Post && !empty($posts_page->post_title)) {
+                    $document_title = $posts_page->post_title . ' — ' . $site_name;
+                }
+            }
+        } elseif ($queried_object instanceof WP_Post && !empty($queried_object->post_title)) {
+            $document_title = $queried_object->post_title . ' — ' . $site_name;
+        } elseif (is_category() || is_tag() || is_tax()) {
+            $term_title = single_term_title('', false);
+            $document_title = ($term_title ? $term_title . ' — ' : '') . $site_name;
+        } elseif (is_post_type_archive()) {
+            $archive_title = post_type_archive_title('', false);
+            $document_title = ($archive_title ? $archive_title . ' — ' : '') . $site_name;
+        } elseif (is_search()) {
+            $document_title = 'Поиск — ' . $site_name;
+        } elseif (is_404()) {
+            $document_title = 'Страница не найдена — ' . $site_name;
+        }
+    }
+
+    if (is_singular(bis_get_seo_enabled_post_types())) {
+        $seo_title = bis_get_post_seo_title(get_queried_object_id());
+        if (!empty($seo_title)) {
+            $document_title = $seo_title;
+        }
+    }
+
+    return $document_title;
+}
+
 function bis_get_current_meta_description() {
     $description = '';
 
@@ -280,15 +325,60 @@ function bis_get_current_meta_description() {
     return $description;
 }
 
-function bis_get_social_share_image_url() {
+function bis_get_social_share_image_data() {
+    $image_url = '';
+    $width = 1200;
+    $height = 630;
+    $type = 'image/png';
+
     if (is_singular() && has_post_thumbnail()) {
-        $thumbnail_url = get_the_post_thumbnail_url(get_queried_object_id(), 'large');
-        if ($thumbnail_url) {
-            return $thumbnail_url;
+        $thumb_id = get_post_thumbnail_id(get_queried_object_id());
+        $img_data = wp_get_attachment_image_src($thumb_id, 'large');
+        if ($img_data) {
+            $image_url = $img_data[0];
+            if (!empty($img_data[1])) {
+                $width = $img_data[1];
+            }
+            if (!empty($img_data[2])) {
+                $height = $img_data[2];
+            }
+            $file_path = get_attached_file($thumb_id);
+            if ($file_path && file_exists($file_path)) {
+                $mime = wp_check_filetype($file_path);
+                if (!empty($mime['type'])) {
+                    $type = $mime['type'];
+                }
+            }
         }
     }
 
-    return get_template_directory_uri() . '/assets/img/bis-black.png';
+    if (empty($image_url)) {
+        $default_img_relative = '/assets/img/bis-black.png';
+        $image_url = get_template_directory_uri() . $default_img_relative;
+        $file_path = get_template_directory() . $default_img_relative;
+        if (file_exists($file_path)) {
+            $size = @getimagesize($file_path);
+            if ($size) {
+                $width = $size[0];
+                $height = $size[1];
+                if (!empty($size['mime'])) {
+                    $type = $size['mime'];
+                }
+            }
+        }
+    }
+
+    return array(
+        'url' => $image_url,
+        'width' => $width,
+        'height' => $height,
+        'type' => $type,
+    );
+}
+
+function bis_get_social_share_image_url() {
+    $image = bis_get_social_share_image_data();
+    return $image['url'];
 }
 
 function bis_output_social_meta_tags() {
@@ -296,7 +386,7 @@ function bis_output_social_meta_tags() {
         return;
     }
 
-    $title = wp_get_document_title();
+    $title = bis_get_current_meta_title();
     $description = bis_get_current_meta_description();
 
     $url = home_url(add_query_arg(array(), $GLOBALS['wp']->request ?? ''));
@@ -307,29 +397,36 @@ function bis_output_social_meta_tags() {
         $url = home_url('/');
     }
 
-    $image_url = bis_get_social_share_image_url();
-    $default_image_path = get_template_directory() . '/assets/img/bis-black.png';
-    $default_image_size = file_exists($default_image_path) ? getimagesize($default_image_path) : false;
+    $image = bis_get_social_share_image_data();
+    $image_url = $image['url'];
 
-    echo "\n";
-    echo '<meta property="og:locale" content="ru_RU">' . "\n";
-    echo '<meta property="og:type" content="' . (is_singular() ? 'article' : 'website') . '">' . "\n";
-    echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
-    echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
-    echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
-    echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
-    echo '<meta property="og:image" content="' . esc_url($image_url) . '">' . "\n";
-
-    if ($default_image_size && !empty($default_image_size[0]) && !empty($default_image_size[1])) {
-        echo '<meta property="og:image:width" content="' . intval($default_image_size[0]) . '">' . "\n";
-        echo '<meta property="og:image:height" content="' . intval($default_image_size[1]) . '">' . "\n";
+    echo "\n" . '  <!-- Open Graph / Rich Social Preview -->' . "\n";
+    echo '  <meta property="og:locale" content="ru_RU">' . "\n";
+    echo '  <meta property="og:type" content="' . (is_singular() ? 'article' : 'website') . '">' . "\n";
+    echo '  <meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+    echo '  <meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '  <meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
+    echo '  <meta property="og:url" content="' . esc_url($url) . '">' . "\n";
+    echo '  <meta property="og:image" content="' . esc_url($image_url) . '">' . "\n";
+    if (is_ssl() || strpos($image_url, 'https://') === 0) {
+        echo '  <meta property="og:image:secure_url" content="' . esc_url($image_url) . '">' . "\n";
     }
+    if (!empty($image['type'])) {
+        echo '  <meta property="og:image:type" content="' . esc_attr($image['type']) . '">' . "\n";
+    }
+    if (!empty($image['width']) && !empty($image['height'])) {
+        echo '  <meta property="og:image:width" content="' . intval($image['width']) . '">' . "\n";
+        echo '  <meta property="og:image:height" content="' . intval($image['height']) . '">' . "\n";
+    }
+    echo '  <meta property="og:image:alt" content="' . esc_attr($title) . '">' . "\n";
 
-    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
-    echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
-    echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
-    echo '<meta name="twitter:image" content="' . esc_url($image_url) . '">' . "\n";
+    echo '  <!-- Twitter Card -->' . "\n";
+    echo '  <meta name="twitter:card" content="summary_large_image">' . "\n";
+    echo '  <meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '  <meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
+    echo '  <meta name="twitter:image" content="' . esc_url($image_url) . '">' . "\n";
 }
+add_action('wp_head', 'bis_output_social_meta_tags', 1);
 
 function bis_admin_enqueue_scripts($hook) {
     global $current_screen;
