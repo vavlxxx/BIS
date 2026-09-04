@@ -23,6 +23,7 @@ function bis_theme_scripts() {
     );
 
     if (is_user_logged_in()) {
+        wp_enqueue_style('bis-katex', get_template_directory_uri() . '/assets/vendor/katex/katex.min.css', array(), '0.16.9');
         $css_files['bis-calculators'] = 'assets/css/calculators.css';
     }
 
@@ -48,7 +49,8 @@ function bis_theme_scripts() {
 
     $app_deps = array('bis-site-forms', 'bis-site-navigation', 'bis-site-home', 'bis-site-team', 'bis-site-project', 'bis-site-news-ajax');
     if (is_user_logged_in()) {
-        wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array(), bis_get_asset_version('assets/js/site-calculators.js'), true);
+        wp_enqueue_script('bis-katex', get_template_directory_uri() . '/assets/vendor/katex/katex.min.js', array(), '0.16.9', false);
+        wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array('bis-katex'), bis_get_asset_version('assets/js/site-calculators.js'), true);
         $app_deps[] = 'bis-site-calculators';
     }
     wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', $app_deps, bis_get_asset_version('assets/js/site-app.js'), true);
