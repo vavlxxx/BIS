@@ -324,6 +324,25 @@ function syncUniformCardHeights() {
       card.style.height = `${maxHeight}px`;
     });
   });
+
+  // Synchronize Popular Services column titles so bottom lines align horizontally at the bottom
+  const popTitles = document.querySelectorAll('.popular-services__col-title');
+  if (popTitles.length > 1) {
+    popTitles.forEach((title) => {
+      title.style.minHeight = '';
+    });
+    if (window.innerWidth > 600) {
+      let maxTitleHeight = 0;
+      popTitles.forEach((title) => {
+        maxTitleHeight = Math.max(maxTitleHeight, title.offsetHeight);
+      });
+      if (maxTitleHeight > 0) {
+        popTitles.forEach((title) => {
+          title.style.minHeight = `${maxTitleHeight}px`;
+        });
+      }
+    }
+  }
 }
 
 function applyBisCondensedStyling(root = document.body) {
@@ -1336,4 +1355,148 @@ function initEstimateModal() {
   window.bisOpenEstimateForm = openEstimateModal;
   window.bisCloseEstimateForm = closeEstimateModal;
 }
+
+// Vacancy Modal Functionality
+function initVacancyModal() {
+  const vacancyBtns = document.querySelectorAll('.open-vacancy-modal');
+  const vacancyOverlay = document.getElementById('vacancyOverlay');
+  const vacancyClose = document.getElementById('vacancyClose');
+  const vacancyForm = document.getElementById('vacancyForm');
+  const vacancyPhone = document.getElementById('vacancyPhone');
+  const vacancyResume = document.getElementById('vacancyResume');
+  const vacancyResumeLabel = document.getElementById('vacancyResumeLabel');
+  const vacancyTitleInput = document.getElementById('vacancyTitleInput');
+  const vacancyModalTitle = document.getElementById('vacancyModalTitle');
+  const ANIMATION_DURATION = 400;
+  let closeTimeout;
+
+  if (!vacancyOverlay) return;
+
+  vacancyBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const vacancy = btn.dataset.vacancy || 'Инженерные вакансии';
+      if (vacancyTitleInput) vacancyTitleInput.value = vacancy;
+      if (vacancyModalTitle) vacancyModalTitle.textContent = vacancy;
+      openVacancyModal();
+    });
+  });
+
+  if (vacancyClose) {
+    vacancyClose.addEventListener('click', (event) => {
+      event.preventDefault();
+      closeVacancyModal();
+    });
+  }
+
+  vacancyOverlay.addEventListener('click', (e) => {
+    if (e.target === vacancyOverlay || e.target.closest('#vacancyClose')) {
+      closeVacancyModal();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && vacancyOverlay.classList.contains('active')) {
+      closeVacancyModal();
+    }
+  });
+
+  if (vacancyPhone) {
+    attachPhoneMask(vacancyPhone);
+  }
+
+  if (vacancyResume && vacancyResumeLabel) {
+    vacancyResume.addEventListener('change', () => {
+      const fileText = vacancyResumeLabel.querySelector('.vacancy-file-text');
+      if (vacancyResume.files && vacancyResume.files[0]) {
+        if (fileText) fileText.textContent = vacancyResume.files[0].name;
+      } else {
+        if (fileText) fileText.textContent = 'Прикрепить файл резюме...';
+      }
+    });
+  }
+
+  if (vacancyForm) {
+    vacancyForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (!validateFormFields(vacancyForm) || !validateHCaptcha(vacancyForm)) {
+        return;
+      }
+
+      const formData = new FormData(vacancyForm);
+      formData.append('action', 'bis_submit_vacancy');
+      appendLocationToFormData(formData);
+
+      const submitBtn = vacancyForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Отправка...';
+
+      fetch(bisAjaxUrl, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            submitBtn.textContent = '✓ Отправлено!';
+            submitBtn.style.background = '#10b981';
+            clearHCaptchaError(vacancyForm);
+
+            setTimeout(() => {
+              closeVacancyModal({ resetForm: true });
+              submitBtn.disabled = false;
+              submitBtn.textContent = originalText;
+              submitBtn.style.background = '';
+              showNotification('Спасибо за отклик! Наш специалист HR свяжется с вами.', 'success');
+            }, 1500);
+          } else {
+            showNotification(data.data?.message || 'Ошибка отправки отклика. Попробуйте позже.', 'error');
+            resetHCaptcha(vacancyForm);
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          resetHCaptcha(vacancyForm);
+          showNotification(error.message || 'Ошибка отправки отклика. Попробуйте позже.', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        });
+    });
+  }
+
+  function openVacancyModal() {
+    clearTimeout(closeTimeout);
+    vacancyOverlay.classList.remove('closing');
+    vacancyOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVacancyModal({ resetForm = true } = {}) {
+    if (!vacancyOverlay.classList.contains('active')) return;
+    vacancyOverlay.classList.add('closing');
+    clearTimeout(closeTimeout);
+    closeTimeout = setTimeout(() => {
+      vacancyOverlay.classList.remove('active', 'closing');
+      document.body.style.overflow = '';
+      if (vacancyForm && resetForm) {
+        resetFormState(vacancyForm);
+        if (vacancyResumeLabel) {
+          const fileText = vacancyResumeLabel.querySelector('.vacancy-file-text');
+          if (fileText) fileText.textContent = 'Прикрепить файл резюме...';
+        }
+      }
+    }, ANIMATION_DURATION);
+  }
+
+  window.bisOpenVacancyForm = openVacancyModal;
+  window.bisCloseVacancyForm = closeVacancyModal;
+}
+
+window.initVacancyModal = initVacancyModal;
+
 

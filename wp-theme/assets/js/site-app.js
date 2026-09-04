@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   runInit('initServicesSlider');
   runInit('initRelatedServicesSlider');
   runInit('initEstimateModal');
+  runInit('initVacancyModal');
   runInit('initRevenueChart');
   runInit('initProjectConsultationForm');
   runInit('initProjectGallery');

@@ -85,6 +85,7 @@
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
         <p><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></p>
+        <p><a href="<?php echo esc_url(home_url('/vacancies/')); ?>">Вакансии</a></p>
         <p><a href="#contact">Контакты</a></p>
         <p><a href="#faq">F.A.Q</a></p>
       </div>
@@ -131,6 +132,7 @@
   </footer>
 
   <?php get_template_part('estimate-modal'); ?>
+  <?php get_template_part('vacancy-modal'); ?>
   <div class="cookie-consent" id="cookieConsentBanner" hidden>
     <p class="cookie-consent__text">Этот сайт использует cookie для хранения данных. Продолжая использовать сайт, Вы даете согласие на работу с этими файлами.</p>
     <button class="cookie-consent__button" id="cookieConsentAccept" type="button">Принять и закрыть</button>

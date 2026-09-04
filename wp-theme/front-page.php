@@ -48,6 +48,7 @@ $has_hero_slider = !empty($hero_images);
         <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
         <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li>
+        <li><a href="<?php echo esc_url(home_url('/vacancies/')); ?>">Вакансии</a></li>
         <?php if (is_user_logged_in()) : ?>
           <li><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></li>
         <?php endif; ?>
@@ -56,33 +57,72 @@ $has_hero_slider = !empty($hero_images);
       </ul>
     </div>
   </section>
-<!-- Tasks Section -->
-<section class="tasks-section" id="tasks">
-    <div class="tasks-content">
+<!-- Tasks / Tech Customer Team Section -->
+<section class="tasks-section tech-supervision-section" id="tasks">
+    <div class="tasks-content mw-1400px">
         <div class="section-header">
-            <span class="section-badge">Наши задачи</span>
-            <h2 class="section-title">Что мы решаем</h2>
-            <p class="section-subtitle">Основные задачи, которые мы ставим перед собой при работе с каждым проектом</p>
+            <span class="section-badge">Инженерный надзор и экспертиза</span>
+            <h2 class="section-title bis-condensed">Инженерная команда технического заказчика</h2>
+            <p class="section-subtitle">Обычный технадзор контролирует только процесс и бумаги. «БИС» контролирует конечный инженерный результат — от проверки исходных решений до комплексных испытаний и передачи в эксплуатацию.</p>
         </div>
 
-        <div class="tasks-grid">
-            <div class="task-item">
-                <div class="task-image">
-                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/z1.webp" alt="" loading="lazy" decoding="async">
+        <div class="tech-supervision__grid">
+            <div class="tech-supervision__card">
+                <div class="tech-supervision__step">01</div>
+                <div class="tech-supervision__icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><circle cx="12" cy="12" r="10"/></svg>
                 </div>
-                <p>Сбалансировать расчетные и фактические параметры систем микроклимата</p>
+                <h3 class="tech-supervision__card-title">Обследование объекта</h3>
+                <p class="tech-supervision__card-text">Обследуем объект и существующие системы, выявляем дефекты и риски до ввода в эксплуатацию, оцениваем фактическую готовность сетей.</p>
             </div>
-            <div class="task-item">
-                <div class="task-image">
-                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/z2.webp" alt="" loading="lazy" decoding="async">
+
+            <div class="tech-supervision__card">
+                <div class="tech-supervision__step">02</div>
+                <div class="tech-supervision__icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 </div>
-                <p>Обеспечить оптимальную работу и эффективность работы оборудования</p>
+                <h3 class="tech-supervision__card-title">Проверка проектов и расчетов</h3>
+                <p class="tech-supervision__card-text">Проверяем проектные решения, аэродинамические и гидравлические расчеты, оцениваем обоснованность решений проектировщиков и подрядчиков.</p>
             </div>
-            <div class="task-item">
-                <div class="task-image">
-                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/z3.webp" alt="" loading="lazy" decoding="async">
+
+            <div class="tech-supervision__card">
+                <div class="tech-supervision__step">03</div>
+                <div class="tech-supervision__icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                 </div>
-                <p>Понять и решить технические задачи, возникающие на объекте</p>
+                <h3 class="tech-supervision__card-title">Контроль монтажа и замечаний</h3>
+                <p class="tech-supervision__card-text">Контролируем соответствие монтажа рабочей документации, СП и ГОСТ на строительной площадке, формируем замечания и контролируем их устранение.</p>
+            </div>
+
+            <div class="tech-supervision__card">
+                <div class="tech-supervision__step">04</div>
+                <div class="tech-supervision__icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3 class="tech-supervision__card-title">Испытания и пусконаладка</h3>
+                <p class="tech-supervision__card-text">Проводим индивидуальные и комплексные испытания оборудования, выполняем ПНР и выводим системы на проектные параметры силами лаборатории.</p>
+            </div>
+
+            <div class="tech-supervision__card">
+                <div class="tech-supervision__step">05</div>
+                <div class="tech-supervision__icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <h3 class="tech-supervision__card-title">Сдача техзаказчику и эксплуатацию</h3>
+                <p class="tech-supervision__card-text">Проверяем исполнительную документацию, сопровождаем процедуру сдачи техническому заказчику и передачу систем эксплуатирующей организации.</p>
+            </div>
+        </div>
+
+        <div class="tech-supervision__banner">
+            <div class="tech-supervision__banner-text">
+                <span class="tech-supervision__banner-tag">Ключевое отличие</span>
+                <h4 class="tech-supervision__banner-title">Мы проверяем не только документы, но и фактическую работу систем</h4>
+                <p class="tech-supervision__banner-desc">Наша команда сама занимается обследованием, испытаниями и наладкой. Мы видим взаимосвязь проекта, автоматики и оборудования, поэтому выявляем причину отклонений, а не просто фиксируем ошибку.</p>
+            </div>
+            <div class="tech-supervision__banner-action">
+                <a href="#contact" class="btn btn-primary tech-supervision__btn">
+                    Подробнее об услугах <span aria-hidden="true">→</span>
+                </a>
             </div>
         </div>
     </div>
@@ -1143,6 +1183,113 @@ $categories = get_terms(array(
   <div class="faq-cta">
     <p>Остались вопросы?</p>
     <a href="#contact" class="btn btn-primary">Получить консультацию</a>
+  </div>
+</section>
+
+<!-- Popular Services Section -->
+<section class="popular-services-section" id="popular-services">
+  <div class="popular-services__container mw-1400px">
+    <div class="section-header">
+      <h2 class="popular-services__title bis-condensed">Популярные услуги</h2>
+      <p class="section-subtitle"></p>
+    </div>
+
+    <div class="popular-services__grid">
+      <?php
+      $service_categories = get_terms(array(
+          'taxonomy'   => 'bis_service_category',
+          'hide_empty' => false,
+      ));
+
+      $has_custom_categories = !empty($service_categories) && !is_wp_error($service_categories);
+      $rendered_columns = 0;
+
+      if ($has_custom_categories) {
+          foreach ($service_categories as $cat) {
+              $cat_services = get_posts(array(
+                  'post_type'      => 'bis_service',
+                  'posts_per_page' => 12,
+                  'post_status'    => 'publish',
+                  'tax_query'      => array(
+                      array(
+                          'taxonomy' => 'bis_service_category',
+                          'field'    => 'term_id',
+                          'terms'    => $cat->term_id,
+                      ),
+                  ),
+              ));
+
+              if (empty($cat_services)) {
+                  continue;
+              }
+
+              $rendered_columns++;
+              ?>
+              <div class="popular-services__col">
+                <div class="popular-services__col-head">
+                  <h3 class="popular-services__col-title"><?php echo esc_html($cat->name); ?></h3>
+                </div>
+                <ul class="popular-services__list">
+                  <?php foreach ($cat_services as $srv) : ?>
+                    <li>
+                      <a href="<?php echo esc_url(get_permalink($srv->ID)); ?>" class="popular-services__link">
+                        <?php echo esc_html(get_the_title($srv->ID)); ?>
+                      </a>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
+              <?php
+          }
+      }
+
+      // Fallback: если рубрики не найдены, разбиваем все опубликованные услуги на 4 сбалансированные колонки
+      if ($rendered_columns === 0) {
+          $all_services = get_posts(array(
+              'post_type'      => 'bis_service',
+              'posts_per_page' => -1,
+              'post_status'    => 'publish',
+              'orderby'        => 'menu_order title',
+              'order'          => 'ASC',
+          ));
+
+          if (!empty($all_services)) {
+              $fallback_categories = array(
+                  'Вентиляция и кондиционирование' => array(),
+                  'Противодымная вентиляция'      => array(),
+                  'Чистка и дезинфекция систем'   => array(),
+                  'Автоматика и спецналадка'       => array(),
+              );
+
+              $col_keys = array_keys($fallback_categories);
+              foreach ($all_services as $idx => $srv) {
+                  $cat_key = $col_keys[$idx % count($col_keys)];
+                  $fallback_categories[$cat_key][] = $srv;
+              }
+
+              foreach ($fallback_categories as $col_title => $services_list) {
+                  if (empty($services_list)) continue;
+                  ?>
+                  <div class="popular-services__col">
+                    <div class="popular-services__col-head">
+                      <h3 class="popular-services__col-title"><?php echo esc_html($col_title); ?></h3>
+                    </div>
+                    <ul class="popular-services__list">
+                      <?php foreach ($services_list as $srv) : ?>
+                        <li>
+                          <a href="<?php echo esc_url(get_permalink($srv->ID)); ?>" class="popular-services__link">
+                            <?php echo esc_html(get_the_title($srv->ID)); ?>
+                          </a>
+                        </li>
+                      <?php endforeach; ?>
+                    </ul>
+                  </div>
+                  <?php
+              }
+          }
+      }
+      ?>
+    </div>
   </div>
 </section>
 <?php get_footer(); ?>
