@@ -1009,7 +1009,7 @@
     }
 
     return `
-      <svg viewBox="0 0 ${w} ${h}" width="100%" height="auto" style="max-width:640px; background:#ffffff; font-family:'Times New Roman', serif;">
+      <svg viewBox="0 0 ${w} ${h}" style="width: 100%; height: auto; max-width: 640px; background: #ffffff; font-family: 'Times New Roman', serif;">
         <!-- Сетка и числовые деления -->
         ${xTicks}
         ${yTicks}
