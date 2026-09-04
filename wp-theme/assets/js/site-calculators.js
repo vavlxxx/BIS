@@ -1062,8 +1062,17 @@
       const Ga = parseFloat(res.Ga) || ((La * rho_a) / 3600);
       const G0 = parseFloat(res.G0) || (Ga * 0.95);
       const L0 = res.L0 || Math.round((G0 * 3600) / rho_a);
-      const Lfact = res.Lfact ? Math.round(res.Lfact) : null;
-      const deviation = res.deviation !== null && res.deviation !== undefined ? res.deviation : null;
+      const rawLfactInput = document.getElementById('b1_Lfact')?.value?.trim();
+      const parsedLfactInput = rawLfactInput ? parseFloat(rawLfactInput) : null;
+      const Lfact = (res.Lfact !== null && res.Lfact !== undefined && !isNaN(res.Lfact))
+        ? Math.round(res.Lfact)
+        : (parsedLfactInput !== null && !isNaN(parsedLfactInput) ? Math.round(parsedLfactInput) : null);
+      let effectiveDeviation = (res.deviation !== null && res.deviation !== undefined && !isNaN(res.deviation))
+        ? res.deviation
+        : null;
+      if (effectiveDeviation === null && Lfact !== null && !isNaN(Lfact) && L0 > 0) {
+        effectiveDeviation = ((Lfact - L0) / L0) * 100;
+      }
 
       let table1Rows = '';
       const floors = res.floorResults || [];
@@ -1125,7 +1134,7 @@
           <p class="gost-p">
             Характеристики системы приняты согласно проектной документации:<br>
             Наиболее удалённое дымоприёмное устройство от вентилятора расположено на ${meta.section || 'цокольном этаже'}.<br>
-            Lпр = ${Lpr} м3/ч – проектный объёмный расход вентилятора,<br>
+            Lпр = ${Lpr} м³/ч – проектный объёмный расход вентилятора,<br>
             Psv = ${Psv} Па – фактическое давление, создаваемое вентилятором,<br>
             Тпг = ${Tpg} К – температура продуктов горения, удаляемых из помещения,<br>
             Тv = ${Tv} К – температура продуктов горения, перемещаемых вентилятором,<br>
@@ -1171,7 +1180,7 @@
           </div>
           <p class="gost-p">
             Используя аэродинамическую характеристику вентилятора (рисунок 1), определяем приближенное значение объёмного расхода воздуха, перемещаемого им при температуре Ta:<br>
-            La ≈ ${Math.round(La)} м3/ч.
+            La ≈ ${Math.round(La)} м³/ч.
           </p>
 
           <!-- Formula (4) -->
@@ -1276,19 +1285,19 @@
           </div>
 
           <!-- Fact comparison -->
-          ${Lfact ? `
+          ${(Lfact !== null && effectiveDeviation !== null && !isNaN(effectiveDeviation)) ? `
             <p class="gost-p">
               Фактический расход воздуха через наиболее удалённое от вентилятора открытое дымоприёмное устройство ${kTeX(`L_{\\text{ф}} = ${Math.round(Lfact)} \\text{ м}^3/\\text{ч}`, false)}.<br>
               Отклонение фактических показателей по расходу воздуха от определённых по расчёту:
             </p>
             <div class="gost-formula-row">
               <div class="gost-formula-math">
-                ${kTeX(`\\delta = \\left( \\frac{L_{\\text{ф}} - L_0}{L_0} \\right) \\cdot 100\\% = \\left( \\frac{${Math.round(Lfact)} - ${Math.round(L0)}}{${Math.round(L0)}} \\right) \\cdot 100\\% = ${deviation > 0 ? '+' : ''}${deviation.toFixed(1).replace('.', ',')}\\%`)}
+                ${kTeX(`\\delta = \\left( \\frac{L_{\\text{ф}} - L_0}{L_0} \\right) \\cdot 100\\% = \\left( \\frac{${Math.round(Lfact)} - ${Math.round(L0)}}{${Math.round(L0)}} \\right) \\cdot 100\\% = ${effectiveDeviation > 0 ? '+' : ''}${effectiveDeviation.toFixed(1).replace('.', ',')}\\%`)}
               </div>
             </div>
           ` : `
             <p class="gost-p">
-              Фактический расход воздуха через наиболее удалённое от вентилятора открытое дымоприёмное устройство Lф = _______ м3/ч.
+              Фактический расход воздуха через наиболее удалённое от вентилятора открытое дымоприёмное устройство Lф = ${Lfact ? Math.round(Lfact) + ' м³/ч' : '_______ м³/ч'}.
             </p>
           `}
 
@@ -1296,7 +1305,7 @@
           <p class="gost-p">
             1. В соответствии с ГОСТ Р 53300-2009 «Противодымная защита зданий и сооружений. Методы приёмосдаточных и периодических испытаний», определено требуемое значение расхода воздуха через открытое дымоприёмное устройство для систем противодымной вытяжной вентиляции.<br>
             2. В соответствии с ГОСТ Р 53300-2009 «Противодымная защита зданий и сооружений. Методы приёмосдаточных и периодических испытаний», отклонение фактических показателей по расходу воздуха от определённых по расчёту, допускается не более 15%.<br>
-            3. ${deviation !== null ? (Math.abs(deviation) <= 15 ? `Фактическое отклонение составляет ${deviation > 0 ? '+' : ''}${deviation.toFixed(1).replace('.', ',')}%. Система работает удовлетворительно.` : `Фактическое отклонение составляет ${deviation > 0 ? '+' : ''}${deviation.toFixed(1).replace('.', ',')}%. Отклонение превышает допустимые 15%, система работает неудовлетворительно.`) : 'Система работает удовлетворительно.'}
+            3. ${(effectiveDeviation !== null && !isNaN(effectiveDeviation)) ? (Math.abs(effectiveDeviation) <= 15 ? `Фактическое отклонение составляет ${effectiveDeviation > 0 ? '+' : ''}${effectiveDeviation.toFixed(1).replace('.', ',')}%. Система работает удовлетворительно.` : `Фактическое отклонение составляет ${effectiveDeviation > 0 ? '+' : ''}${effectiveDeviation.toFixed(1).replace('.', ',')}%. Отклонение превышает допустимые 15%, система работает неудовлетворительно.`) : 'Система работает удовлетворительно.'}
           </p>
 
           <p class="gost-section-heading">6 Аэродинамическая характеристика вентилятора</p>
