@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Estimate Modal */
 #estimateOverlay {
   display: flex;
@@ -575,7 +576,7 @@ body.post-type-archive-bis_news {
 }
 
 .news-card__link::after {
-  content: '→';
+  content: '\2192';
   transition: transform 0.2s ease;
 }
 

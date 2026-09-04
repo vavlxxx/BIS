@@ -19,6 +19,7 @@ function bis_theme_scripts() {
         'bis-news'        => 'assets/css/news.css',
         'bis-team'        => 'assets/css/team.css',
         'bis-content'     => 'assets/css/content.css',
+        'bis-vacancies'   => 'assets/css/vacancies.css',
     );
 
     if (is_user_logged_in()) {

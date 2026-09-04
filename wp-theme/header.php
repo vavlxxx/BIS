@@ -162,6 +162,7 @@ $document_description = bis_get_current_meta_description();
           <li><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></li>
         <?php endif; ?>
         <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li>
+        <li><a href="<?php echo esc_url(home_url('/vacancies/')); ?>">Вакансии</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
         <li><a href="<?php echo esc_url(home_url('/#services'));?>">Специализация</a></li>
         <li><a href="<?php echo esc_url(home_url('/#equipment'));?>">Оборудование</a></li>

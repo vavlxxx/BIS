@@ -241,7 +241,7 @@ function bis_force_latin_slug_on_save($data, $postarr) {
 add_filter('wp_insert_post_data', 'bis_force_latin_slug_on_save', 20, 2);
 
 function bis_get_latin_slug_taxonomies() {
-    return array('bis_service_tag', 'bis_news_tag', 'bis_news_category', 'bis_project_type', 'bis_project_service', 'category', 'post_tag');
+    return array('bis_service_category', 'bis_service_tag', 'bis_news_tag', 'bis_news_category', 'bis_project_type', 'bis_project_service', 'category', 'post_tag');
 }
 
 function bis_should_force_latin_term_slug($taxonomy) {
@@ -650,6 +650,33 @@ function bis_flush_service_hierarchy_rewrites() {
 add_action('init', 'bis_flush_service_hierarchy_rewrites', 100);
 
 function bis_register_service_taxonomies() {
+    $category_labels = array(
+        'name'                       => 'Рубрики',
+        'singular_name'              => 'Рубрика',
+        'search_items'               => 'Искать рубрики',
+        'popular_items'              => 'Популярные рубрики',
+        'all_items'                  => 'Все рубрики',
+        'edit_item'                  => 'Редактировать рубрику',
+        'update_item'                => 'Обновить рубрику',
+        'add_new_item'               => 'Добавить рубрику',
+        'new_item_name'              => 'Новая рубрика',
+        'separate_items_with_commas' => 'Разделяйте рубрики запятыми',
+        'add_or_remove_items'        => 'Добавить или удалить рубрики',
+        'choose_from_most_used'      => 'Выбрать из часто используемых',
+        'not_found'                  => 'Рубрики не найдены',
+        'menu_name'                  => 'Рубрики',
+    );
+
+    register_taxonomy('bis_service_category', array('bis_service'), array(
+        'hierarchical'      => true,
+        'labels'            => $category_labels,
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
+        'query_var'         => true,
+        'rewrite'           => array('slug' => 'service-category', 'hierarchical' => true),
+    ));
+
     $labels = array(
         'name'                       => 'Теги услуг',
         'singular_name'              => 'Тег услуги',

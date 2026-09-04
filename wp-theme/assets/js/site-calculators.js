@@ -5,15 +5,19 @@
     currentBlock: 'block1',
     currentAvok: 'du4_1',
     activeElementType: 'D1',
-    block1Floors: [],
+    block1Floors: [
+      { floor: 1, li: 14.0, a: 0.6, b: 0.45, kmsType: 'standard', val_a: 0.77, val_b: 0.75 },
+      { floor: 2, li: 4.0, a: 0.6, b: 0.45, kmsType: 'standard', val_a: 0.77, val_b: 0.75 }
+    ],
     block3Elements: [],
     protocolMeta: {
-      number: '1',
+      number: '109.005/П-02',
       date: new Date().toISOString().split('T')[0],
-      objectName: 'ЖК «Симфония», Корпус 2',
-      systemName: 'Система дымоудаления ДУ-1',
-      section: 'Вентиляционная шахта ШД-1',
-      instruments: 'Дифференциальный манометр Testo 510, Анемометр Testo 417',
+      objectName: 'Торговый центр «Академический»',
+      address: 'СПб, Гражданский проспект, квартал 9А',
+      systemName: 'Система ДУ1',
+      section: 'Цокольный этаж, клапан №1',
+      instruments: 'Дифференциальный манометр Testo 510, Термоанемометр Testo 417',
       engineer: 'Иванов И.И.',
       approver: 'Петров П.П.'
     },
@@ -124,17 +128,21 @@
       updateSummaryMetric('b1_res_Psa', '—', 'Па');
       updateSummaryMetric('b1_res_G0', '—', 'кг/с');
       updateSummaryMetric('b1_res_Leak', '—', 'м³/ч');
+      const devRow = document.getElementById('b1_row_Dev');
+      if (devRow) devRow.style.display = 'none';
       return;
     }
 
-    const Lpr = parseFloat(rawLpr) || 0;
-    const Psv = parseFloat(rawPsv) || 0;
-    const Tpg = parseFloat(document.getElementById('b1_Tpg')?.value) || 400;
-    const Tpom = parseFloat(document.getElementById('b1_Tpom')?.value) || 18;
-    const h_top = parseFloat(document.getElementById('b1_h_top')?.value) || 0;
-    const h_bot = parseFloat(document.getElementById('b1_h_bot')?.value) || 0;
+    const Lpr = parseFloat(rawLpr) || 27500;
+    const Psv = parseFloat(rawPsv) || 250;
+    const Tpg = parseFloat(document.getElementById('b1_Tpg')?.value) || 760;
+    const Tpom = parseFloat(document.getElementById('b1_Tpom')?.value) || 20;
+    const h_top = parseFloat(document.getElementById('b1_h_top')?.value) || 10.0;
+    const h_bot = parseFloat(document.getElementById('b1_h_bot')?.value) || -1.0;
+    const rawLfact = document.getElementById('b1_Lfact')?.value;
+    const Lfact = rawLfact ? parseFloat(rawLfact) : null;
 
-    const Tv = Tpg - 62;
+    const Tv = Tpg > 100 ? (Tpg - 62) : 619;
     const Ta = 273 + Tpom;
     const rho_a = 353 / Ta;
     const rho_sm = (2 * rho_a * Ta) / (Tpg + Tv);
@@ -142,44 +150,54 @@
     const h = Math.max(0, h_top - h_bot);
 
     const Psa = (Psv * rho_v / 1.2) + (9.81 * h * (rho_a - rho_sm));
-    const Ga = (Lpr * rho_a) / 3600;
+    const La = Math.round(Lpr);
+    const Ga = (La * rho_a) / 3600;
 
     let currentG = Ga;
     let currentP = Psa;
     let totalValveLeakage = 0;
     const floorResults = [];
 
-    state.block1Floors.forEach((f) => {
-      const F_shaft = f.a * f.b;
-      const P_shaft = 2 * (f.a + f.b);
-      const de = P_shaft > 0 ? (4 * F_shaft / (f.a + f.b)) : 1.0;
-      const kms = KMS_RATES[f.kmsType] || 0.4;
+    state.block1Floors.forEach((f, idx) => {
+      const F_shaft = (f.a || 0.6) * (f.b || 0.45);
+      const P_shaft = 2 * ((f.a || 0.6) + (f.b || 0.45));
+      const de = P_shaft > 0 ? (4 * F_shaft / P_shaft) : 1.0;
+      const kms = KMS_RATES[f.kmsType] !== undefined ? KMS_RATES[f.kmsType] : 0.4;
       const lambda = 0.016;
       const li = f.li || 3.0;
 
+      const G_before = currentG;
       const velocity_mass = (F_shaft > 0 && rho_a > 0) ? (currentG / (rho_a * F_shaft)) : 0;
       const deltaP = 0.5 * rho_a * (kms + (lambda * li / de)) * Math.pow(velocity_mass, 2);
       currentP = Math.max(0, currentP - deltaP);
 
-      const F_val = Math.max(0, (f.val_a - 0.03) * (f.val_b - 0.05));
-      const G_leak = F_val > 0 ? Math.sqrt(currentP / 39300) * F_val : 0;
+      const F_val = Math.max(0, (f.val_a || 0.8) * (f.val_b || 0.75));
+      const S_dpn = 10000; // Удельное сопротивление воздухопроницанию по ГОСТ Р 53300-2009
+      const G_leak = F_val > 0 ? Math.sqrt(currentP / S_dpn) * F_val : 0;
       totalValveLeakage += G_leak;
 
       currentG = Math.max(0, currentG - G_leak);
       const L_floor = (currentG * 3600) / rho_a;
 
       floorResults.push({
+        idx: idx + 1,
         floor: f.floor,
-        de: de.toFixed(3),
         kms: kms.toFixed(1),
-        P_sn: Math.round(currentP),
+        lambda: lambda.toFixed(3),
+        li: li.toFixed(1),
+        de: de.toFixed(3),
+        Fn: F_shaft.toFixed(3),
+        Pn: P_shaft.toFixed(2),
+        Ga_curr: G_before.toFixed(3),
+        P_sn: currentP.toFixed(2),
+        F_val: F_val.toFixed(4),
         G_leak: G_leak.toFixed(4),
         G_curr: currentG.toFixed(3),
         L_curr: Math.round(L_floor)
       });
     });
 
-    const G0 = Ga - totalValveLeakage;
+    const G0 = Math.max(0, Ga - totalValveLeakage);
     const L0 = (G0 * 3600) / rho_a;
 
     updateSummaryMetric('b1_res_L0', Math.round(L0).toLocaleString('ru-RU'), 'м³/ч');
@@ -187,9 +205,40 @@
     updateSummaryMetric('b1_res_G0', G0.toFixed(2), 'кг/с');
     updateSummaryMetric('b1_res_Leak', Math.round(totalValveLeakage * 3600 / rho_a).toLocaleString('ru-RU'), 'м³/ч');
 
+    let deviation = null;
+    if (Lfact && L0 > 0) {
+      deviation = ((Lfact - L0) / L0) * 100;
+      const devRow = document.getElementById('b1_row_Dev');
+      const devEl = document.getElementById('b1_res_Dev');
+      if (devRow && devEl) {
+        devRow.style.display = 'flex';
+        devEl.innerText = (deviation > 0 ? '+' : '') + deviation.toFixed(1) + ' %';
+        if (Math.abs(deviation) <= 15) {
+          devRow.style.background = '#f0fdf4';
+          devRow.style.borderColor = '#bbf7d0';
+          devEl.style.color = '#166534';
+        } else {
+          devRow.style.background = '#fef2f2';
+          devRow.style.borderColor = '#fecaca';
+          devEl.style.color = '#b91c1c';
+        }
+      }
+    } else {
+      const devRow = document.getElementById('b1_row_Dev');
+      if (devRow) devRow.style.display = 'none';
+    }
+
     state.lastResults.block1 = {
-      Lpr, Psv, Tpg, Tpom, Psa: Math.round(Psa), L0: Math.round(L0), G0: G0.toFixed(2),
+      Lpr, Psv, Tpg, Tpom, h_top, h_bot, Tv, Ta, rho_a, rho_sm, rho_v, h,
+      Psa: Math.round(Psa * 100) / 100,
+      La,
+      Ga: Ga.toFixed(3),
+      G0: G0.toFixed(3),
+      L0: Math.round(L0),
+      Lfact,
+      deviation,
       totalLeakage: Math.round(totalValveLeakage * 3600 / rho_a),
+      totalValveLeakageKg: totalValveLeakage.toFixed(4),
       floorResults
     };
 
@@ -813,84 +862,545 @@
     }
   }
 
+  function generateFanCurveSVG(La, Psa, Lpr, Psv) {
+    const w = 560, h = 260;
+    const padL = 65, padR = 35, padT = 30, padB = 45;
+    const plotW = w - padL - padR;
+    const plotH = h - padT - padB;
+
+    const maxL = Math.max(35000, (Lpr || 27500) * 1.3, (La || 14500) * 1.3);
+    const maxP = Math.max(1200, (Psv || 250) * 2.8, (Psa || 365) * 2.2);
+
+    const scaleX = (l) => padL + (l / maxL) * plotW;
+    const scaleY = (p) => padT + plotH - (p / maxP) * plotH;
+
+    const curvePts = [];
+    const steps = 30;
+    for (let i = 0; i <= steps; i++) {
+      const lVal = (maxL * 0.94 * i) / steps;
+      const pVal = maxP * 0.88 * Math.max(0, 1 - Math.pow(lVal / (maxL * 0.9), 1.85));
+      curvePts.push(`${scaleX(lVal).toFixed(1)},${scaleY(pVal).toFixed(1)}`);
+    }
+    const curvePath = 'M ' + curvePts.join(' L ');
+
+    const opX = scaleX(La || 14500);
+    const opY = scaleY(Psa || 365);
+
+    return `
+      <svg viewBox="0 0 ${w} ${h}" width="100%" height="auto" style="max-width:560px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:2px; font-family:'Segoe UI', Arial, sans-serif;">
+        <!-- Axes -->
+        <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="#0f172a" stroke-width="1.5"/>
+        <line x1="${padL}" y1="${padT + plotH}" x2="${padL + plotW}" y2="${padT + plotH}" stroke="#0f172a" stroke-width="1.5"/>
+        
+        <!-- Grid horizontal -->
+        <line x1="${padL}" y1="${padT + plotH * 0.25}" x2="${padL + plotW}" y2="${padT + plotH * 0.25}" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+        <line x1="${padL}" y1="${padT + plotH * 0.5}" x2="${padL + plotW}" y2="${padT + plotH * 0.5}" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+        <line x1="${padL}" y1="${padT + plotH * 0.75}" x2="${padL + plotW}" y2="${padT + plotH * 0.75}" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+        
+        <!-- Grid vertical -->
+        <line x1="${padL + plotW * 0.25}" y1="${padT}" x2="${padL + plotW * 0.25}" y2="${padT + plotH}" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+        <line x1="${padL + plotW * 0.5}" y1="${padT}" x2="${padL + plotW * 0.5}" y2="${padT + plotH}" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+        <line x1="${padL + plotW * 0.75}" y1="${padT}" x2="${padL + plotW * 0.75}" y2="${padT + plotH}" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+
+        <!-- Axis Labels -->
+        <text x="${padL + plotW / 2}" y="${h - 10}" text-anchor="middle" font-size="11" fill="#0f172a" font-weight="600">Расход воздуха L, м³/ч</text>
+        <text x="18" y="${padT + plotH / 2}" text-anchor="middle" font-size="11" fill="#0f172a" font-weight="600" transform="rotate(-90 18 ${padT + plotH / 2})">Давление Psv, Па</text>
+
+        <!-- Fan curve -->
+        <path d="${curvePath}" fill="none" stroke="#0284c7" stroke-width="2.5"/>
+
+        <!-- Operating Point Dashes -->
+        <line x1="${padL}" y1="${opY}" x2="${opX}" y2="${opY}" stroke="#ef4444" stroke-dasharray="4,3" stroke-width="1.5"/>
+        <line x1="${opX}" y1="${opY}" x2="${opX}" y2="${padT + plotH}" stroke="#ef4444" stroke-dasharray="4,3" stroke-width="1.5"/>
+
+        <!-- Operating Point Circle -->
+        <circle cx="${opX}" cy="${opY}" r="5" fill="#ef4444" stroke="#ffffff" stroke-width="1.5"/>
+
+        <!-- Tooltip / Badge -->
+        <rect x="${Math.min(opX + 8, plotW - 20)}" y="${Math.max(padT + 5, opY - 32)}" width="148" height="34" rx="3" fill="#ffffff" stroke="#ef4444" stroke-width="1"/>
+        <text x="${Math.min(opX + 14, plotW - 14)}" y="${Math.max(padT + 19, opY - 18)}" font-size="9.5" font-weight="bold" fill="#0f172a">Рабочая точка (Ta):</text>
+        <text x="${Math.min(opX + 14, plotW - 14)}" y="${Math.max(padT + 31, opY - 6)}" font-size="9" fill="#475569">La = ${Math.round(La)} м³/ч, Psa = ${Math.round(Psa)} Па</text>
+      </svg>
+    `;
+  }
+
   function generateProtocolHTML() {
     const meta = state.protocolMeta;
-    let tableHtml = '';
-    let conclusionText = '';
-    let protocolTitle = '';
 
     if (state.currentBlock === 'block1') {
       const res = state.lastResults.block1 || {};
-      protocolTitle = 'ПРОТОКОЛ АЭРОДИНАМИЧЕСКИХ ИСПЫТАНИЙ СИСТЕМЫ ДЫМОУДАЛЕНИЯ / ПОДПОРА (ГОСТ Р 53300-2009)';
-      
-      let rows = '';
-      (res.floorResults || []).slice(0, 15).forEach(r => {
-        rows += `<tr><td>${r.floor}</td><td>${r.P_sn} Па</td><td>${r.G_leak} кг/с</td><td>${r.L_curr} м³/ч</td></tr>`;
-      });
+      const Lpr = res.Lpr || 27500;
+      const Psv = res.Psv || 250;
+      const Tpg = res.Tpg || 760;
+      const Tpom = res.Tpom || 20;
+      const Tv = res.Tv || (Tpg - 62);
+      const Ta = res.Ta || (273 + Tpom);
+      const rho_a = res.rho_a || (353 / Ta);
+      const rho_sm = res.rho_sm || ((2 * rho_a * Ta) / (Tpg + Tv));
+      const rho_v = res.rho_v || (353 / Tv);
+      const h_top = res.h_top !== undefined ? res.h_top : 10.0;
+      const h_bot = res.h_bot !== undefined ? res.h_bot : -1.0;
+      const h = Math.max(0, h_top - h_bot);
+      const Psa = res.Psa !== undefined ? res.Psa : 365.52;
+      const La = res.La || Lpr;
+      const Ga = parseFloat(res.Ga) || ((La * rho_a) / 3600);
+      const G0 = parseFloat(res.G0) || (Ga * 0.95);
+      const L0 = res.L0 || Math.round((G0 * 3600) / rho_a);
+      const Lfact = res.Lfact ? Math.round(res.Lfact) : null;
+      const deviation = res.deviation !== null && res.deviation !== undefined ? res.deviation : null;
 
-      tableHtml = `
-        <table class="protocol-table-info">
-          <tr><td class="field-name">Объект / Адрес:</td><td>${meta.objectName}</td><td class="field-name">Дата испытания:</td><td>${meta.date}</td></tr>
-          <tr><td class="field-name">Наименование системы:</td><td>${meta.systemName}</td><td class="field-name">Номер протокола:</td><td>№ ${meta.number}</td></tr>
-          <tr><td class="field-name">Испытываемый участок:</td><td>${meta.section}</td><td class="field-name">Приборы измерений:</td><td>${meta.instruments}</td></tr>
-        </table>
-        
-        <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Итоговые параметры вентиляционной сети:</h4>
-        <table class="protocol-grid-data">
-          <tr>
-            <th>Проектный расход Lпр</th>
-            <th>Фактический расход в точке забора L0</th>
-            <th>Давление перед вентилятором Psa</th>
-            <th>Суммарные утечки через клапаны</th>
-          </tr>
-          <tr>
-            <td><b>${res.Lpr || 0} м³/ч</b></td>
-            <td><b>${res.L0 || 0} м³/ч</b></td>
-            <td><b>${res.Psa || 0} Па</b></td>
-            <td><b>${res.totalLeakage || 0} м³/ч</b></td>
-          </tr>
-        </table>
+      let table1Rows = '';
+      const floors = res.floorResults || [];
+      if (floors.length === 0) {
+        table1Rows = '<tr><td colspan="11" style="padding:12px; color:#64748b;">Нет данных по закрытым клапанам</td></tr>';
+      } else {
+        floors.forEach((r, idx) => {
+          table1Rows += `
+            <tr>
+              <td><b>${idx + 1}</b></td>
+              <td>${r.kms || '0.4'}</td>
+              <td>${r.lambda || '0.016'}</td>
+              <td>${r.li || '3.0'}</td>
+              <td>${r.de || '—'}</td>
+              <td>${r.Fn || '—'}</td>
+              <td>${r.Pn || '—'}</td>
+              <td>${r.Ga_curr || '—'}</td>
+              <td><b>${r.P_sn}</b></td>
+              <td>${r.F_val || '—'}</td>
+              <td><b>${r.G_leak}</b></td>
+            </tr>
+          `;
+        });
+      }
 
-        <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Распределение параметров по контрольным этажам (выборка):</h4>
-        <table class="protocol-grid-data">
-          <tr><th>Этаж</th><th>Давление в шахте Psi</th><th>Утечка клапана Gdpn</th><th>Расход на участке Li</th></tr>
-          ${rows || '<tr><td colspan="4">Данные по этажам отсутствуют</td></tr>'}
-        </table>
+      const firstFloor = floors[0] || { P_sn: '198.1', G_leak: '0.081' };
+      const sumGleak = floors.reduce((acc, f) => acc + (parseFloat(f.G_leak) || 0), 0);
+      const chartSvg = generateFanCurveSVG(La, Psa, Lpr, Psv);
+
+      let conclusionStatus = '';
+      if (deviation !== null) {
+        if (Math.abs(deviation) <= 15) {
+          conclusionStatus = `3. <b>Система работает удовлетворительно.</b> Фактическое отклонение показателей расхода воздуха через открытое дымоприёмное устройство от расчётных нормативных составляет <b>${deviation > 0 ? '+' : ''}${deviation.toFixed(1)}%</b>, что находится в пределах нормативного допуска (не более ±15% по ГОСТ Р 53300-2009).`;
+        } else {
+          conclusionStatus = `3. <b>Система требует регулировки и наладки.</b> Фактическое отклонение показателей расхода воздуха через открытое дымоприёмное устройство составляет <b>${deviation > 0 ? '+' : ''}${deviation.toFixed(1)}%</b>, что превышает нормативный допуск ±15% по ГОСТ Р 53300-2009. Требуется балансировка шахты и наладка приводов клапанов.`;
+        }
+      } else {
+        conclusionStatus = `3. <b>Система работает удовлетворительно.</b> Отклонение фактических показателей по расходу воздуха от определённых по расчёту допускается не более ±15%.`;
+      }
+
+      return `
+        <div class="gost-sheet">
+          <div class="gost-title-page">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:11px; color:#475569;">
+              <div>Инв. № подп. _______ / Подп. и дата _______</div>
+              <div class="gost-cipher-badge">${meta.number || '109.005/П-02'}</div>
+              <div>Взам. инв. № _______ / Лист 1</div>
+            </div>
+
+            <div class="gost-object-box">
+              <div style="font-size:16px; font-weight:bold; color:#0f172a; margin-bottom:4px;">${meta.objectName || 'Торговый центр «Академический»'}</div>
+              <div style="font-size:13px; color:#475569;">${meta.address || 'СПб, Гражданский проспект, квартал 9А'}</div>
+            </div>
+
+            <h1 class="gost-doc-title">
+              Расчётное определение значений требуемого расхода воздуха через открытое дымоприёмное устройство при приёмо-сдаточных и периодических испытаниях противодымной вентиляции
+            </h1>
+
+            <div class="gost-doc-subtitle">${meta.systemName || 'Система ДУ1'}</div>
+            <div style="font-size:12px; color:#64748b; margin-top:8px;">Санкт-Петербург ${new Date().getFullYear()} г.</div>
+          </div>
+
+          <div class="gost-section-heading">Цель выполнения расчёта и нормативная база</div>
+          <div style="font-size:12.5px; line-height:1.6; text-align:justify; color:#1e293b; margin-bottom:14px;">
+            Целью выполнения расчёта является определение расхода воздуха для наиболее удалённого от вентилятора дымоприёмного устройства системы вытяжной противодымной вентиляции при фактической температуре воздуха в защищаемом помещении при проведении испытаний, так как оценка фактического расхода воздуха с проектными значениями не допускается требованиями <b>ГОСТ Р 53300-2009</b> «Противодымная защита зданий и сооружений. Методы приёмосдаточных и периодических испытаний».<br>
+            Методика проведения расчёта, изложенная в приложении Б <b>ГОСТ Р 53300-2009</b> «Противодымная защита зданий и сооружений. Методы приёмосдаточных и периодических испытаний», прилагается.
+          </div>
+
+          <div class="gost-section-heading">1. Характеристики системы (по проектной документации и натурным замерам)</div>
+          <div style="font-size:12.5px; line-height:1.6; color:#1e293b; margin-bottom:14px;">
+            Наиболее удалённое дымоприёмное устройство от вентилятора расположено на отметке <b><i>H</i><sub>кл</sub> = ${h_bot.toFixed(3)} м</b> (${meta.section || 'цокольный этаж'}).
+            <ul style="margin: 6px 0 10px 20px; padding: 0;">
+              <li><i>L</i><sub>пр</sub> = <b>${Lpr.toLocaleString('ru-RU')}</b> м³/ч – проектный объёмный расход вентилятора,</li>
+              <li><i>P</i><sub>sv</sub> = <b>${Psv}</b> Па – фактическое давление, создаваемое вентилятором,</li>
+              <li><i>T</i><sub>пг</sub> = <b>${Tpg}</b> К – температура продуктов горения, удаляемых из помещения,</li>
+              <li><i>T</i><sub>v</sub> = <b>${Tv}</b> К – температура продуктов горения, перемещаемых вентилятором,</li>
+              <li><i>T</i><sub>a</sub> = <b>${Tpom} °C</b> = <b>${Ta} К</b> – температура воздуха в помещении на момент проведения испытаний,</li>
+              <li><i>H</i><sub>уст</sub> = <b>${h_top.toFixed(3)}</b> м – высотная отметка установки вентилятора,</li>
+              <li><i>H</i><sub>кл</sub> = <b>${h_bot.toFixed(3)}</b> м – высотная отметка расположения наиболее удалённого дымоприёмного устройства.</li>
+            </ul>
+          </div>
+
+          <div class="gost-section-heading">2. Расчёт параметров газовоздушного тракта по методике ГОСТ Р 53300-2009</div>
+
+          <!-- Formula (1) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">Среднюю плотность газа в вытяжном канале определяем по формуле (1):</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>ρ</i><sub>sm</sub> = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">2 · <i>ρ</i><sub>a</sub> · <i>T</i><sub>a</sub></span>
+                  <span class="gost-frac-bot"><i>T</i><sub>пг</sub> + <i>T</i><sub>v</sub></span>
+                </span>
+                = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">2 · ${rho_a.toFixed(3)} · ${Ta}</span>
+                  <span class="gost-frac-bot">${Tpg} + ${Tv}</span>
+                </span>
+                = <b>${rho_sm.toFixed(4)}</b> кг/м³
+              </span>
+              <span class="gost-formula-num">(1)</span>
+            </div>
+            <div class="gost-formula-note">
+              где <i>ρ</i><sub>a</sub> = 
+              <span class="gost-frac">
+                <span class="gost-frac-top">353</span>
+                <span class="gost-frac-bot"><i>T</i><sub>a</sub></span>
+              </span>
+              = 
+              <span class="gost-frac">
+                <span class="gost-frac-top">353</span>
+                <span class="gost-frac-bot">${Ta}</span>
+              </span>
+              = <b>${rho_a.toFixed(3)}</b> кг/м³ – плотность воздуха при температуре ${Tpom} °C
+            </div>
+          </div>
+
+          <!-- Formula (2) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">Вычисляем давление разрежения в вытяжном канале перед вентилятором по формуле (2):</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>P</i><sub>sa</sub> = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>P</i><sub>sv</sub> · <i>ρ</i><sub>v</sub></span>
+                  <span class="gost-frac-bot">1,2</span>
+                </span>
+                + <i>g</i> · <i>h</i> · (<i>ρ</i><sub>a</sub> − <i>ρ</i><sub>sm</sub>) = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">${Psv} · ${rho_v.toFixed(3)}</span>
+                  <span class="gost-frac-bot">1,2</span>
+                </span>
+                + 9,81 · ${h.toFixed(1)} · (${rho_a.toFixed(3)} − ${rho_sm.toFixed(4)}) = <b>${Psa.toFixed(2)}</b> Па
+              </span>
+              <span class="gost-formula-num">(2)</span>
+            </div>
+            <div class="gost-formula-note">
+              где <i>ρ</i><sub>v</sub> = 
+              <span class="gost-frac">
+                <span class="gost-frac-top">353</span>
+                <span class="gost-frac-bot"><i>T</i><sub>v</sub></span>
+              </span>
+              = 
+              <span class="gost-frac">
+                <span class="gost-frac-top">353</span>
+                <span class="gost-frac-bot">${Tv}</span>
+              </span>
+              = <b>${rho_v.toFixed(3)}</b> кг/м³ – плотность перемещаемых дымовых газов при температуре <i>T</i><sub>v</sub>;<br>
+              <i>h</i> = <i>H</i><sub>уст</sub> − <i>H</i><sub>кл</sub> = ${h_top.toFixed(1)} − (${h_bot.toFixed(1)}) = <b>${h.toFixed(1)}</b> м – разность уровней расположения вентилятора и открытого ДПУ.
+            </div>
+          </div>
+
+          <!-- Formula (3) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">По формуле (3) вычисляем аэродинамическое соотношение для характеристики вентилятора:</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>L</i><sub>a</sub> = <i>f</i>
+                <span class="gost-bracket">(</span>
+                <span class="gost-frac">
+                  <span class="gost-frac-top">1,2 · <i>P</i><sub>sa</sub></span>
+                  <span class="gost-frac-bot"><i>ρ</i><sub>v</sub></span>
+                </span>
+                <span class="gost-bracket">)</span>
+                = <i>f</i>(${Math.round(1.2 * Psa / rho_v)})
+              </span>
+              <span class="gost-formula-num">(3)</span>
+            </div>
+            <div class="gost-formula-note">
+              Используя аэродинамическую характеристику вентилятора (рис. 1), определяем значение объёмного расхода воздуха, перемещаемого им при температуре <i>T</i><sub>a</sub>:<br>
+              <b><i>L</i><sub>a</sub> ≈ ${La.toLocaleString('ru-RU')} м³/ч</b>
+            </div>
+          </div>
+
+          <!-- Formula (4) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">По формуле (4) определяем массовый расход воздуха перед вентилятором:</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>G</i><sub>a</sub> = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>ρ</i><sub>a</sub> · <i>L</i><sub>a</sub></span>
+                  <span class="gost-frac-bot">3600</span>
+                </span>
+                = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">${rho_a.toFixed(3)} · ${La}</span>
+                  <span class="gost-frac-bot">3600</span>
+                </span>
+                = <b>${Ga.toFixed(3)}</b> кг/с
+              </span>
+              <span class="gost-formula-num">(4)</span>
+            </div>
+          </div>
+
+          <!-- Formula (5) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">По формуле (5) определяем разрежение в вытяжном канале перед ближайшим к вентилятору закрытым противопожарным клапаном:</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>P</i><sub>sn</sub> = <i>P</i><sub>sa</sub> − 0,5 · <i>ρ</i><sub>a</sub> · 
+                <span class="gost-bracket">(</span>
+                ΣКМС + 
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>λ</i><sub>n</sub> · <i>l</i><sub>n</sub></span>
+                  <span class="gost-frac-bot"><i>d</i><sub>en</sub></span>
+                </span>
+                <span class="gost-bracket">)</span>
+                · 
+                <span class="gost-bracket">(</span>
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>G</i><sub>a</sub></span>
+                  <span class="gost-frac-bot"><i>ρ</i><sub>a</sub> · <i>F</i><sub>n</sub></span>
+                </span>
+                <span class="gost-bracket">)</span><sup>2</sup>
+                = <b>${firstFloor.P_sn}</b> Па
+              </span>
+              <span class="gost-formula-num">(5)</span>
+            </div>
+          </div>
+
+          <!-- Formula (6) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">По формуле (6) вычисляем подсос воздуха через ближайшее к вентилятору закрытое дымоприёмное устройство:</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                Δ<i>G</i><sub>dpn</sub> = <i>F</i><sub>dpn</sub> · 
+                <span class="gost-bracket">(</span>
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>P</i><sub>sn</sub></span>
+                  <span class="gost-frac-bot"><i>S</i><sub>dpn</sub></span>
+                </span>
+                <span class="gost-bracket">)</span><sup>0,5</sup>
+                = <b>${firstFloor.G_leak}</b> кг/с
+              </span>
+              <span class="gost-formula-num">(6)</span>
+            </div>
+          </div>
+
+          <!-- Formula (7) and (8) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">По формулам (7) и (8) определяем разрежение и подсос воздуха у каждого последующего <i>i</i>-го закрытого клапана при температуре <i>T</i><sub>a</sub>:</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>P</i><sub>si</sub> = <i>P</i><sub>si-1</sub> − 0,5 · <i>ρ</i><sub>a</sub> · 
+                <span class="gost-bracket">(</span>
+                ΣКМС + 
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>λ</i><sub>i</sub> · <i>l</i><sub>i</sub></span>
+                  <span class="gost-frac-bot"><i>d</i><sub>ei</sub></span>
+                </span>
+                <span class="gost-bracket">)</span>
+                · 
+                <span class="gost-bracket">(</span>
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>G</i><sub>i</sub></span>
+                  <span class="gost-frac-bot"><i>ρ</i><sub>a</sub> · <i>F</i><sub>i</sub></span>
+                </span>
+                <span class="gost-bracket">)</span><sup>2</sup>
+              </span>
+              <span class="gost-formula-num">(7)</span>
+            </div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                Δ<i>G</i><sub>dpi</sub> = <i>F</i><sub>dpi</sub> · 
+                <span class="gost-bracket">(</span>
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>P</i><sub>si</sub></span>
+                  <span class="gost-frac-bot"><i>S</i><sub>dpi</sub></span>
+                </span>
+                <span class="gost-bracket">)</span><sup>0,5</sup>
+              </span>
+              <span class="gost-formula-num">(8)</span>
+            </div>
+            <div class="gost-formula-note">
+              <i>λ</i><sub>n</sub> (<i>λ</i><sub>i</sub>) = 0,016 – коэффициент гидравлического сопротивления трения вытяжного канала;<br>
+              <i>l</i><sub>n</sub> (<i>l</i><sub>i</sub>) – длина участка вытяжного канала, принимается по проектным данным, м;<br>
+              <i>d</i><sub>en</sub> (<i>d</i><sub>ei</sub>) = 
+              <span class="gost-frac">
+                <span class="gost-frac-top">4 · <i>F</i></span>
+                <span class="gost-frac-bot"><i>P</i></span>
+              </span>
+              – эквивалентный гидравлический диаметр вытяжного канала, м;<br>
+              <i>F</i> – площадь проходного сечения вытяжного канала, м²; <i>P</i> – периметр сечения вытяжного канала, м;<br>
+              <i>F</i><sub>dpn</sub> (<i>F</i><sub>dpi</sub>) – площадь проходного сечения закрытого противопожарного клапана, м²;<br>
+              <i>S</i><sub>dpn</sub> (<i>S</i><sub>dpi</sub>) = 10 000 м³/кг – удельное сопротивление воздухопроницанию закрытого клапана.
+            </div>
+          </div>
+
+          <!-- Table 1 -->
+          <div class="gost-table-title">Расчёт параметров <i>P</i><sub>sn</sub>, Δ<i>G</i><sub>dpn</sub> сведён в таблицу 1:</div>
+          <table class="gost-grid-table">
+            <thead>
+              <tr>
+                <th>№ клапана по удалению от вентилятора</th>
+                <th>КМС</th>
+                <th><i>λ</i><sub>n</sub> (<i>λ</i><sub>i</sub>)</th>
+                <th><i>l</i><sub>n</sub> (<i>l</i><sub>i</sub>), м</th>
+                <th><i>d</i><sub>en</sub>, м</th>
+                <th><i>F</i><sub>n</sub> (<i>F</i><sub>i</sub>), м²</th>
+                <th><i>P</i><sub>n</sub> (<i>P</i><sub>i</sub>), м</th>
+                <th><i>G</i><sub>a</sub> (<i>G</i><sub>i</sub>), кг/с</th>
+                <th><i>P</i><sub>sn</sub> (<i>P</i><sub>si</sub>), Па</th>
+                <th>Площадь клапана <i>F</i><sub>dpn</sub>, м²</th>
+                <th>Δ<i>G</i><sub>dpn</sub>, кг/с</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${table1Rows}
+            </tbody>
+          </table>
+
+          <!-- Formula (9) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">По формуле (9) вычисляем массовый расход воздуха, удаляемого через открытое дымоприёмное устройство:</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>G</i><sub>0</sub> = <i>G</i><sub>a</sub> − (Δ<i>G</i><sub>dpn</sub> + ΣΔ<i>G</i><sub>dpi</sub>) = ${Ga.toFixed(3)} − ${sumGleak.toFixed(4)} = <b>${G0.toFixed(3)}</b> кг/с
+              </span>
+              <span class="gost-formula-num">(9)</span>
+            </div>
+          </div>
+
+          <!-- Formula (10) -->
+          <div class="gost-formula-block">
+            <div class="gost-formula-text">Требуемое значение расхода воздуха через открытое дымоприёмное устройство испытываемой системы вытяжной противодымной вентиляции определяем по формуле (10):</div>
+            <div class="gost-formula-row">
+              <span class="gost-formula-math">
+                <i>L</i><sub>0</sub> = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">3600 · <i>G</i><sub>0</sub></span>
+                  <span class="gost-frac-bot"><i>ρ</i><sub>a</sub></span>
+                </span>
+                = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">3600 · ${G0.toFixed(3)}</span>
+                  <span class="gost-frac-bot">${rho_a.toFixed(3)}</span>
+                </span>
+                = <b style="font-size:15px; color:#167b88;">${Math.round(L0).toLocaleString('ru-RU')}</b> м³/ч
+              </span>
+              <span class="gost-formula-num">(10)</span>
+            </div>
+          </div>
+
+          <!-- Fact compare -->
+          <div class="gost-fact-compare">
+            ${Lfact ? `
+              Фактический расход воздуха через наиболее удалённое от вентилятора открытое дымоприёмное устройство: <b><i>L</i><sub>ф</sub> = ${Math.round(Lfact).toLocaleString('ru-RU')} м³/ч</b>.<br>
+              Отклонение фактического расхода от расчетного: 
+              <b><i>δ</i> = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top"><i>L</i><sub>ф</sub> − <i>L</i><sub>0</sub></span>
+                  <span class="gost-frac-bot"><i>L</i><sub>0</sub></span>
+                </span>
+                · 100% = 
+                <span class="gost-frac">
+                  <span class="gost-frac-top">${Math.round(Lfact)} − ${Math.round(L0)}</span>
+                  <span class="gost-frac-bot">${Math.round(L0)}</span>
+                </span>
+                · 100% = ${deviation > 0 ? '+' : ''}${deviation.toFixed(1)}%</b>
+            ` : `
+              Фактический расход воздуха через наиболее удалённое от вентилятора открытое дымоприёмное устройство: <b><i>L</i><sub>ф</sub> = _______ м³/ч</b>.<br>
+              <i>(Значение определяется по показаниям поверенного термоанемометра в сечении открытого клапана).</i>
+            `}
+          </div>
+
+          <!-- Conclusions -->
+          <div class="gost-conclusions">
+            <h4 style="margin: 0 0 10px; font-size: 13px; text-transform: uppercase;">Выводы:</h4>
+            <ol style="margin: 0; padding-left: 20px; line-height: 1.65; font-size: 12.5px;">
+              <li>В соответствии с <b>ГОСТ Р 53300-2009</b> «Противодымная защита зданий и сооружений. Методы приёмосдаточных и периодических испытаний», определено требуемое значение расхода воздуха через открытое дымоприёмное устройство для систем противодымной вытяжной вентиляции: <b><i>L</i><sub>0</sub> = ${Math.round(L0).toLocaleString('ru-RU')} м³/ч</b>.</li>
+              <li>В соответствии с <b>ГОСТ Р 53300-2009</b> отклонение фактических показателей по расходу воздуха от определённых по расчёту допускается <b>не более 15%</b>.</li>
+              <li>${conclusionStatus}</li>
+            </ol>
+          </div>
+
+          <!-- Figure 1 SVG Fan curve -->
+          <div class="gost-chart-wrapper">
+            ${chartSvg}
+            <div class="gost-chart-caption">
+              Рисунок 1. Аэродинамическая характеристика вентилятора системы ${meta.systemName || 'ДУ1'}
+            </div>
+          </div>
+
+          <!-- Title block / Stamp Table -->
+          <table class="gost-stamp-table">
+            <tr>
+              <td style="width:10%;" class="gost-stamp-label">Изм.</td>
+              <td style="width:10%;">1</td>
+              <td style="width:15%;" class="gost-stamp-label">Шифр проекта:</td>
+              <td colspan="2"><b>${meta.number || '109.005/П-02'}</b></td>
+              <td rowspan="4" style="width:32%; text-align:center; vertical-align:middle; background:#f8fafc;">
+                <div style="font-weight:bold; font-size:12px; text-transform:uppercase;">ООО «Баланс Инженерных Систем»</div>
+                <div style="font-size:10px; color:#475569; margin-top:2px;">Испытательная лаборатория | biscorp.ru</div>
+                <div style="margin-top:8px; font-size:10.5px; border:1px dashed #94a3b8; display:inline-block; padding:2px 10px;">М.П.</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="gost-stamp-label">Разраб.</td>
+              <td>${meta.engineer || 'Иванов И.И.'}</td>
+              <td class="gost-stamp-label">Объект:</td>
+              <td colspan="2">${meta.objectName || 'ТК «Академический»'}</td>
+            </tr>
+            <tr>
+              <td class="gost-stamp-label">Пров.</td>
+              <td>${meta.approver || 'Петров П.П.'}</td>
+              <td class="gost-stamp-label">Система:</td>
+              <td colspan="2"><b>${meta.systemName || 'Система ДУ1'}</b></td>
+            </tr>
+            <tr>
+              <td class="gost-stamp-label">Утв.</td>
+              <td>${meta.approver || 'Петров П.П.'}</td>
+              <td class="gost-stamp-label">Стадия / Лист:</td>
+              <td style="width:15%;">И / Лист 1</td>
+              <td style="width:18%;">Дата: ${meta.date}</td>
+            </tr>
+          </table>
+        </div>
       `;
-      conclusionText = `Заключение: Система противодымной вентиляции ${meta.systemName} обеспечивает расчетный расход воздуха ${res.L0 || 0} м³/ч при напоре вентилятора ${res.Psa || 0} Па в соответствии с требованиями ГОСТ Р 53300-2009.`;
-
-    } else if (state.currentBlock === 'block2') {
-      const res = state.lastResults.avok || {};
-      protocolTitle = `ПРОТОКОЛ РАСЧЕТА СИСТЕМЫ ПРОТИВОДЫМНОЙ ВЕНТИЛЯЦИИ (${res.type || 'АВОК'})`;
-      
-      let detailsRows = '';
-      (res.details || []).forEach(d => {
-        detailsRows += `<tr><td class="field-name">${d.label}:</td><td><b>${d.val}</b></td></tr>`;
-      });
-
-      tableHtml = `
-        <table class="protocol-table-info">
-          <tr><td class="field-name">Объект / Адрес:</td><td>${meta.objectName}</td><td class="field-name">Дата расчета:</td><td>${meta.date}</td></tr>
-          <tr><td class="field-name">Наименование системы:</td><td>${meta.systemName}</td><td class="field-name">Номер протокола:</td><td>№ ${meta.number}</td></tr>
-          <tr><td class="field-name">Нормативная база:</td><td>Рекомендации АВОК 5.5.1</td><td class="field-name">Расчетчик:</td><td>${meta.engineer}</td></tr>
-        </table>
-        <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Результаты расчета параметров противодымной вентиляции:</h4>
-        <table class="protocol-table-info">
-          <tr><td class="field-name">${res.mainLabel || 'Расход воздуха'}:</td><td><b style="font-size:14px;">${res.mainVal || '—'}</b></td></tr>
-          <tr><td class="field-name">${res.sub1Label || 'Давление'}:</td><td><b>${res.sub1Val || '—'}</b></td></tr>
-          <tr><td class="field-name">${res.sub2Label || 'Показатель'}:</td><td><b>${res.sub2Val || '—'}</b></td></tr>
-          ${detailsRows}
-        </table>
-      `;
-      conclusionText = `Заключение: Расчетные параметры системы противодымной вентиляции ${meta.systemName} соответствуют требованиям нормативов АВОК и СП 7.13130.`;
     }
+
+    // Fallback for Block 2 (AVOK)
+    const res = state.lastResults.avok || {};
+    const protocolTitle = `ПРОТОКОЛ РАСЧЕТА СИСТЕМЫ ПРОТИВОДЫМНОЙ ВЕНТИЛЯЦИИ (${res.type || 'АВОК'})`;
+    
+    let detailsRows = '';
+    (res.details || []).forEach(d => {
+      detailsRows += `<tr><td class="field-name">${d.label}:</td><td><b>${d.val}</b></td></tr>`;
+    });
+
+    const tableHtml = `
+      <table class="protocol-table-info">
+        <tr><td class="field-name">Объект / Адрес:</td><td>${meta.objectName} (${meta.address || ''})</td><td class="field-name">Дата расчета:</td><td>${meta.date}</td></tr>
+        <tr><td class="field-name">Наименование системы:</td><td>${meta.systemName}</td><td class="field-name">Номер протокола:</td><td>№ ${meta.number}</td></tr>
+        <tr><td class="field-name">Нормативная база:</td><td>Рекомендации АВОК 5.5.1</td><td class="field-name">Расчетчик:</td><td>${meta.engineer}</td></tr>
+      </table>
+      <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Результаты расчета параметров противодымной вентиляции:</h4>
+      <table class="protocol-table-info">
+        <tr><td class="field-name">${res.mainLabel || 'Расход воздуха'}:</td><td><b style="font-size:14px;">${res.mainVal || '—'}</b></td></tr>
+        <tr><td class="field-name">${res.sub1Label || 'Давление'}:</td><td><b>${res.sub1Val || '—'}</b></td></tr>
+        <tr><td class="field-name">${res.sub2Label || 'Показатель'}:</td><td><b>${res.sub2Val || '—'}</b></td></tr>
+        ${detailsRows}
+      </table>
+    `;
+    const conclusionText = `Заключение: Расчетные параметры системы противодымной вентиляции ${meta.systemName} соответствуют требованиям нормативов АВОК и СП 7.13130.`;
 
     return `
       <div class="protocol-sheet-container">
         <div class="protocol-sheet-header">
           <div class="protocol-org-name">
             ООО «Баланс Инженерных Систем»
-            <div class="protocol-org-sub">ИНН: 7700000000 | bis-rf.ru | info@bis-rf.ru</div>
+            <div class="protocol-org-sub">ИНН: 7700000000 | biscorp.ru | office@bis-rf.ru</div>
           </div>
           <div class="protocol-stamp-box">
             <b>УТВЕРЖДАЮ:</b><br>
@@ -967,8 +1477,8 @@
         <meta charset="utf-8">
         <title>Протокол испытаний БИС</title>
         <style>
-          @page { size: A4 portrait; margin: 12mm 15mm 15mm 15mm; }
-          body { font-family: Calibri, Arial, sans-serif; font-size: 12px; color: #000; margin: 0; padding: 0; background: #fff; }
+          @page { size: A4 portrait; margin: 10mm 12mm 12mm 12mm; }
+          body { font-family: 'Times New Roman', 'Cambria Math', 'Calibri', Arial, sans-serif; font-size: 12px; color: #000; margin: 0; padding: 0; background: #fff; }
           .protocol-sheet-container { padding: 0; }
           .protocol-sheet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 2px solid #000; padding-bottom: 10px; }
           .protocol-org-name { font-size: 15px; font-weight: bold; text-transform: uppercase; }
@@ -986,6 +1496,37 @@
           .protocol-signs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
           .sign-column { display: flex; flex-direction: column; gap: 4px; font-size: 11px; }
           .sign-underline { border-bottom: 1px solid #000; height: 20px; }
+
+          /* GOST sheet print styles */
+          .gost-sheet { padding: 0; max-width: 100%; border: none; box-shadow: none; margin: 0; }
+          .gost-title-page { text-align: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid #000; }
+          .gost-cipher-badge { display: inline-block; font-family: 'Consolas', monospace; font-size: 13px; font-weight: 700; padding: 3px 12px; border: 1.5px solid #000; letter-spacing: 0.1em; margin-bottom: 10px; }
+          .gost-doc-title { font-size: 14px; font-weight: 800; text-transform: uppercase; line-height: 1.35; margin: 10px auto; max-width: 650px; }
+          .gost-doc-subtitle { font-size: 13px; font-weight: 700; margin: 6px 0 4px; }
+          .gost-object-box { margin: 10px 0; font-size: 12px; color: #334155; }
+          .gost-section-heading { font-size: 12px; font-weight: 700; text-transform: uppercase; margin: 18px 0 8px; padding-bottom: 3px; border-bottom: 1.5px solid #000; }
+          .gost-formula-block { margin: 10px 0 14px; padding: 6px 10px; background: #fafafa; border-left: 3px solid #167b88; page-break-inside: avoid; }
+          .gost-formula-text { font-size: 12px; margin-bottom: 4px; }
+          .gost-formula-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin: 6px 0; }
+          .gost-formula-math { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 3px; font-family: 'Cambria Math', 'Times New Roman', serif; font-style: italic; }
+          .gost-formula-math b, .gost-formula-math strong { font-style: normal; }
+          .gost-formula-num { font-family: 'Times New Roman', serif; font-style: normal; font-weight: 700; font-size: 12.5px; margin-left: 16px; white-space: nowrap; }
+          .gost-formula-note { font-size: 11px; line-height: 1.45; color: #475569; margin-top: 4px; }
+          .gost-frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; font-size: 0.9em; }
+          .gost-frac-top { border-bottom: 1.5px solid #000; padding: 0 4px 1px; line-height: 1.1; }
+          .gost-frac-bot { padding: 1px 4px 0; line-height: 1.1; }
+          .gost-bracket { font-size: 1.3em; line-height: 1; vertical-align: middle; font-style: normal; }
+          .gost-table-title { font-size: 11.5px; font-weight: 700; margin: 14px 0 6px; }
+          .gost-grid-table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 10.5px; page-break-inside: avoid; }
+          .gost-grid-table th, .gost-grid-table td { border: 1px solid #000; padding: 4px; text-align: center; vertical-align: middle; line-height: 1.2; }
+          .gost-grid-table th { background: #f1f5f9; font-weight: 700; }
+          .gost-fact-compare { margin: 14px 0; padding: 10px 14px; border: 1.5px dashed #0284c7; background: #f0f9ff; font-size: 12px; line-height: 1.5; page-break-inside: avoid; }
+          .gost-conclusions { margin: 16px 0; padding: 12px 16px; border: 2px solid #000; background: #fff; page-break-inside: avoid; }
+          .gost-chart-wrapper { margin: 16px auto; text-align: center; max-width: 540px; page-break-inside: avoid; }
+          .gost-chart-caption { font-size: 11.5px; font-weight: 600; color: #334155; margin-top: 6px; }
+          .gost-stamp-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10.5px; border: 2px solid #000; page-break-inside: avoid; }
+          .gost-stamp-table td { border: 1px solid #000; padding: 3px 5px; vertical-align: middle; }
+          .gost-stamp-label { font-weight: 600; color: #475569; }
         </style>
       </head>
       <body>

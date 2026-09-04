@@ -57,7 +57,7 @@ get_header();
             <section class="news-tags-section">
                 <div class="mw-1400px news-tags-order-btn" style="margin-bottom: 32px;">
                     <button class="btn btn-primary news-tags-panel__cta open-estimate-modal" type="button">
-                        Заказать оборудование <span aria-hidden="true">→</span>
+                        Рассчитать смету и сроки <span aria-hidden="true">→</span>
                     </button>
                 </div>
                 <?php if (is_array($news_tags) && !empty($news_tags) && !is_wp_error($news_tags)) : ?>

@@ -591,6 +591,7 @@ function bis_get_request_type_label($request_type) {
         'order'        => 'Заявка на услугу',
         'callback'     => 'Обратный звонок',
         'exit_intent'  => 'Лид-магнит при выходе',
+        'vacancy'      => 'Отклик на вакансию',
     );
 
     return isset($type_labels[$request_type]) ? $type_labels[$request_type] : 'Заявка с сайта';
@@ -741,6 +742,8 @@ function bis_get_request_notification_context($post_id) {
         $type_label = 'Консультация по проекту';
     } elseif ('estimate' === $request_type) {
         $type_label = 'Смета и сроки';
+    } elseif ('vacancy' === $request_type) {
+        $type_label = 'Отклик на вакансию';
     }
 
     $name = (string) get_post_meta($post_id, 'bis_name', true);
@@ -999,6 +1002,93 @@ function bis_submit_estimate() {
 }
 add_action('wp_ajax_bis_submit_estimate', 'bis_submit_estimate');
 add_action('wp_ajax_nopriv_bis_submit_estimate', 'bis_submit_estimate');
+
+// AJAX Handler for Vacancy Application Form
+function bis_submit_vacancy() {
+    if (bis_is_request_larger_than_post_max_size()) {
+        wp_send_json_error(array('message' => 'Размер данных формы превышает лимит сервера. Уменьшите файл резюме.'));
+    }
+
+    $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
+    $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
+    $raw_email = isset($_POST['email']) ? wp_unslash($_POST['email']) : '';
+    $email = sanitize_email($raw_email);
+    $vacancy_title = isset($_POST['vacancy_title']) && trim((string)$_POST['vacancy_title']) !== '' 
+        ? sanitize_text_field(wp_unslash($_POST['vacancy_title'])) 
+        : 'Вакансии в БИС';
+    $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
+    $location_meta = bis_get_request_location_meta_input();
+    $hcaptcha_check = bis_maybe_verify_hcaptcha_response(true);
+
+    if (is_wp_error($hcaptcha_check)) {
+        wp_send_json_error(array('message' => $hcaptcha_check->get_error_message()));
+    }
+
+    if ($name === '' || $phone === '' || trim((string) $raw_email) === '') {
+        wp_send_json_error(array('message' => 'Заполните обязательные поля: имя, телефон и email.'));
+    }
+
+    if (!bis_is_valid_request_phone($phone)) {
+        wp_send_json_error(array('message' => 'Укажите корректный номер телефона.'));
+    }
+    if (!is_email($email)) {
+        wp_send_json_error(array('message' => 'Укажите корректный email.'));
+    }
+
+    if (!empty($_FILES['resume']['name']) && isset($_FILES['resume']['error']) && (int) $_FILES['resume']['error'] !== UPLOAD_ERR_OK) {
+        wp_send_json_error(array('message' => bis_get_upload_error_message($_FILES['resume']['error'])));
+    }
+
+    $post_id = wp_insert_post(array(
+        'post_title'  => 'Отклик: ' . $vacancy_title . ' — ' . $name . ' (' . $phone . ')',
+        'post_type'   => 'bis_request',
+        'post_status' => 'publish',
+        'meta_input'  => array_merge($location_meta, array(
+            'bis_name'         => $name,
+            'bis_phone'        => $phone,
+            'bis_email'        => $email,
+            'bis_topic'        => $vacancy_title,
+            'bis_comment'      => $message,
+            'bis_request_type' => 'vacancy',
+            'bis_status'       => 'new',
+            'bis_date'         => current_time('mysql'),
+        )),
+    ));
+
+    if ($post_id) {
+        $upload_error = '';
+        if (!empty($_FILES['resume']['name'])) {
+            $uploaded_file = bis_handle_private_request_upload('resume');
+
+            if (is_wp_error($uploaded_file)) {
+                $upload_error = $uploaded_file->get_error_message();
+            } else {
+                update_post_meta($post_id, 'bis_private_file_path', $uploaded_file['path']);
+                update_post_meta($post_id, 'bis_private_file_relative_path', $uploaded_file['relative_path']);
+                update_post_meta($post_id, 'bis_private_file_name', $uploaded_file['name']);
+                delete_post_meta($post_id, 'bis_upload_error');
+            }
+        }
+
+        if ($upload_error !== '') {
+            update_post_meta($post_id, 'bis_upload_error', $upload_error);
+        }
+
+        $mail_sent = bis_send_request_notification($post_id);
+        if (!$mail_sent) {
+            wp_send_json_error(array(
+                'message'      => 'Отклик сохранен, но письмо уведомления не отправилось. Проверьте настройки почты.',
+                'upload_error' => $upload_error,
+            ));
+        }
+
+        wp_send_json_success(array('message' => 'Отклик успешно отправлен! Мы свяжемся с вами.', 'upload_error' => $upload_error));
+    } else {
+        wp_send_json_error(array('message' => 'Ошибка при сохранении отклика'));
+    }
+}
+add_action('wp_ajax_bis_submit_vacancy', 'bis_submit_vacancy');
+add_action('wp_ajax_nopriv_bis_submit_vacancy', 'bis_submit_vacancy');
 
 // AJAX Handler for Project Consultation Form
 function bis_submit_project_consultation() {
