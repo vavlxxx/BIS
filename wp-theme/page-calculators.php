@@ -103,7 +103,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_Lpr">Проектный расход Lпр <small>Расход вентилятора</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_Lpr" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="27500" placeholder="например, 27500" step="50">
+                                    <input type="number" id="b1_Lpr" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 27500" step="50">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_Psv">Давление вентилятора Psv <small>По номограмме при 20°C</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_Psv" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="250" placeholder="например, 250" step="10">
+                                    <input type="number" id="b1_Psv" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 250" step="10">
                                     <span class="calc-field-unit">Па</span>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_Tpg">Температура горения Тпг <small>В очаге пожара</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_Tpg" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="760" placeholder="например, 760">
+                                    <input type="number" id="b1_Tpg" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 760">
                                     <span class="calc-field-unit">К</span>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_Tpom">Температура в помещении <small>Внутренний воздух</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_Tpom" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="20" placeholder="например, 20">
+                                    <input type="number" id="b1_Tpom" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 20">
                                     <span class="calc-field-unit">°C</span>
                                 </div>
                             </div>
@@ -135,7 +135,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_h_top">Отметка выброса <small>Верх шахты / вентилятор</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_h_top" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="10.0" placeholder="например, 10.0" step="0.1">
+                                    <input type="number" id="b1_h_top" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 10.0" step="0.1">
                                     <span class="calc-field-unit">м</span>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_h_bot">Отметка открытого клапана <small>Нижний обслуживаемый этаж</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_h_bot" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="-1.0" placeholder="например, -1.0" step="0.1">
+                                    <input type="number" id="b1_h_bot" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, -1.0" step="0.1">
                                     <span class="calc-field-unit">м</span>
                                 </div>
                             </div>
@@ -151,7 +151,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b1_Lfact">Фактический замер Lф <small>Расход на ДПУ при испытании</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_Lfact" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="12092" placeholder="например, 12092" step="10">
+                                    <input type="number" id="b1_Lfact" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 12092" step="10">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -223,15 +223,18 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <span id="b1_res_Leak" class="calc-metric-row__value">— <span class="unit">м³/ч</span></span>
                         </div>
 
-                        <div class="calc-metric-row" id="b1_row_Dev" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
-                            <span class="calc-metric-row__label" style="font-weight: 600;">Отклонение (Lф vs L₀):</span>
-                            <span id="b1_res_Dev" class="calc-metric-row__value" style="color: #166534; font-weight: 800;">— <span class="unit">%</span></span>
+                        <div class="calc-metric-row" id="b1_row_Dev" style="display: none; background: #f0fdf4; border-color: #bbf7d0; text-align: center; align-items: center; justify-content: center;">
+                            <span class="calc-metric-row__label" style="font-weight: 600; text-align: center; width: 100%;">Отклонение (Lф vs L₀):</span>
+                            <span id="b1_res_Dev" class="calc-metric-row__value" style="color: #166534; font-weight: 800; text-align: center; width: 100%;">— <span class="unit">%</span></span>
                         </div>
 
-                        <button type="button" class="btn-calc-cta" onclick="window.calcEngineOpenProtocol()">
+                        <button type="button" class="btn-calc-cta btn-disabled" id="b1_btn_protocol" onclick="window.calcEngineOpenProtocol()" disabled="disabled" title="Для формирования отчёта введите параметры и добавьте хотя бы 1 этаж">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                             Сформировать протокол
                         </button>
+                        <div id="b1_calc_hint" style="font-size: 12px; color: var(--text-light); margin-top: 8px; text-align: center;">
+                            Для расчета и формирования отчета заполните параметры и добавьте этажи
+                        </div>
                     </div>
                 </div>
             </div>
