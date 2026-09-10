@@ -491,7 +491,7 @@
   border: 1px solid var(--border);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   padding: 8px 10px;
-  min-width: 200px;
+  min-width: 240px;
   text-align: left;
   display: flex;
   flex-direction: column;

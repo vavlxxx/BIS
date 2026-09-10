@@ -36,12 +36,13 @@
   };
 
   const KMS_COMPONENTS = {
-    pass: { name: 'Проход (0.4)', val: 0.4 },
-    turn: { name: 'Поворот / отвод (1.6)', val: 1.6 },
-    complex: { name: 'Отводы + Тройник (4.6)', val: 4.6 },
-    tee: { name: 'Тройник (3.0)', val: 3.0 },
-    trans: { name: 'Переход (0.2)', val: 0.2 },
-    grille: { name: 'Решетка (1.5)', val: 1.5 }
+    pass: { name: 'Тройник на проход (0.4)', val: 0.4 },
+    tee_branch: { name: 'Тройник на ответвление (1.9)', val: 1.9 },
+    elbow_90: { name: 'Колено 90° (0.6)', val: 0.6 },
+    bend_45: { name: 'Полуотвод 45° (0.4)', val: 0.4 },
+    expansion: { name: 'Внезапное расширение (1.0)', val: 1.0 },
+    contraction: { name: 'Внезапное сужение (1.0)', val: 1.0 },
+    plenum_box: { name: 'Анемостатическая камера решётки (5.6)', val: 5.6 }
   };
 
   function getKmsShortTitle(f) {
@@ -56,7 +57,7 @@
   const KMS_RATES = {
     standard: 0.4,
     complex: 4.6,
-    turns: 1.6
+    turns: 0.6
   };
 
   const LEAKAGE_CLASSES = {
@@ -436,30 +437,12 @@
                 <span style="font-size: 9px; margin-left: 2px;">▼</span>
               </summary>
               <div class="b1-kms-popover">
-                <label class="b1-kms-label">
-                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="0.4" data-id="pass" ${items.includes('pass') ? 'checked' : ''}>
-                  Проход (0.4)
-                </label>
-                <label class="b1-kms-label">
-                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="1.6" data-id="turn" ${items.includes('turn') ? 'checked' : ''}>
-                  Поворот / отвод (1.6)
-                </label>
-                <label class="b1-kms-label">
-                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="4.6" data-id="complex" ${items.includes('complex') ? 'checked' : ''}>
-                  Отводы + Тройник (4.6)
-                </label>
-                <label class="b1-kms-label">
-                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="3.0" data-id="tee" ${items.includes('tee') ? 'checked' : ''}>
-                  Тройник (3.0)
-                </label>
-                <label class="b1-kms-label">
-                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="0.2" data-id="trans" ${items.includes('trans') ? 'checked' : ''}>
-                  Переход (0.2)
-                </label>
-                <label class="b1-kms-label">
-                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="1.5" data-id="grille" ${items.includes('grille') ? 'checked' : ''}>
-                  Решетка (1.5)
-                </label>
+                ${Object.entries(KMS_COMPONENTS).map(([kId, kObj]) => `
+                  <label class="b1-kms-label">
+                    <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="${kObj.val}" data-id="${kId}" ${items.includes(kId) ? 'checked' : ''}>
+                    ${kObj.name}
+                  </label>
+                `).join('')}
               </div>
             </details>
           </div>
