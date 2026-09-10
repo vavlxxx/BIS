@@ -188,7 +188,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <th style="width: 70px;">Этаж</th>
                                         <th style="width: 90px;">Длина li</th>
                                         <th style="width: 140px;">Сечение шахты A×B</th>
-                                        <th style="width: 175px;">КМС (сопротивление)</th>
+                                        <th style="width: 185px;" title="Суммарный коэффициент местного сопротивления участка шахты (ручной ввод или выбор из списка)">КМС (Σξ)</th>
                                         <th style="width: 140px;">Клапан a×b</th>
                                         <th>Давление Psi</th>
                                         <th>Утечка Gdpn</th>
