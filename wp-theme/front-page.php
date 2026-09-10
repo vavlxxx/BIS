@@ -272,7 +272,7 @@ $has_hero_slider = !empty($hero_images);
           <span class="stat-label">клиентов возвращаются повторно</span>
         </div>
       </div>
-      <p class="pnr-stats-note">Комплексный подход: мы команда высококлассных инженеров с уникальным опытом наладки инженерных систем.</p>
+      <p class="pnr-stats-note">Для нас не существует неразрешимых задач: мы не боимся трудностей, а решение нестандартных технических вопросов - наша работа. Поэтому, если в вашей деятельности возникли технические проблемы, мы обязательно постараемся вам помочь!</p>
     </div>
     <div style="margin-top: 40px;width: 100%; text-align: center;display: flex; justify-content: center;">
       <a href="#contact" class="btn btn-primary" data-service="Общая заявка">Отправить заявку</a>
@@ -1186,111 +1186,7 @@ $categories = get_terms(array(
   </div>
 </section>
 
-<!-- Popular Services Section -->
-<section class="popular-services-section" id="popular-services">
-  <div class="popular-services__container mw-1400px">
-    <div class="section-header">
-      <h2 class="popular-services__title bis-condensed">Популярные услуги</h2>
-      <p class="section-subtitle"></p>
-    </div>
-
-    <div class="popular-services__grid">
-      <?php
-      $service_categories = get_terms(array(
-          'taxonomy'   => 'bis_service_category',
-          'hide_empty' => false,
-      ));
-
-      $has_custom_categories = !empty($service_categories) && !is_wp_error($service_categories);
-      $rendered_columns = 0;
-
-      if ($has_custom_categories) {
-          foreach ($service_categories as $cat) {
-              $cat_services = get_posts(array(
-                  'post_type'      => 'bis_service',
-                  'posts_per_page' => 12,
-                  'post_status'    => 'publish',
-                  'tax_query'      => array(
-                      array(
-                          'taxonomy' => 'bis_service_category',
-                          'field'    => 'term_id',
-                          'terms'    => $cat->term_id,
-                      ),
-                  ),
-              ));
-
-              if (empty($cat_services)) {
-                  continue;
-              }
-
-              $rendered_columns++;
-              ?>
-              <div class="popular-services__col">
-                <div class="popular-services__col-head">
-                  <h3 class="popular-services__col-title"><?php echo esc_html($cat->name); ?></h3>
-                </div>
-                <ul class="popular-services__list">
-                  <?php foreach ($cat_services as $srv) : ?>
-                    <li>
-                      <a href="<?php echo esc_url(get_permalink($srv->ID)); ?>" class="popular-services__link">
-                        <?php echo esc_html(get_the_title($srv->ID)); ?>
-                      </a>
-                    </li>
-                  <?php endforeach; ?>
-                </ul>
-              </div>
-              <?php
-          }
-      }
-
-      // Fallback: если рубрики не найдены, разбиваем все опубликованные услуги на 4 сбалансированные колонки
-      if ($rendered_columns === 0) {
-          $all_services = get_posts(array(
-              'post_type'      => 'bis_service',
-              'posts_per_page' => -1,
-              'post_status'    => 'publish',
-              'orderby'        => 'menu_order title',
-              'order'          => 'ASC',
-          ));
-
-          if (!empty($all_services)) {
-              $fallback_categories = array(
-                  'Вентиляция и кондиционирование' => array(),
-                  'Противодымная вентиляция'      => array(),
-                  'Чистка и дезинфекция систем'   => array(),
-                  'Автоматика и спецналадка'       => array(),
-              );
-
-              $col_keys = array_keys($fallback_categories);
-              foreach ($all_services as $idx => $srv) {
-                  $cat_key = $col_keys[$idx % count($col_keys)];
-                  $fallback_categories[$cat_key][] = $srv;
-              }
-
-              foreach ($fallback_categories as $col_title => $services_list) {
-                  if (empty($services_list)) continue;
-                  ?>
-                  <div class="popular-services__col">
-                    <div class="popular-services__col-head">
-                      <h3 class="popular-services__col-title"><?php echo esc_html($col_title); ?></h3>
-                    </div>
-                    <ul class="popular-services__list">
-                      <?php foreach ($services_list as $srv) : ?>
-                        <li>
-                          <a href="<?php echo esc_url(get_permalink($srv->ID)); ?>" class="popular-services__link">
-                            <?php echo esc_html(get_the_title($srv->ID)); ?>
-                          </a>
-                        </li>
-                      <?php endforeach; ?>
-                    </ul>
-                  </div>
-                  <?php
-              }
-          }
-      }
-      ?>
-    </div>
-  </div>
-</section>
+<!-- Popular Services Block (Популярные услуги) -->
+<?php get_template_part('template-parts/popular-pages'); ?>
 <?php get_footer(); ?>
 

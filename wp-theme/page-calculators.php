@@ -65,11 +65,11 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
 
     <section class="calculators-section">
         <div class="calculators-section__container mw-1400px">
-            <div class="calc-nav-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="calc-nav-grid">
                 <div class="calc-nav-card active" data-block="block1">
                     <span class="calc-nav-card__tag">Блок 1 • ГОСТ Р 53300-2009</span>
-                    <span class="calc-nav-card__title">Расчётное определение значений требуемого расхода воздуха через открытое дымоприёмное устройство при приёмо-сдаточных и периодических испытаниях противодымной вентиляции</span>
-                    <!-- <span class="calc-nav-card__desc">Расчётное определение значений требуемого расхода воздуха через открытое дымоприёмное устройство при приёмо-сдаточных и периодических испытаниях противодымной вентиляции</span> -->
+                    <span class="calc-nav-card__title">Требуемый расход воздуха через ДПУ</span>
+                    <span class="calc-nav-card__desc">Расчётное определение расхода воздуха через открытое дымоприёмное устройство при приёмо-сдаточных и периодических испытаниях</span>
                 </div>
 
                 <div class="calc-nav-card" data-block="block2">
@@ -78,13 +78,11 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <span class="calc-nav-card__desc">Расчет дымоудаления из коридоров, подпора в ЛК, шахты лифтов, зоны ПБЗ и тамбур-шлюзы</span>
                 </div>
 
-                <!--
                 <div class="calc-nav-card" data-block="block3">
-                    <span class="calc-nav-card__tag">Блок 3 • ГОСТ 34060</span>
-                    <span class="calc-nav-card__title">Конструктор и герметичность сети</span>
-                    <span class="calc-nav-card__desc">Развернутая площадь фасонных элементов и проверка классов герметичности (A, B, C)</span>
+                    <span class="calc-nav-card__tag">Блок 3 • ГОСТ 34060-2017</span>
+                    <span class="calc-nav-card__title">Калькулятор расчета герметичности воздуховодов</span>
+                    <span class="calc-nav-card__desc">Расчет утечек и определение класса герметичности (A, B, C, D) воздуховодов систем вентиляции косвенным методом</span>
                 </div>
-                -->
             </div>
 
         <div id="panel-block1" class="calc-block-content" style="display: block;">
@@ -155,6 +153,22 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
+
+                            <div class="calc-form-group">
+                                <label for="b1_out_Pdiagr">Давление по диаграмме <small>1,2·Psa / ρv по формуле (3)</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="text" id="b1_out_Pdiagr" class="calc-field-input" readonly style="background: #f8fafc; font-weight: 700; color: #166534;" value="—">
+                                    <span class="calc-field-unit">Па</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b1_La">Расход по диаграмме La <small>Перед расчётом по этажам</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b1_La" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="по диаграмме (или = Lпр)" step="10">
+                                    <span class="calc-field-unit">м³/ч</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -174,7 +188,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <th style="width: 70px;">Этаж</th>
                                         <th style="width: 90px;">Длина li</th>
                                         <th style="width: 140px;">Сечение шахты A×B</th>
-                                        <th style="width: 160px;">КМС (сопротивление)</th>
+                                        <th style="width: 175px;">КМС (сопротивление)</th>
                                         <th style="width: 140px;">Клапан a×b</th>
                                         <th>Давление Psi</th>
                                         <th>Утечка Gdpn</th>
@@ -188,9 +202,12 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             </table>
                         </div>
 
-                        <div class="calc-table-btns">
+                        <div class="calc-table-btns" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <button type="button" id="b1BtnAddFloor" class="btn btn-outline btn--small">
                                 + Добавить этаж
+                            </button>
+                            <button type="button" id="b1BtnApplyKmsToAll" class="btn btn-ghost btn--small" style="font-size: 12px; border: 1px dashed var(--border);" title="Скопировать значение КМС с верхнего этажа на все остальные этажи">
+                                Скопировать КМС верхнего этажа на все
                             </button>
                         </div>
                     </div>
@@ -223,7 +240,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <span id="b1_res_Leak" class="calc-metric-row__value">— <span class="unit">м³/ч</span></span>
                         </div>
 
-                        <div class="calc-metric-row" id="b1_row_Dev" style="display: none; background: #f0fdf4; border-color: #bbf7d0; text-align: center; align-items: center; justify-content: center;">
+                        <div class="calc-metric-row" id="b1_row_Dev" style="display: none; text-align: center; align-items: center; justify-content: center;">
                             <span class="calc-metric-row__label" style="font-weight: 600; text-align: center; width: 100%;">Отклонение (Lф vs L₀):</span>
                             <span id="b1_res_Dev" class="calc-metric-row__value" style="color: #166534; font-weight: 800; text-align: center; width: 100%;">— <span class="unit">%</span></span>
                         </div>
@@ -267,6 +284,42 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div class="avok-tab-item" data-avok="pd7_a">
                         <span class="code">ПД7-а</span>
                         <span>Зона ПБЗ (закрытая дверь)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calc-card" style="margin-bottom: 24px;">
+                <div class="calc-card__head">
+                    <h2 class="calc-card__title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Параметры системы и объекта для отчёта
+                    </h2>
+                    <span class="calc-norm-pill">Реквизиты протокола</span>
+                </div>
+                <div class="calc-grid-fields calc-grid-fields--4cols">
+                    <div class="calc-form-group">
+                        <label for="b2_system_name">Наименование системы <small>Маркировка по проекту</small></label>
+                        <div class="calc-field-wrap">
+                            <input type="text" id="b2_system_name" class="calc-field-input calc-auto-recalc" value="Система ДУ1" placeholder="например, Система ДУ1">
+                        </div>
+                    </div>
+                    <div class="calc-form-group">
+                        <label for="b2_object_name">Наименование объекта <small>Здание / комплекс</small></label>
+                        <div class="calc-field-wrap">
+                            <input type="text" id="b2_object_name" class="calc-field-input calc-auto-recalc" value="Торговый центр «Академический»" placeholder="название объекта">
+                        </div>
+                    </div>
+                    <div class="calc-form-group">
+                        <label for="b2_address">Адрес объекта <small>Местонахождение</small></label>
+                        <div class="calc-field-wrap">
+                            <input type="text" id="b2_address" class="calc-field-input calc-auto-recalc" value="СПб, Гражданский проспект, квартал 9А" placeholder="адрес">
+                        </div>
+                    </div>
+                    <div class="calc-form-group">
+                        <label for="b2_engineer">Выполнил <small>Инженер-составитель</small></label>
+                        <div class="calc-field-wrap">
+                            <input type="text" id="b2_engineer" class="calc-field-input calc-auto-recalc" value="Иванов И.И." placeholder="ФИО инженера">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -499,53 +552,246 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
             </div>
         </div>
 
-        <!-- BLOCK 3 (TEMPORARILY DISABLED)
+        <!-- BLOCK 3: КАЛЬКУЛЯТОР РАСЧЕТА ГЕРМЕТИЧНОСТИ ВОЗДУХОВОДОВ (ГОСТ 34060-2017) -->
         <div id="panel-block3" class="calc-block-content" style="display: none;">
-            </div>
-        </div>
-    </section>
+            <div class="calc-layout-grid">
+                <div class="calc-main-column">
+                    <!-- Card 1: Параметры вентиляционной системы -->
+                    <div class="calc-card">
+                        <div class="calc-card__head">
+                            <h2 class="calc-card__title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                                Параметры испытываемой системы
+                            </h2>
+                            <span class="calc-norm-pill">ГОСТ 34060-2017 / СП 60.13330</span>
+                        </div>
 
-    <!-- ====================================================================
-         IN-PAGE MODAL: ADD / EDIT DUCT ELEMENT (BLOCK 3)
-         ==================================================================== -->
-    <div id="calcElementModal" class="calc-modal-overlay">
-        <div class="calc-modal-box calc-modal-box--medium">
-            <div class="calc-modal-box__head">
-                <h3 id="calcElementModalTitle" class="calc-modal-box__title">Добавление элемента воздуховода</h3>
-                <button type="button" class="calc-modal-box__close" onclick="window.calcEngineCloseElementModal()">&times;</button>
-            </div>
+                        <div class="calc-grid-fields calc-grid-fields--3cols">
+                            <div class="calc-form-group">
+                                <label for="b3_system">Наименование системы <small>Обозначение в проекте</small></label>
+                                <input type="text" id="b3_system" class="calc-field-input calc-auto-recalc" placeholder="например, П11 или В11" value="П11">
+                            </div>
 
-            <div class="calc-modal-box__body">
-                <div class="element-modal-type-badge">
-                    <span id="elModalIcon" class="icon">⭕</span>
-                    <div>
-                        <div id="elModalTypeName" class="name">Прямой круглый участок</div>
-                        <span id="elModalTypeTag" class="tag">D1</span>
+                            <div class="calc-form-group">
+                                <label for="b3_area">Развёрнутая площадь воздуховодов ΣAi <small>Общая площадь поверхности</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_area" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="145.925" step="0.001" value="145.925">
+                                    <span class="calc-field-unit">м²</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_pressure">Статическое давление p <small>Измеренное в системе</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_pressure" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="116" step="1" value="116">
+                                    <span class="calc-field-unit">Па</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_Lvent">Расход у вентилятора Lвент.ф <small>Фактический замер после установки</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_Lvent" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="4111.2" step="0.1" value="4111.2">
+                                    <span class="calc-field-unit">м³/ч</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_Lgrille">Расход по решёткам Lр-ки.ф <small>Сумма расходов по оконечным устр.</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_Lgrille" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="4015.27" step="0.1" value="4015.27">
+                                    <span class="calc-field-unit">м³/ч</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_Lproject">Проектный расход Lпр <small>Для официального отчёта</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_Lproject" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="3950" step="10" value="3950">
+                                    <span class="calc-field-unit">м³/ч</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_net_resistance">Проектное сопротивление <small>Давление сети по проекту</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_net_resistance" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="180" step="1" value="180">
+                                    <span class="calc-field-unit">Па</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_P_fan_total">Полное давление вентилятора <small>Рп.вент при замере</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_P_fan_total" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="685" step="1" value="685">
+                                    <span class="calc-field-unit">Па</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b3_frequency">Частота электродвигателя <small>На частотном преобразователе</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b3_frequency" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="50" step="0.5" value="50">
+                                    <span class="calc-field-unit">Гц</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Замеры по решеткам / диффузорам -->
+                    <div class="calc-card">
+                        <div class="calc-card__head">
+                            <h2 class="calc-card__title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                                Замеры по оконечным устройствам (решёткам)
+                            </h2>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <label style="font-size: 13px; color: var(--text-light); display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="checkbox" id="b3_auto_sum_grilles" checked> Автосуммирование в общий расход
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="calc-table-container">
+                            <table class="calc-clean-table" id="b3GrillesTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">№ точки</th>
+                                        <th style="width: 140px;">Помещение</th>
+                                        <th style="width: 160px;">Проектный расход, м³/ч</th>
+                                        <th style="width: 160px;">Фактический замер, м³/ч</th>
+                                        <th>Невязка, %</th>
+                                        <th style="width: 40px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="b3GrillesTableBody">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="calc-table-btns" style="display: flex; justify-content: space-between; align-items: center;">
+                            <button type="button" id="b3BtnAddGrille" class="btn btn-outline btn--small">
+                                + Добавить точку замера (решётку)
+                            </button>
+                            <span id="b3GrillesSumLabel" style="font-size: 13px; font-weight: 600; color: var(--dark);">
+                                Сумма по решёткам: <strong id="b3GrillesSumVal">0</strong> м³/ч
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Справочная информация по нормам ГОСТ -->
+                    <div class="calc-card">
+                        <div class="calc-card__head">
+                            <h2 class="calc-card__title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Нормативные критерии классов герметичности (ГОСТ 34060-2017)
+                            </h2>
+                            <span class="calc-norm-pill">Таблица 5 / СП 60.13330</span>
+                        </div>
+                        <div class="calc-table-container">
+                            <table class="calc-clean-table">
+                                <thead>
+                                    <tr>
+                                        <th>Класс</th>
+                                        <th>Предельное давление Ps+, Па</th>
+                                        <th>Предельное давление Ps-, Па</th>
+                                        <th>Предельная удельная утечка f max, м³/(ч·м²)</th>
+                                        <th>Область применения</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>А</strong></td>
+                                        <td>500</td>
+                                        <td>500</td>
+                                        <td><code>0,097 · p<sup>0,65</sup></code></td>
+                                        <td>Открытые воздуховоды в помещении, перепад ≤ 150 Па</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>В</strong></td>
+                                        <td>1000</td>
+                                        <td>750</td>
+                                        <td><code>0,032 · p<sup>0,65</sup></code></td>
+                                        <td>Воздуховоды вне помещений или перепад > 150 Па (стандарт)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>С</strong></td>
+                                        <td>2000</td>
+                                        <td>750</td>
+                                        <td><code>0,0108 · p<sup>0,65</sup></code></td>
+                                        <td>Перепад давления > 1500 Па, чистые помещения</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>D</strong></td>
+                                        <td>2000</td>
+                                        <td>750</td>
+                                        <td><code>0,0036 · p<sup>0,65</sup></code></td>
+                                        <td>Специальные технологические системы по спецТЗ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <form id="calcElementForm" onsubmit="event.preventDefault(); window.calcEngineSaveElement();">
-                    <div id="elModalFieldsContainer" class="calc-grid-fields">
-                        <!-- Populated dynamically based on element type -->
-                    </div>
+                <div class="calc-results-sidebar">
+                    <div class="calc-summary-panel">
+                        <div class="calc-summary-panel__header">
+                            Оценка герметичности
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
 
-                    <div class="element-modal-preview">
-                        <span class="label">Развернутая площадь элемента S:</span>
-                        <span id="elModalCalculatedArea" class="value">0.00 <span class="unit">м²</span></span>
-                    </div>
-                </form>
-            </div>
+                        <div class="calc-metric-row">
+                            <span class="calc-metric-row__label">Величина утечек Lут:</span>
+                            <span id="b3_res_Leak" class="calc-metric-row__value">— <span class="unit">м³/ч</span></span>
+                        </div>
 
-            <div class="calc-modal-box__foot">
-                <button type="button" class="btn btn-outline" onclick="window.calcEngineCloseElementModal()">
-                    Отмена
-                </button>
-                <button type="button" class="btn btn-primary" onclick="window.calcEngineSaveElement()">
-                    Добавить в спецификацию
-                </button>
+                        <div class="calc-metric-row">
+                            <span class="calc-metric-row__label">Удельные утечки fфакт:</span>
+                            <span id="b3_res_f_fact" class="calc-metric-row__value">— <span class="unit">м³/(ч·м²)</span></span>
+                        </div>
+
+                        <div class="calc-metric-row" id="b3_row_Deviation">
+                            <span class="calc-metric-row__label">Невязка расходов Δут:</span>
+                            <span id="b3_res_Deviation" class="calc-metric-row__value">— <span class="unit">%</span></span>
+                        </div>
+
+                        <div class="calc-metric-row">
+                            <span class="calc-metric-row__label">Предел Класса А (fA):</span>
+                            <span id="b3_res_fA" class="calc-metric-row__value">— <span class="unit">м³/(ч·м²)</span></span>
+                        </div>
+
+                        <div class="calc-metric-row">
+                            <span class="calc-metric-row__label">Предел Класса В (fB):</span>
+                            <span id="b3_res_fB" class="calc-metric-row__value">— <span class="unit">м³/(ч·м²)</span></span>
+                        </div>
+
+                        <div class="calc-metric-row">
+                            <span class="calc-metric-row__label">Предел Класса С (fC):</span>
+                            <span id="b3_res_fC" class="calc-metric-row__value">— <span class="unit">м³/(ч·м²)</span></span>
+                        </div>
+
+                        <div class="calc-metric-row">
+                            <span class="calc-metric-row__label">Предел Класса D (fD):</span>
+                            <span id="b3_res_fD" class="calc-metric-row__value">— <span class="unit">м³/(ч·м²)</span></span>
+                        </div>
+
+                        <div id="b3_class_banner" style="margin-top: 16px; padding: 14px; background: #ecfeff; border: 1px solid #a5f3fc; text-align: center;">
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; color: var(--primary-dark); letter-spacing: 0.05em; margin-bottom: 4px;">Фактический класс герметичности:</div>
+                            <div id="b3_res_Class" style="font-size: 20px; font-weight: 800; color: var(--dark);">Класс В</div>
+                            <div id="b3_res_StatusText" style="font-size: 12px; color: #047857; margin-top: 4px; font-weight: 500;">Утечки в пределах нормы ГОСТ 34060 (≤ 8%)</div>
+                        </div>
+
+                        <button type="button" class="btn-calc-cta" id="b3_btn_protocol" onclick="window.calcEngineOpenProtocol()" style="margin-top: 16px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            Сформировать официальный отчёт
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- ====================================================================
          OFFICIAL PROTOCOL MODAL & PRINT CONTAINER

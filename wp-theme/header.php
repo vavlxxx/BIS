@@ -49,7 +49,7 @@
   <header class="header" id="header">
     <div class="header-content">
       <div class="brand-block">
-        <a href="<?php echo esc_url( home_url( '/#home' ) ); ?>" class="logo-link" aria-label="На главную">
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo-link" aria-label="На главную">
           <img src="<?php echo get_template_directory_uri(); ?>/assets/img/bis-logo-white.png" alt="БИС — Баланс Инженерных Систем" class="brand-mark brand-mark--default">
           <img src="<?php echo get_template_directory_uri(); ?>/assets/img/removebg-preview.png" alt="БИС — Баланс Инженерных Систем" class="brand-mark brand-mark--scrolled">
         </a>
