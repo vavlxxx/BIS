@@ -4,22 +4,54 @@
   const state = {
     currentBlock: 'block1',
     currentAvok: 'du4_1',
-    activeElementType: 'D1',
-    block1Floors: [],
-    block3Elements: [],
+    block1Floors: [
+      { floor: 8, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 7, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 6, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 5, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 4, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 3, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 2, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 },
+      { floor: 1, li: 3.0, a: 1.0, b: 0.8, kms: 0.4, kmsItems: ['pass'], val_a: 0.8, val_b: 0.5 }
+    ],
+    block3Grilles: [
+      { point: '1', room: '119/1', Lpr: 500, Lfact: 495.33 },
+      { point: '2', room: '118', Lpr: 1000, Lfact: 1030.58 },
+      { point: '3', room: '116', Lpr: 1150, Lfact: 1137.02 },
+      { point: '4', room: '120/1', Lpr: 650, Lfact: 689.47 },
+      { point: '5', room: '120/1', Lpr: 650, Lfact: 662.86 }
+    ],
     protocolMeta: {
       number: '109.005/П-02',
       date: new Date().toISOString().split('T')[0],
       objectName: 'Торговый центр «Академический»',
       address: 'СПб, Гражданский проспект, квартал 9А',
-      systemName: 'Система ДУ1',
-      section: 'Цокольный этаж, клапан №1',
-      instruments: 'Дифференциальный манометр Testo 510, Термоанемометр Testo 417',
-      engineer: 'Иванов И.И.',
-      approver: 'Петров П.П.'
+      systemName: 'Система П11',
+      section: 'Вентиляционная сеть 1-го этажа',
+      instruments: 'Комбинированный дифманометр Testo 440 dP, зонд-анемометр крыльчатка Ду 100, крыльчатка Ду 16',
+      engineer: 'Журавлев А.Д.',
+      approver: 'Журавлев А.Д.'
     },
     lastResults: {}
   };
+
+  const KMS_COMPONENTS = {
+    pass: { name: 'Проход (0.4)', val: 0.4 },
+    turn: { name: 'Поворот / отвод (1.6)', val: 1.6 },
+    complex: { name: 'Отводы + Тройник (4.6)', val: 4.6 },
+    tee: { name: 'Тройник (3.0)', val: 3.0 },
+    trans: { name: 'Переход (0.2)', val: 0.2 },
+    grille: { name: 'Решетка (1.5)', val: 1.5 }
+  };
+
+  function getKmsShortTitle(f) {
+    const items = f.kmsItems || [];
+    if (items.length === 0) return `${(parseFloat(f.kms) || 0.4).toFixed(1)}`;
+    if (items.length === 1 && KMS_COMPONENTS[items[0]]) {
+      return KMS_COMPONENTS[items[0]].name.split(' (')[0];
+    }
+    return `${items.length} элм. (${(parseFloat(f.kms) || 0.4).toFixed(1)})`;
+  }
 
   const KMS_RATES = {
     standard: 0.4,
@@ -28,9 +60,10 @@
   };
 
   const LEAKAGE_CLASSES = {
-    A: { name: 'Класс A (Низкая плотность)', c: 0.027 },
-    B: { name: 'Класс B (Плотный)', c: 0.009 },
-    C: { name: 'Класс C (Высокая плотность)', c: 0.003 }
+    A: { name: 'Класс A (Низкая плотность)', c: 0.097 },
+    B: { name: 'Класс B (Плотный)', c: 0.032 },
+    C: { name: 'Класс C (Высокая плотность)', c: 0.0108 },
+    D: { name: 'Класс D (Специальный)', c: 0.0036 }
   };
 
   function kTeX(latex, isDisplay = true) {
@@ -63,11 +96,13 @@
     dom.avokPanels = document.querySelectorAll('.avok-calc-content');
 
     dom.b1TableBody = document.getElementById('b1FloorsTableBody');
-    dom.b3TableBody = document.getElementById('b3ElementsTableBody');
+    dom.b3TableBody = document.getElementById('b3GrillesTableBody');
+    dom.b3BtnAddGrille = document.getElementById('b3BtnAddGrille');
+    dom.b3AutoSumGrilles = document.getElementById('b3_auto_sum_grilles');
+    dom.b3GrillesSumVal = document.getElementById('b3GrillesSumVal');
 
     dom.protocolModal = document.getElementById('calcProtocolModal');
     dom.protocolPrintArea = document.getElementById('protocolPrintArea');
-    dom.calcElementModal = document.getElementById('calcElementModal');
   }
 
   function bindEvents() {
@@ -94,13 +129,31 @@
     const btnAddFloor = document.getElementById('b1BtnAddFloor');
     if (btnAddFloor) btnAddFloor.addEventListener('click', addBlock1Floor);
 
-    const elCards = document.querySelectorAll('.element-select-card');
-    elCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const type = card.dataset.type;
-        openAddElementDialog(type);
+    const btnApplyKmsAll = document.getElementById('b1BtnApplyKmsToAll');
+    if (btnApplyKmsAll) {
+      btnApplyKmsAll.addEventListener('click', () => {
+        if (!state.block1Floors || state.block1Floors.length === 0) return;
+        const sourceKms = state.block1Floors[0].kms !== undefined ? state.block1Floors[0].kms : 0.4;
+        const sourceItems = [...(state.block1Floors[0].kmsItems || ['pass'])];
+        state.block1Floors.forEach(f => {
+          f.kms = sourceKms;
+          f.kmsItems = [...sourceItems];
+        });
+        renderBlock1Table();
+        recalculateBlock1();
       });
-    });
+    }
+
+    if (dom.b3BtnAddGrille) {
+      dom.b3BtnAddGrille.addEventListener('click', addBlock3Grille);
+    }
+
+    if (dom.b3AutoSumGrilles) {
+      dom.b3AutoSumGrilles.addEventListener('change', () => {
+        updateBlock3GrillesSum();
+        recalculateBlock3();
+      });
+    }
   }
 
   function switchBlock(block) {
@@ -122,12 +175,22 @@
     dom.avokPanels.forEach(panel => {
       panel.style.display = panel.id === `avok-${tab}` ? 'block' : 'none';
     });
+
+    const sysInput = document.getElementById('b2_system_name');
+    if (sysInput) {
+      if (tab === 'du4_1' && sysInput.value.startsWith('Система ПД')) {
+        sysInput.value = 'Система ДУ1';
+      } else if (tab !== 'du4_1' && sysInput.value.startsWith('Система ДУ')) {
+        sysInput.value = 'Система ПД1';
+      }
+    }
+
     recalculateCurrent();
   }
 
   function renderAll() {
     renderBlock1Table();
-    renderBlock3Table();
+    renderBlock3GrillesTable();
     recalculateCurrent();
   }
 
@@ -213,7 +276,15 @@
     const h = Math.max(0, h_top - h_bot);
 
     const Psa = (Psv * rho_v / 1.2) + (9.81 * h * (rho_a - rho_sm));
-    const La = Math.round(Lpr);
+    const P_diagr = (1.2 * Psa) / rho_v;
+    const pDiagrEl = document.getElementById('b1_out_Pdiagr');
+    if (pDiagrEl) {
+      pDiagrEl.value = Math.round(P_diagr);
+    }
+
+    const rawLaInput = document.getElementById('b1_La')?.value?.trim();
+    const userLa = rawLaInput ? parseFloat(rawLaInput) : null;
+    const La = (userLa !== null && !isNaN(userLa) && userLa > 0) ? userLa : Math.round(Lpr);
     const Ga = (La * rho_a) / 3600;
 
     let currentG = Ga;
@@ -225,7 +296,7 @@
       const F_shaft = (f.a || 0.6) * (f.b || 0.45);
       const P_shaft = 2 * ((f.a || 0.6) + (f.b || 0.45));
       const de = P_shaft > 0 ? (4 * F_shaft / P_shaft) : 1.0;
-      const kms = KMS_RATES[f.kmsType] !== undefined ? KMS_RATES[f.kmsType] : 0.4;
+      const kms = parseFloat(f.kms !== undefined ? f.kms : (KMS_RATES[f.kmsType] !== undefined ? KMS_RATES[f.kmsType] : 0.4));
       const lambda = 0.016;
       const li = f.li || 3.0;
 
@@ -274,20 +345,15 @@
       const devEl = document.getElementById('b1_res_Dev');
       if (devRow && devEl) {
         devRow.style.display = 'flex';
-        devRow.style.flexDirection = 'column';
-        devRow.style.alignItems = 'center';
-        devRow.style.justifyContent = 'center';
-        devRow.style.textAlign = 'center';
+        devRow.style.background = 'transparent';
+        devRow.style.border = 'none';
+        devRow.style.borderBottom = '1px solid #f1f5f9';
         devEl.style.textAlign = 'center';
         devEl.style.width = '100%';
         devEl.innerText = (deviation > 0 ? '+' : '') + deviation.toFixed(1) + ' %';
         if (Math.abs(deviation) <= 15) {
-          devRow.style.background = '#f0fdf4';
-          devRow.style.borderColor = '#bbf7d0';
           devEl.style.color = '#166534';
         } else {
-          devRow.style.background = '#fef2f2';
-          devRow.style.borderColor = '#fecaca';
           devEl.style.color = '#b91c1c';
         }
       }
@@ -298,6 +364,7 @@
     state.lastResults.block1 = {
       Lpr, Psv, Tpg, Tpom, h_top, h_bot, Tv, Ta, rho_a, rho_sm, rho_v, h,
       Psa: Math.round(Psa * 100) / 100,
+      P_diagr: Math.round(P_diagr),
       La,
       Ga: Ga.toFixed(3),
       G0: G0.toFixed(3),
@@ -343,6 +410,9 @@
 
     state.block1Floors.forEach((f, idx) => {
       const tr = document.createElement('tr');
+      const curKms = parseFloat(f.kms !== undefined ? f.kms : 0.4);
+      const items = f.kmsItems || ['pass'];
+
       tr.innerHTML = `
         <td style="font-weight:600;">
           <input type="number" class="calc-table-input b1-floor-input" data-idx="${idx}" data-field="floor" value="${f.floor}" style="width: 55px;">
@@ -358,11 +428,41 @@
           </div>
         </td>
         <td>
-          <select class="calc-table-select b1-floor-input" data-idx="${idx}" data-field="kmsType" style="width: 140px;">
-            <option value="standard" ${f.kmsType === 'standard' ? 'selected' : ''}>Проход (0.4)</option>
-            <option value="complex" ${f.kmsType === 'complex' ? 'selected' : ''}>Отводы + Тройник (4.6)</option>
-            <option value="turns" ${f.kmsType === 'turns' ? 'selected' : ''}>Повороты (1.6)</option>
-          </select>
+          <div class="b1-kms-cell-wrap">
+            <input type="number" step="0.1" class="calc-table-input b1-floor-kms-val" data-idx="${idx}" value="${curKms.toFixed(1)}" title="Суммарный КМС этажа (Σξ)" style="width: 50px; font-weight: 700; text-align: center; height: 32px; padding: 2px 4px;">
+            <details class="b1-kms-details">
+              <summary class="b1-kms-summary" title="Кликните для выбора комбинации сопротивлений">
+                <span class="b1-kms-summary-text">${getKmsShortTitle(f)}</span>
+                <span style="font-size: 9px; margin-left: 2px;">▼</span>
+              </summary>
+              <div class="b1-kms-popover">
+                <label class="b1-kms-label">
+                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="0.4" data-id="pass" ${items.includes('pass') ? 'checked' : ''}>
+                  Проход (0.4)
+                </label>
+                <label class="b1-kms-label">
+                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="1.6" data-id="turn" ${items.includes('turn') ? 'checked' : ''}>
+                  Поворот / отвод (1.6)
+                </label>
+                <label class="b1-kms-label">
+                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="4.6" data-id="complex" ${items.includes('complex') ? 'checked' : ''}>
+                  Отводы + Тройник (4.6)
+                </label>
+                <label class="b1-kms-label">
+                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="3.0" data-id="tee" ${items.includes('tee') ? 'checked' : ''}>
+                  Тройник (3.0)
+                </label>
+                <label class="b1-kms-label">
+                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="0.2" data-id="trans" ${items.includes('trans') ? 'checked' : ''}>
+                  Переход (0.2)
+                </label>
+                <label class="b1-kms-label">
+                  <input type="checkbox" class="b1-kms-cb" data-idx="${idx}" data-val="1.5" data-id="grille" ${items.includes('grille') ? 'checked' : ''}>
+                  Решетка (1.5)
+                </label>
+              </div>
+            </details>
+          </div>
         </td>
         <td>
           <div style="display:inline-flex; align-items:center; gap:4px;">
@@ -385,11 +485,38 @@
       input.addEventListener('change', e => {
         const idx = parseInt(e.target.dataset.idx, 10);
         const field = e.target.dataset.field;
-        if (field === 'kmsType') {
-          state.block1Floors[idx].kmsType = e.target.value;
+        state.block1Floors[idx][field] = parseFloat(e.target.value) || 0;
+        recalculateBlock1();
+      });
+    });
+
+    dom.b1TableBody.querySelectorAll('.b1-floor-kms-val').forEach(input => {
+      input.addEventListener('change', e => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const val = parseFloat(e.target.value) || 0;
+        state.block1Floors[idx].kms = val;
+        renderBlock1Table();
+        recalculateBlock1();
+      });
+    });
+
+    dom.b1TableBody.querySelectorAll('.b1-kms-cb').forEach(cb => {
+      cb.addEventListener('change', e => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const floor = state.block1Floors[idx];
+        if (!floor.kmsItems) floor.kmsItems = [];
+        const id = e.target.dataset.id;
+        if (e.target.checked) {
+          if (!floor.kmsItems.includes(id)) floor.kmsItems.push(id);
         } else {
-          state.block1Floors[idx][field] = parseFloat(e.target.value) || 0;
+          floor.kmsItems = floor.kmsItems.filter(x => x !== id);
         }
+        let totalKms = 0;
+        floor.kmsItems.forEach(kId => {
+          if (KMS_COMPONENTS[kId]) totalKms += KMS_COMPONENTS[kId].val;
+        });
+        floor.kms = Math.round(totalKms * 10) / 10;
+        renderBlock1Table();
         recalculateBlock1();
       });
     });
@@ -423,7 +550,8 @@
       li: 3.0,
       a: 1.0,
       b: 0.8,
-      kmsType: 'standard',
+      kms: 0.4,
+      kmsItems: ['pass'],
       val_a: 0.8,
       val_b: 0.5
     });
@@ -669,282 +797,227 @@
     };
   }
 
-  function recalculateBlock3() {
-    const factP = parseFloat(document.getElementById('b3_factP')?.value) || 400;
-    const factL = parseFloat(document.getElementById('b3_factL')?.value) || 25;
-    const reqClass = document.getElementById('b3_reqClass')?.value || 'B';
-
-    let totalS = 0;
-    state.block3Elements.forEach(el => {
-      totalS += el.s;
+  function addBlock3Grille() {
+    const nextNum = state.block3Grilles.length + 1;
+    state.block3Grilles.push({
+      point: `${nextNum}`,
+      room: `Помещение ${nextNum}`,
+      Lpr: 500,
+      Lfact: 500
     });
-    totalS = Math.max(0.1, totalS);
-
-    const factLeak = factL / totalS;
-    const classConfig = LEAKAGE_CLASSES[reqClass] || LEAKAGE_CLASSES.B;
-    const allowLeak = classConfig.c * Math.pow(factP, 0.65) * 3.6;
-    const isPassed = factLeak <= allowLeak;
-
-    updateSummaryMetric('b3_res_totalS', totalS.toFixed(2), 'м²');
-    updateSummaryMetric('b3_res_factLeak', factLeak.toFixed(2), 'м³/(ч·м²)');
-    updateSummaryMetric('b3_res_allowLeak', allowLeak.toFixed(2), 'м³/(ч·м²)');
-
-    const verdictEl = document.getElementById('b3_verdict_badge');
-    if (verdictEl) {
-      if (isPassed) {
-        verdictEl.className = 'calc-status-badge calc-status-badge--success';
-        verdictEl.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> СООТВЕТСТВУЕТ КЛАССУ ${reqClass}`;
-      } else {
-        verdictEl.className = 'calc-status-badge calc-status-badge--danger';
-        verdictEl.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> НЕ СООТВЕТСТВУЕТ (Превышение ${((factLeak/allowLeak - 1)*100).toFixed(0)}%)`;
-      }
-    }
-
-    state.lastResults.block3 = {
-      factP, factL, reqClass,
-      totalS: totalS.toFixed(2),
-      factLeak: factLeak.toFixed(2),
-      allowLeak: allowLeak.toFixed(2),
-      isPassed,
-      elements: [...state.block3Elements]
-    };
+    renderBlock3GrillesTable();
+    updateBlock3GrillesSum();
+    recalculateBlock3();
   }
 
-  function renderBlock3Table() {
+  function updateBlock3GrillesSum() {
+    let sum = 0;
+    state.block3Grilles.forEach(g => {
+      sum += parseFloat(g.Lfact) || 0;
+    });
+    if (dom.b3GrillesSumVal) {
+      dom.b3GrillesSumVal.innerText = sum.toFixed(1);
+    }
+    const autoSumCheckbox = document.getElementById('b3_auto_sum_grilles');
+    if (autoSumCheckbox && autoSumCheckbox.checked) {
+      const lGrilleInput = document.getElementById('b3_Lgrille');
+      if (lGrilleInput) {
+        lGrilleInput.value = sum.toFixed(1);
+      }
+    }
+  }
+
+  function renderBlock3GrillesTable() {
     if (!dom.b3TableBody) return;
     dom.b3TableBody.innerHTML = '';
 
-    state.block3Elements.forEach((el, idx) => {
+    state.block3Grilles.forEach((g, idx) => {
       const tr = document.createElement('tr');
+      const lpr = parseFloat(g.Lpr) || 0;
+      const lfact = parseFloat(g.Lfact) || 0;
+      const dev = lpr > 0 ? (((lfact - lpr) / lpr) * 100).toFixed(2) : '—';
+      const devColor = (dev !== '—' && Math.abs(parseFloat(dev)) <= 10) ? '#166534' : '#b91c1c';
+
       tr.innerHTML = `
-        <td style="font-weight:600;">${idx + 1}</td>
-        <td style="text-align:left; font-weight:600;">${el.name}</td>
-        <td><span class="calc-norm-pill" style="font-size:11px;">${el.type}</span></td>
-        <td style="text-align:left; font-size:13px; color:var(--text);">${formatElementParams(el)}</td>
-        <td style="font-weight:700; color:var(--primary-dark);">${el.s.toFixed(2)} м²</td>
         <td>
-          <button type="button" class="btn-delete-element" data-idx="${idx}" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:18px; padding:4px;" title="Удалить элемент">&times;</button>
+          <input type="text" class="calc-field-input calc-field-input--small b3-grille-point" data-idx="${idx}" value="${g.point || (idx + 1)}" style="text-align:center;">
+        </td>
+        <td>
+          <input type="text" class="calc-field-input calc-field-input--small b3-grille-room" data-idx="${idx}" value="${g.room || ''}">
+        </td>
+        <td>
+          <input type="number" class="calc-field-input calc-field-input--small b3-grille-lpr" data-idx="${idx}" value="${g.Lpr || ''}" step="10">
+        </td>
+        <td>
+          <input type="number" class="calc-field-input calc-field-input--small b3-grille-lfact" data-idx="${idx}" value="${g.Lfact || ''}" step="0.1">
+        </td>
+        <td style="font-weight:700; color:${devColor};">
+          ${dev !== '—' ? `${dev} %` : '—'}
+        </td>
+        <td>
+          <button type="button" class="btn-delete-grille" data-idx="${idx}" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:18px; padding:4px;" title="Удалить точку замера">&times;</button>
         </td>
       `;
       dom.b3TableBody.appendChild(tr);
     });
 
-    dom.b3TableBody.querySelectorAll('.btn-delete-element').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const idx = parseInt(btn.dataset.idx, 10);
-        state.block3Elements.splice(idx, 1);
-        renderBlock3Table();
+    dom.b3TableBody.querySelectorAll('.b3-grille-point').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        state.block3Grilles[idx].point = e.target.value;
+      });
+    });
+
+    dom.b3TableBody.querySelectorAll('.b3-grille-room').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        state.block3Grilles[idx].room = e.target.value;
+      });
+    });
+
+    dom.b3TableBody.querySelectorAll('.b3-grille-lpr').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        state.block3Grilles[idx].Lpr = parseFloat(e.target.value) || 0;
         recalculateBlock3();
       });
     });
-  }
 
-  function formatElementParams(el) {
-    const p = el.params;
-    switch (el.type) {
-      case 'D1': return `Диаметр D = ${p.D} м, Длина L = ${p.L} м`;
-      case 'D2': return `Сечение ${p.A} × ${p.B} м, Длина L = ${p.L} м`;
-      case 'O1': return `Диаметр D = ${p.D} м, Радиус R = ${p.R} м, Угол = ${p.A}°`;
-      case 'O2': return `Сечение ${p.A} × ${p.B} м, Радиус R = ${p.R} м, Угол = ${p.A}°`;
-      case 'A1': return `D1 = ${p.D1} м → D2 = ${p.D2} м, L = ${p.L} м`;
-      case 'A3': return `Сечение ${p.A} × ${p.B} м → ${p.A1} × ${p.B1} м, Длина L = ${p.L} м`;
-      case 'E1': return `Круг диаметром D = ${p.D} м`;
-      case 'E2': return `Прямоугольник ${p.A} × ${p.B} м`;
-      default: return JSON.stringify(p);
-    }
-  }
-
-  const ELEMENT_DEFS = {
-    D1: {
-      name: 'Прямой круглый участок',
-      icon: '⭕',
-      fields: [
-        { key: 'D', label: 'Диаметр воздуховода D', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'L', label: 'Длина участка L', unit: 'м', def: 4.0, step: 0.5 }
-      ]
-    },
-    D2: {
-      name: 'Прямой прямоугольный участок',
-      icon: '⏹️',
-      fields: [
-        { key: 'A', label: 'Ширина стороны A', unit: 'м', def: 0.5, step: 0.05 },
-        { key: 'B', label: 'Высота стороны B', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'L', label: 'Длина участка L', unit: 'м', def: 5.0, step: 0.5 }
-      ]
-    },
-    O1: {
-      name: 'Отвод круглый',
-      icon: '↪️',
-      fields: [
-        { key: 'D', label: 'Диаметр воздуховода D', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'R', label: 'Радиус поворота R', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'A', label: 'Угол поворота α', unit: '°', def: 90, step: 15 }
-      ]
-    },
-    O2: {
-      name: 'Отвод прямоугольный',
-      icon: '🔄',
-      fields: [
-        { key: 'A', label: 'Размер стороны A', unit: 'м', def: 0.5, step: 0.05 },
-        { key: 'B', label: 'Размер стороны B', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'R', label: 'Радиус поворота R', unit: 'м', def: 0.5, step: 0.05 },
-        { key: 'A', label: 'Угол поворота α', unit: '°', def: 90, step: 15 }
-      ]
-    },
-    A1: {
-      name: 'Переход круглый (D1 → D2)',
-      icon: '🔻',
-      fields: [
-        { key: 'D1', label: 'Начальный диаметр D1', unit: 'м', def: 0.5, step: 0.05 },
-        { key: 'D2', label: 'Конечный диаметр D2', unit: 'м', def: 0.3, step: 0.05 },
-        { key: 'L', label: 'Длина перехода L', unit: 'м', def: 0.5, step: 0.1 }
-      ]
-    },
-    A3: {
-      name: 'Переход прямоугольный',
-      icon: '🔻',
-      fields: [
-        { key: 'A', label: 'Начальная ширина A', unit: 'м', def: 0.6, step: 0.05 },
-        { key: 'B', label: 'Начальная высота B', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'A1', label: 'Конечная ширина A1', unit: 'м', def: 0.4, step: 0.05 },
-        { key: 'B1', label: 'Конечная высота B1', unit: 'м', def: 0.3, step: 0.05 },
-        { key: 'L', label: 'Длина перехода L', unit: 'м', def: 0.5, step: 0.1 }
-      ]
-    },
-    E1: {
-      name: 'Заглушка круглая',
-      icon: '🔵',
-      fields: [
-        { key: 'D', label: 'Диаметр заглушки D', unit: 'м', def: 0.4, step: 0.05 }
-      ]
-    },
-    E2: {
-      name: 'Заглушка прямоугольная',
-      icon: '⬛',
-      fields: [
-        { key: 'A', label: 'Ширина заглушки A', unit: 'м', def: 0.5, step: 0.05 },
-        { key: 'B', label: 'Высота заглушки B', unit: 'м', def: 0.4, step: 0.05 }
-      ]
-    }
-  };
-
-  function openAddElementDialog(type) {
-    const config = ELEMENT_DEFS[type] || ELEMENT_DEFS.D1;
-    state.activeElementType = type;
-
-    const modal = document.getElementById('calcElementModal');
-    const titleEl = document.getElementById('calcElementModalTitle');
-    const typeNameEl = document.getElementById('elModalTypeName');
-    const typeTagEl = document.getElementById('elModalTypeTag');
-    const iconEl = document.getElementById('elModalIcon');
-    const fieldsContainer = document.getElementById('elModalFieldsContainer');
-
-    if (titleEl) titleEl.innerText = `Добавление элемента: ${config.name}`;
-    if (typeNameEl) typeNameEl.innerText = config.name;
-    if (typeTagEl) typeTagEl.innerText = type;
-    if (iconEl) iconEl.innerText = config.icon;
-
-    if (fieldsContainer) {
-      fieldsContainer.innerHTML = '';
-      config.fields.forEach(f => {
-        const group = document.createElement('div');
-        group.className = 'calc-form-group';
-        group.innerHTML = `
-          <label for="el_param_${f.key}">${f.label}</label>
-          <div class="calc-field-wrap">
-            <input type="number" id="el_param_${f.key}" data-key="${f.key}" class="calc-field-input calc-field-input--with-unit el-modal-input" value="${f.def}" step="${f.step || '0.1'}">
-            <span class="calc-field-unit">${f.unit}</span>
-          </div>
-        `;
-        fieldsContainer.appendChild(group);
+    dom.b3TableBody.querySelectorAll('.b3-grille-lfact').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        state.block3Grilles[idx].Lfact = parseFloat(e.target.value) || 0;
+        updateBlock3GrillesSum();
+        recalculateBlock3();
       });
-
-      fieldsContainer.querySelectorAll('.el-modal-input').forEach(inp => {
-        inp.addEventListener('input', updateModalLiveArea);
-      });
-    }
-
-    updateModalLiveArea();
-
-    if (modal) {
-      modal.classList.add('active');
-    }
-  }
-
-  function getModalCurrentParams() {
-    const type = state.activeElementType || 'D1';
-    const config = ELEMENT_DEFS[type] || ELEMENT_DEFS.D1;
-    const params = {};
-    config.fields.forEach(f => {
-      const el = document.getElementById(`el_param_${f.key}`);
-      params[f.key] = el ? (parseFloat(el.value) || f.def) : f.def;
-    });
-    return params;
-  }
-
-  function updateModalLiveArea() {
-    const type = state.activeElementType || 'D1';
-    const params = getModalCurrentParams();
-    const area = calculateArea(type, params);
-    const areaEl = document.getElementById('elModalCalculatedArea');
-    if (areaEl) {
-      areaEl.innerHTML = `${area.toFixed(2)} <span class="unit">м²</span>`;
-    }
-  }
-
-  window.calcEngineCloseElementModal = function() {
-    const modal = document.getElementById('calcElementModal');
-    if (modal) {
-      modal.classList.remove('active');
-    }
-  };
-
-  window.calcEngineSaveElement = function() {
-    const type = state.activeElementType || 'D1';
-    const config = ELEMENT_DEFS[type] || ELEMENT_DEFS.D1;
-    const params = getModalCurrentParams();
-    const s = calculateArea(type, params);
-
-    state.block3Elements.push({
-      id: Date.now(),
-      type,
-      name: config.name,
-      params,
-      s
     });
 
-    renderBlock3Table();
-    recalculateBlock3();
-    window.calcEngineCloseElementModal();
-  };
+    dom.b3TableBody.querySelectorAll('.btn-delete-grille').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        state.block3Grilles.splice(idx, 1);
+        renderBlock3GrillesTable();
+        updateBlock3GrillesSum();
+        recalculateBlock3();
+      });
+    });
 
-  function calculateArea(type, p) {
-    const pi = Math.PI;
-    switch (type) {
-      case 'D1': return pi * (p.D || 0.4) * (p.L || 4.0);
-      case 'D2': return 2 * ((p.A || 0.5) + (p.B || 0.4)) * (p.L || 5.0);
-      case 'O1': return pi * (p.D || 0.4) * (pi * (p.R || 0.4) * ((p.A || 90) / 180));
-      case 'O2': return 2 * ((p.A || 0.5) + (p.B || 0.4)) * (pi * (p.R || 0.5) * ((p.A || 90) / 180));
-      case 'A1': {
-        const d1 = p.D1 || 0.5;
-        const d2 = p.D2 || 0.3;
-        const l = p.L || 0.5;
-        return pi * ((d1 + d2) / 2) * Math.sqrt(Math.pow(l, 2) + Math.pow((d1 - d2) / 2, 2));
-      }
-      case 'A3': {
-        const a = p.A || 0.6;
-        const b = p.B || 0.4;
-        const a1 = p.A1 || 0.4;
-        const b1 = p.B1 || 0.3;
-        const l = p.L || 0.5;
-        const h1 = Math.sqrt(Math.pow(l, 2) + Math.pow((b - b1)/2, 2));
-        const h2 = Math.sqrt(Math.pow(l, 2) + Math.pow((a - a1)/2, 2));
-        return (a + a1) * h1 + (b + b1) * h2;
-      }
-      case 'E1': return (pi * Math.pow(p.D || 0.4, 2)) / 4;
-      case 'E2': return (p.A || 0.5) * (p.B || 0.4);
-      default: return 1.0;
+    updateBlock3GrillesSum();
+  }
+
+  function recalculateBlock3() {
+    const system = document.getElementById('b3_system')?.value || 'П11';
+    const area = Math.max(0.001, parseFloat(document.getElementById('b3_area')?.value) || 145.925);
+    const pressure = Math.max(1, parseFloat(document.getElementById('b3_pressure')?.value) || 116);
+    const Lvent = parseFloat(document.getElementById('b3_Lvent')?.value) || 4111.2;
+    const Lgrille = parseFloat(document.getElementById('b3_Lgrille')?.value) || 4015.27;
+    const Lproject = parseFloat(document.getElementById('b3_Lproject')?.value) || 3950;
+    const netResistance = parseFloat(document.getElementById('b3_net_resistance')?.value) || 180;
+    const P_fan_total = parseFloat(document.getElementById('b3_P_fan_total')?.value) || 685;
+    const frequency = parseFloat(document.getElementById('b3_frequency')?.value) || 50;
+
+    // Утечки Lут = Lвент.ф - Lр-ки.ф (м³/ч)
+    const L_leak = Lvent - Lgrille;
+    // Невязка в процентах (по п. 7.5 ГОСТ 34060: (Lвент - Lреш) / Lвент * 100%)
+    const deviation = Lvent > 0 ? ((L_leak / Lvent) * 100) : 0;
+    // Удельные утечки fфакт = Lут / ΣAi (м³/(ч·м²))
+    const f_fact = Math.max(0, L_leak / area);
+
+    // Нормативные формулы пределов классов по ГОСТ 34060:
+    const fA = 0.097 * Math.pow(pressure, 0.65);
+    const fB = 0.032 * Math.pow(pressure, 0.65);
+    const fC = 0.0108 * Math.pow(pressure, 0.65);
+    const fD = 0.0036 * Math.pow(pressure, 0.65);
+
+    // Допустимые утечки воздуха для классов:
+    const Ld_A = fA * area;
+    const Ld_B = fB * area;
+    const Ld_C = fC * area;
+    const Ld_D = fD * area;
+
+    let assignedClass = 'Класс B (Плотный)';
+    let assignedClassShort = 'В';
+    let isPassedStandard = false;
+
+    if (f_fact <= fD) {
+      assignedClass = 'Класс D (Специальный)';
+      assignedClassShort = 'D';
+      isPassedStandard = true;
+    } else if (f_fact <= fC) {
+      assignedClass = 'Класс C (Высокая герметичность)';
+      assignedClassShort = 'C';
+      isPassedStandard = true;
+    } else if (f_fact <= fB) {
+      assignedClass = 'Класс B (Плотный)';
+      assignedClassShort = 'В';
+      isPassedStandard = true;
+    } else if (f_fact <= fA) {
+      assignedClass = 'Класс A (Нормальный)';
+      assignedClassShort = 'А';
+      isPassedStandard = true;
+    } else {
+      assignedClass = 'Не соответствует классу A (Негерметично)';
+      assignedClassShort = 'Не соответствует';
+      isPassedStandard = false;
     }
+
+    updateSummaryMetric('b3_res_Leak', L_leak.toFixed(2), 'м³/ч');
+    updateSummaryMetric('b3_res_f_fact', f_fact.toFixed(3), 'м³/(ч·м²)');
+    updateSummaryMetric('b3_res_Deviation', deviation.toFixed(2), '%');
+    updateSummaryMetric('b3_res_fA', fA.toFixed(3), 'м³/(ч·м²)');
+    updateSummaryMetric('b3_res_fB', fB.toFixed(3), 'м³/(ч·м²)');
+    updateSummaryMetric('b3_res_fC', fC.toFixed(3), 'м³/(ч·м²)');
+    updateSummaryMetric('b3_res_fD', fD.toFixed(3), 'м³/(ч·м²)');
+
+    const devRow = document.getElementById('b3_row_Deviation');
+    if (devRow) {
+      devRow.style.background = '';
+      devRow.style.borderColor = '';
+      const devEl = document.getElementById('b3_res_Deviation');
+      if (devEl) {
+        if (Math.abs(deviation) <= 8) {
+          devEl.style.color = '#059669';
+        } else if (Math.abs(deviation) <= 10) {
+          devEl.style.color = '#d97706';
+        } else {
+          devEl.style.color = '#dc2626';
+        }
+      }
+    }
+
+    const classEl = document.getElementById('b3_res_Class');
+    const statusTextEl = document.getElementById('b3_res_StatusText');
+    const bannerEl = document.getElementById('b3_class_banner');
+
+    if (classEl) {
+      classEl.innerText = assignedClass;
+    }
+    if (statusTextEl && bannerEl) {
+      if (isPassedStandard && Math.abs(deviation) <= 8) {
+        statusTextEl.innerText = `Утечки в пределах нормы ГОСТ 34060 (${deviation.toFixed(2)}% ≤ 8%)`;
+        statusTextEl.style.color = '#047857';
+        bannerEl.style.background = '#ecfeff';
+        bannerEl.style.borderColor = '#a5f3fc';
+      } else if (isPassedStandard && Math.abs(deviation) <= 10) {
+        statusTextEl.innerText = `В пределах допуска СП 73.13330 (±10%), но превышает 8% по ГОСТ`;
+        statusTextEl.style.color = '#854d0e';
+        bannerEl.style.background = '#fefce8';
+        bannerEl.style.borderColor = '#fde047';
+      } else {
+        statusTextEl.innerText = `Внимание: превышение допустимой величины подсосов/утечек!`;
+        statusTextEl.style.color = '#b91c1c';
+        bannerEl.style.background = '#fef2f2';
+        bannerEl.style.borderColor = '#fca5a5';
+      }
+    }
+
+    state.lastResults.block3 = {
+      system, area, pressure, Lvent, Lgrille, Lproject, netResistance, P_fan_total, frequency,
+      L_leak, deviation, f_fact, fA, fB, fC, fD,
+      Ld_A, Ld_B, Ld_C, Ld_D,
+      assignedClass, assignedClassShort, isPassedStandard,
+      grilles: JSON.parse(JSON.stringify(state.block3Grilles))
+    };
   }
 
   function generateFanCurveSVG(La, Psa, Lpr, Psv, systemName) {
@@ -1040,8 +1113,415 @@
     `;
   }
 
+  function generateBlock3ProtocolHTML() {
+    const meta = state.protocolMeta;
+    const b3 = state.lastResults.block3 || {};
+
+    const systemName = b3.system || meta.systemName || 'П11';
+    const area = parseFloat(b3.area) || 145.925;
+    const pressure = parseFloat(b3.pressure) || 116;
+    const Lvent = parseFloat(b3.Lvent) || 4111.2;
+    const Lgrille = parseFloat(b3.Lgrille) || 4015.27;
+    const Lproject = parseFloat(b3.Lproject) || 3950;
+    const netResistance = parseFloat(b3.netResistance) || 180;
+    const P_fan_total = parseFloat(b3.P_fan_total) || 685;
+    const frequency = parseFloat(b3.frequency) || 50;
+
+    const L_leak = b3.L_leak !== undefined ? b3.L_leak : (Lvent - Lgrille);
+    const deviation = b3.deviation !== undefined ? b3.deviation : (Lvent > 0 ? ((Lvent - Lgrille) / Lvent) * 100 : 0);
+    const f_fact = b3.f_fact !== undefined ? b3.f_fact : (area > 0 ? L_leak / area : 0);
+
+    const fA = b3.fA !== undefined ? b3.fA : (0.097 * Math.pow(pressure, 0.65));
+    const fB = b3.fB !== undefined ? b3.fB : (0.032 * Math.pow(pressure, 0.65));
+    const fC = b3.fC !== undefined ? b3.fC : (0.0108 * Math.pow(pressure, 0.65));
+    const fD = b3.fD !== undefined ? b3.fD : (0.0036 * Math.pow(pressure, 0.65));
+
+    const Ld_A = b3.Ld_A !== undefined ? b3.Ld_A : (fA * area);
+    const Ld_B = b3.Ld_B !== undefined ? b3.Ld_B : (fB * area);
+    const Ld_C = b3.Ld_C !== undefined ? b3.Ld_C : (fC * area);
+    const Ld_D = b3.Ld_D !== undefined ? b3.Ld_D : (fD * area);
+
+    const assignedClass = b3.assignedClass || 'Класс B (Плотный)';
+    const assignedClassShort = b3.assignedClassShort || 'B';
+
+    // Grilles measurement table
+    const grilles = b3.grilles || state.block3Grilles || [];
+    let table2Rows = '';
+    let sumLpr = 0;
+    let sumLfact = 0;
+
+    if (grilles.length === 0) {
+      table2Rows = '<tr><td colspan="5">Нет данных по замерам решёток</td></tr>';
+    } else {
+      grilles.forEach((g, idx) => {
+        const lpr = parseFloat(g.Lpr) || 0;
+        const lfact = parseFloat(g.Lfact) || 0;
+        sumLpr += lpr;
+        sumLfact += lfact;
+        const dev = lpr > 0 ? (((lfact - lpr) / lpr) * 100).toFixed(1) : '—';
+        table2Rows += `
+          <tr>
+            <td>${g.point || (idx + 1)}</td>
+            <td style="text-align: left; padding-left: 8px;">${g.room || '—'}</td>
+            <td>${lpr > 0 ? lpr.toFixed(1).replace('.', ',') : '—'}</td>
+            <td>${lfact > 0 ? lfact.toFixed(1).replace('.', ',') : '—'}</td>
+            <td>${dev !== '—' ? `${dev.replace('.', ',')} %` : '—'}</td>
+          </tr>
+        `;
+      });
+    }
+
+    const overallGrilleDev = sumLpr > 0 ? (((sumLfact - sumLpr) / sumLpr) * 100).toFixed(1) : '—';
+
+    // Highlight active class in table
+    const isA = assignedClassShort === 'A';
+    const isB = assignedClassShort === 'B';
+    const isC = assignedClassShort === 'C';
+    const isD = assignedClassShort === 'D';
+
+    return `
+      <div class="gost-sheet">
+        <p class="gost-p-center">
+          ${meta.objectName || 'Торговый комплекс «Академический»'}<br>
+          ${meta.address || 'г. Москва'}
+        </p>
+
+        <p class="gost-p-center" style="margin: 18pt 0 6pt 0; font-weight: bold; font-size: 13pt;">
+          ОТЧЁТ<br>
+          по результатам проведения испытаний на герметичность воздуховодов<br>
+          системы ${systemName} косвенным методом
+        </p>
+
+        <p class="gost-p-center" style="margin-bottom: 22pt; font-size: 10pt; color: #4b5563;">
+          (на основании ГОСТ 34060-2017 и СП 60.13330-2020)
+        </p>
+
+        <p class="gost-section-heading">1 Цель проведения работ</p>
+
+        <p class="gost-p">
+          Цель проведения работ – выполнение комплекса работ по испытанию воздуховодов на герметичность косвенным методом.
+        </p>
+        <p class="gost-p">
+          Ввиду высокой сложности и затруднённости проведения подготовительных мероприятий по установке заглушек на испытываемых участках вентиляционных сетей согласно методике ГОСТ 34060-2017, так как монтаж воздуховодов и воздухораспределительных устройств завершён в полном объёме, проведена оценка герметичности воздуховодов по методике испытаний с существующими вентустановками.
+        </p>
+        <p class="gost-p">
+          Все работы проводятся в строгом соответствии с требованиями:
+        </p>
+        <p class="gost-p" style="margin-left: 1.25cm; text-indent: 0;">
+          – <b>ГОСТ 34060-2017</b> «Инженерные сети зданий и сооружений внутренние. Испытание и наладка систем вентиляции и кондиционирования воздуха. Правила проведения и контроль выполнения работ»;<br>
+          – <b>СП 73.13330.2016</b> «Внутренние санитарно-технические системы зданий»;<br>
+          – <b>СП 60.13330.2020</b> «Отопление, вентиляция и кондиционирование воздуха. Актуализированная редакция СНиП 41-01-2003».
+        </p>
+        <p class="gost-p">
+          Работы по испытанию на герметичность воздуховодов косвенным методом включают в себя проведение замеров давлений и расходов воздуха на вентустановках и на оконечных воздухораспределительных устройствах, а также проведение оценки по результатам измерений на класс герметичности.
+        </p>
+
+        <p class="gost-section-heading">2 Комплект измерительного оборудования</p>
+        <p class="gost-p">
+          Измерения проводились следующим комплектом поверенного оборудования:
+        </p>
+        <p class="gost-p" style="margin-left: 1.25cm; text-indent: 0;">
+          1. <b>Testo 440 dP</b> – комбинированный дифференциальный манометр с подключаемыми зондами-анемометрами (внесён в Госреестр СИ РФ).<br>
+          2. <b>Зонд-анемометр с механической крыльчаткой Ду 100</b> – для проведения замеров расходов воздуха на оконечных воздухораспределительных решётках и диффузорах.<br>
+          3. <b>Зонд-анемометр с механической крыльчаткой Ду 16 / трубка Пито</b> – для измерения скоростей воздушного потока и статического давления в мерных сечениях воздуховодов.
+        </p>
+
+        <p class="gost-section-heading">3 Результаты измерений и испытаний</p>
+        <p class="gost-p">
+          В ходе испытаний на герметичность воздуховодов согласно программе проведения работ выполнены измерения:
+        </p>
+        <p class="gost-p" style="margin-left: 1.25cm; text-indent: 0;">
+          • статическое давление в сети воздуховодов после вентустановки;<br>
+          • фактический расход воздуха у вентилятора (в мерном сечении воздуховода);<br>
+          • сумма фактических расходов воздуха по оконечным устройствам (решёткам).
+        </p>
+        <p class="gost-p">
+          В ходе визуального обследования явных дефектов монтажа, повреждений изоляции и разрывов не выявлено. Фильтрующие элементы на момент испытаний не загрязнены.
+        </p>
+
+        <p class="gost-p--no-indent" style="text-align: left; margin-bottom: 4pt; font-style: italic;">Таблица 1 – Исходные проектные и фактические параметры системы ${systemName}</p>
+        <table class="gost-table">
+          <thead>
+            <tr>
+              <th style="width: 42%;">Параметр системы</th>
+              <th style="width: 24%;">Проектное значение</th>
+              <th style="width: 24%;">Фактическое значение</th>
+              <th style="width: 10%;">Ед. изм.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: left; padding-left: 8px;">Расход воздуха</td>
+              <td>${Lproject > 0 ? Lproject.toFixed(1).replace('.', ',') : '—'}</td>
+              <td><b>${Lvent.toFixed(1).replace('.', ',')}</b></td>
+              <td>м³/ч</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding-left: 8px;">Статическое давление сети p</td>
+              <td>${netResistance > 0 ? netResistance.toFixed(1).replace('.', ',') : '—'}</td>
+              <td><b>${pressure.toFixed(1).replace('.', ',')}</b></td>
+              <td>Па</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding-left: 8px;">Развёрнутая площадь воздуховодов ΣAi</td>
+              <td>—</td>
+              <td><b>${area.toFixed(3).replace('.', ',')}</b></td>
+              <td>м²</td>
+            </tr>
+            ${(P_fan_total > 0 || frequency > 0) ? `
+              <tr>
+                <td style="text-align: left; padding-left: 8px;">Давление вентилятора / Частота ПЧ</td>
+                <td>—</td>
+                <td>${P_fan_total > 0 ? `${P_fan_total} Па` : ''}${P_fan_total > 0 && frequency > 0 ? ' / ' : ''}${frequency > 0 ? `${frequency} Гц` : ''}</td>
+                <td>—</td>
+              </tr>
+            ` : ''}
+          </tbody>
+        </table>
+
+        <p class="gost-p--no-indent" style="text-align: left; margin: 14pt 0 4pt 0; font-style: italic;">Таблица 2 – Ведомость замеров расходов по оконечным устройствам (решёткам)</p>
+        <table class="gost-table">
+          <thead>
+            <tr>
+              <th style="width: 12%;">№ точки</th>
+              <th style="width: 42%;">Наименование зоны / помещения</th>
+              <th style="width: 16%;">Lпр, м³/ч</th>
+              <th style="width: 16%;">Lфакт, м³/ч</th>
+              <th style="width: 14%;">Невязка, %</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${table2Rows}
+          </tbody>
+          <tfoot>
+            <tr style="font-weight: bold; background: #fdfdfd;">
+              <td colspan="2" style="text-align: right; padding-right: 10px;">Итого по решёткам:</td>
+              <td>${sumLpr > 0 ? sumLpr.toFixed(1).replace('.', ',') : '—'}</td>
+              <td>${sumLfact > 0 ? sumLfact.toFixed(1).replace('.', ',') : Lgrille.toFixed(1).replace('.', ',')}</td>
+              <td>${overallGrilleDev !== '—' ? `${overallGrilleDev.replace('.', ',')} %` : '—'}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <p class="gost-section-heading">4 Определение класса герметичности воздуховодов системы ${systemName}</p>
+
+        <p class="gost-p">
+          После проведения всех необходимых замеров проводится оценка класса герметичности воздуховодов согласно пункту 7 ГОСТ 34060-2017 и приложению «М» СП 60.13330-2020.
+        </p>
+
+        <p class="gost-p">
+          Величина подсосов / утечек воздуха по вентиляционной сети $\\Delta_{\\text{ут}}$ (%) определяется по формуле (1):
+        </p>
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`\\Delta_{\\text{ут}} = \\frac{L_{\\text{вент.ф}} - L_{\\text{р-ки.ф}}}{L_{\\text{вент.ф}}} \\cdot 100\\% = \\frac{${Lvent.toFixed(1).replace('.', ',')} - ${Lgrille.toFixed(1).replace('.', ',')}}{${Lvent.toFixed(1).replace('.', ',')}} \\cdot 100\\% = ${deviation.toFixed(2).replace('.', ',')}\\%`)}
+          </div>
+          <span class="gost-formula-num">(1)</span>
+        </div>
+        <p class="gost-note">
+          Согласно п. 7.5 ГОСТ 34060-2017, $\\Delta_{\\text{ут}}$ не должна превышать 8% (допустимое отклонение по СП 73.13330.2016 составляет $\\pm 10\\%$).
+        </p>
+
+        <p class="gost-p">
+          Величина фактических утечек воздуха $L_{\\text{ут}}$ (м³/ч) при проведении испытаний косвенным методом определяется по формуле (2):
+        </p>
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`L_{\\text{ут}} = L_{\\text{вент.ф}} - L_{\\text{р-ки.ф}} = ${Lvent.toFixed(1).replace('.', ',')} - ${Lgrille.toFixed(1).replace('.', ',')} = ${L_leak.toFixed(2).replace('.', ',')} \\text{ м}^3/\\text{ч}`)}
+          </div>
+          <span class="gost-formula-num">(2)</span>
+        </div>
+
+        <p class="gost-p">
+          Допустимые потери или подсосы воздуха через неплотности в воздуховодах $L_d$ (м³/ч) не должны превышать расхода, рассчитанного по формуле (3):
+        </p>
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`L_d = f \\cdot \\Sigma A_i`)}
+          </div>
+          <span class="gost-formula-num">(3)</span>
+        </div>
+        <p class="gost-note">
+          где $\\Sigma A_i = ${area.toFixed(3).replace('.', ',')} \\text{ м}^2$ – общая развёрнутая площадь воздуховодов системы;<br>
+          $f$ – предельные удельные потери или подсосы, м³/(ч·м²), приходящиеся на 1 м² площади воздуховодов, определяемые в зависимости от статического давления $p = ${pressure.toFixed(1).replace('.', ',')} \\text{ Па}$:
+        </p>
+
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`\\text{для класса герметичности А: } f_A = 0{,}097 \\cdot p^{0{,}65} = 0{,}097 \\cdot ${pressure.toFixed(1).replace('.', ',')}^{0{,}65} = ${fA.toFixed(3).replace('.', ',')} \\text{ м}^3/(\\text{ч}\\cdot\\text{м}^2)`)}
+          </div>
+          <span class="gost-formula-num">(4)</span>
+        </div>
+
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`\\text{для класса герметичности В: } f_B = 0{,}032 \\cdot p^{0{,}65} = 0{,}032 \\cdot ${pressure.toFixed(1).replace('.', ',')}^{0{,}65} = ${fB.toFixed(3).replace('.', ',')} \\text{ м}^3/(\\text{ч}\\cdot\\text{м}^2)`)}
+          </div>
+          <span class="gost-formula-num">(5)</span>
+        </div>
+
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`\\text{для класса герметичности С: } f_C = 0{,}0108 \\cdot p^{0{,}65} = 0{,}0108 \\cdot ${pressure.toFixed(1).replace('.', ',')}^{0{,}65} = ${fC.toFixed(3).replace('.', ',')} \\text{ м}^3/(\\text{ч}\\cdot\\text{м}^2)`)}
+          </div>
+          <span class="gost-formula-num">(6)</span>
+        </div>
+
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`\\text{для класса герметичности D: } f_D = 0{,}0036 \\cdot p^{0{,}65} = 0{,}0036 \\cdot ${pressure.toFixed(1).replace('.', ',')}^{0{,}65} = ${fD.toFixed(3).replace('.', ',')} \\text{ м}^3/(\\text{ч}\\cdot\\text{м}^2)`)}
+          </div>
+          <span class="gost-formula-num">(7)</span>
+        </div>
+
+        <p class="gost-p">
+          Фактические удельные потери (утечки) воздуха $f_{\\text{факт}}$ (м³/(ч·м²)) составляют:
+        </p>
+        <div class="gost-formula-row">
+          <div class="gost-formula-math">
+            ${kTeX(`f_{\\text{факт}} = \\frac{L_{\\text{ут}}}{\\Sigma A_i} = \\frac{${L_leak.toFixed(2).replace('.', ',')}}{${area.toFixed(3).replace('.', ',')}} = ${f_fact.toFixed(3).replace('.', ',')} \\text{ м}^3/(\\text{ч}\\cdot\\text{м}^2)`)}
+          </div>
+          <span class="gost-formula-num">(8)</span>
+        </div>
+
+        <p class="gost-p--no-indent" style="text-align: left; margin: 14pt 0 4pt 0; font-style: italic;">Таблица 3 – Нормативные критерии классов герметичности по ГОСТ 34060-2017</p>
+        <table class="gost-table">
+          <thead>
+            <tr>
+              <th rowspan="2" style="width: 14%;">Класс герметичности</th>
+              <th colspan="2" style="width: 28%;">Предельный перепад давления Ps, Па</th>
+              <th rowspan="2" style="width: 20%;">Формула fmax, м³/(ч·м²)</th>
+              <th rowspan="2" style="width: 20%;">Предел f при p = ${pressure.toFixed(1).replace('.', ',')} Па</th>
+              <th rowspan="2" style="width: 18%;">Предельный расход Ld, м³/ч</th>
+            </tr>
+            <tr>
+              <th style="font-size: 9.5pt;">Положительное</th>
+              <th style="font-size: 9.5pt;">Отрицательное</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="${isA ? 'background: #f0fdf4; font-weight: bold;' : ''}">
+              <td><b>А</b></td>
+              <td>500</td>
+              <td>500</td>
+              <td>0,097 · p^0,65</td>
+              <td>${fA.toFixed(3).replace('.', ',')}</td>
+              <td>${Ld_A.toFixed(1).replace('.', ',')}</td>
+            </tr>
+            <tr style="${isB ? 'background: #f0fdf4; font-weight: bold;' : ''}">
+              <td><b>В</b></td>
+              <td>1000</td>
+              <td>750</td>
+              <td>0,032 · p^0,65</td>
+              <td>${fB.toFixed(3).replace('.', ',')}</td>
+              <td>${Ld_B.toFixed(1).replace('.', ',')}</td>
+            </tr>
+            <tr style="${isC ? 'background: #f0fdf4; font-weight: bold;' : ''}">
+              <td><b>С</b></td>
+              <td>2000</td>
+              <td>750</td>
+              <td>0,0108 · p^0,65</td>
+              <td>${fC.toFixed(3).replace('.', ',')}</td>
+              <td>${Ld_C.toFixed(1).replace('.', ',')}</td>
+            </tr>
+            <tr style="${isD ? 'background: #f0fdf4; font-weight: bold;' : ''}">
+              <td><b>D</b></td>
+              <td>2000</td>
+              <td>750</td>
+              <td>0,0036 · p^0,65</td>
+              <td>${fD.toFixed(3).replace('.', ',')}</td>
+              <td>${Ld_D.toFixed(1).replace('.', ',')}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="gost-p--no-indent" style="text-align: left; margin: 14pt 0 4pt 0; font-style: italic;">Таблица 4 – Сводная ведомость оценки герметичности воздуховодов системы</p>
+        <table class="gost-table">
+          <thead>
+            <tr>
+              <th style="width: 11%;">Система</th>
+              <th style="width: 11%;">ΣAi, м²</th>
+              <th style="width: 12%;">Lвент.ф, м³/ч</th>
+              <th style="width: 12%;">Lр-ки.ф, м³/ч</th>
+              <th style="width: 10%;">Δут, %</th>
+              <th style="width: 11%;">Lут, м³/ч</th>
+              <th style="width: 9%;">p, Па</th>
+              <th style="width: 12%;">fфакт, м³/(ч·м²)</th>
+              <th style="width: 12%;">Фактический класс</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>${systemName}</b></td>
+              <td>${area.toFixed(3).replace('.', ',')}</td>
+              <td>${Lvent.toFixed(1).replace('.', ',')}</td>
+              <td>${Lgrille.toFixed(1).replace('.', ',')}</td>
+              <td style="font-weight: bold; color: ${Math.abs(deviation) <= 8 ? '#166534' : (Math.abs(deviation) <= 10 ? '#854d0e' : '#b91c1c')};">
+                ${deviation.toFixed(2).replace('.', ',')}%
+              </td>
+              <td>${L_leak.toFixed(2).replace('.', ',')}</td>
+              <td>${pressure.toFixed(1).replace('.', ',')}</td>
+              <td><b>${f_fact.toFixed(3).replace('.', ',')}</b></td>
+              <td style="font-weight: bold; color: #166534;">
+                Класс «${assignedClassShort}»
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="gost-section-heading">5 Выводы</p>
+        <p class="gost-p">
+          В результате проведения комплекса испытаний воздуховодов системы <b>${systemName}</b> на герметичность косвенным методом установлено следующее:
+        </p>
+        <p class="gost-p" style="margin-left: 1.25cm; text-indent: 0;">
+          1) Явных мест негерметичностей и дефектов монтажа системы ${systemName} не выявлено. Сеть воздуховодов смонтирована с надлежащим качеством. Фильтрующие элементы на момент испытаний не загрязнены. Система работает исправно.<br><br>
+          2) Утечки воздуха по системе составляют <b>${L_leak.toFixed(2).replace('.', ',')} м³/ч</b> (величина невязки <b>${deviation.toFixed(2).replace('.', ',')}%</b>), что ${Math.abs(deviation) <= 8 ? '<b>соответствует допустимым нормам</b> ГОСТ 34060-2017 (не более 8%) и СП 73.13330.2016 (±10%)' : (Math.abs(deviation) <= 10 ? '<b>соответствует допустимым отклонениям</b> СП 73.13330.2016 (±10%), но превышает рекомендуемые 8% по п. 7.5 ГОСТ 34060-2017' : '<b>превышает допустимые отклонения</b> СП 73.13330.2016 и ГОСТ 34060-2017')}.<br><br>
+          3) Фактические удельные утечки воздуха составляют <b>${f_fact.toFixed(3).replace('.', ',')} м³/(ч·м²)</b> при статическом давлении <b>${pressure.toFixed(1).replace('.', ',')} Па</b>. Класс герметичности воздуховодов, определённый на основании выполненных измерений и расчётов по ГОСТ 34060-2017 и СП 60.13330-2020, соответствует <b>«${assignedClass}»</b>.
+        </p>
+
+        <!-- ГОСТ-штамп -->
+        <table class="gost-stamp-table">
+          <tr>
+            <td style="width:12%;">Изм.</td>
+            <td style="width:10%;">1</td>
+            <td style="width:18%;">Шифр проекта:</td>
+            <td colspan="2">${meta.number || '01/ИНГ-2025'}</td>
+            <td rowspan="4" style="width:34%; text-align:center; vertical-align:middle;">
+              ООО «Баланс Инженерных Систем»<br>
+              Испытательная лаборатория<br>
+              М.П.
+            </td>
+          </tr>
+          <tr>
+            <td>Разраб.</td>
+            <td>${meta.engineer || 'Журавлев А.Д.'}</td>
+            <td>Объект:</td>
+            <td colspan="2">${meta.objectName || 'ТК «Академический»'}</td>
+          </tr>
+          <tr>
+            <td>Пров.</td>
+            <td>${meta.approver || 'Журавлев А.Д.'}</td>
+            <td>Система:</td>
+            <td colspan="2">${systemName}</td>
+          </tr>
+          <tr>
+            <td>Утв.</td>
+            <td>${meta.approver || 'Журавлев А.Д.'}</td>
+            <td>Стадия / Лист:</td>
+            <td style="width:15%;">И / Лист 1</td>
+            <td style="width:15%;">Дата: ${meta.date}</td>
+          </tr>
+        </table>
+      </div>
+    `;
+  }
+
   function generateProtocolHTML() {
     const meta = state.protocolMeta;
+
+    if (state.currentBlock === 'block3') {
+      return generateBlock3ProtocolHTML();
+    }
 
     if (state.currentBlock === 'block1') {
       const res = state.lastResults.block1 || {};
@@ -1355,6 +1835,11 @@
 
     // Fallback for Block 2 (AVOK)
     const res = state.lastResults.avok || {};
+    const b2Sys = document.getElementById('b2_system_name')?.value?.trim() || meta.systemName || 'Система ДУ1';
+    const b2Obj = document.getElementById('b2_object_name')?.value?.trim() || meta.objectName || 'Торговый центр «Академический»';
+    const b2Addr = document.getElementById('b2_address')?.value?.trim() || meta.address || '';
+    const b2Eng = document.getElementById('b2_engineer')?.value?.trim() || meta.engineer || 'Иванов И.И.';
+
     const protocolTitle = `ПРОТОКОЛ РАСЧЕТА СИСТЕМЫ ПРОТИВОДЫМНОЙ ВЕНТИЛЯЦИИ (${res.type || 'АВОК'})`;
     
     let detailsRows = '';
@@ -1364,9 +1849,9 @@
 
     const tableHtml = `
       <table class="protocol-table-info">
-        <tr><td class="field-name">Объект / Адрес:</td><td>${meta.objectName} (${meta.address || ''})</td><td class="field-name">Дата расчета:</td><td>${meta.date}</td></tr>
-        <tr><td class="field-name">Наименование системы:</td><td>${meta.systemName}</td><td class="field-name">Номер протокола:</td><td>№ ${meta.number}</td></tr>
-        <tr><td class="field-name">Нормативная база:</td><td>Рекомендации АВОК 5.5.1</td><td class="field-name">Расчетчик:</td><td>${meta.engineer}</td></tr>
+        <tr><td class="field-name">Объект / Адрес:</td><td>${b2Obj}${b2Addr ? ` (${b2Addr})` : ''}</td><td class="field-name">Дата расчета:</td><td>${meta.date}</td></tr>
+        <tr><td class="field-name">Наименование системы:</td><td>${b2Sys}</td><td class="field-name">Номер протокола:</td><td>№ ${meta.number}</td></tr>
+        <tr><td class="field-name">Нормативная база:</td><td>Рекомендации АВОК 5.5.1</td><td class="field-name">Выполнил:</td><td>${b2Eng}</td></tr>
       </table>
       <h4 style="margin:14px 0 6px; font-size:12px; text-transform:uppercase;">Результаты расчета параметров противодымной вентиляции:</h4>
       <table class="protocol-table-info">
@@ -1376,7 +1861,7 @@
         ${detailsRows}
       </table>
     `;
-    const conclusionText = `Заключение: Расчетные параметры системы противодымной вентиляции ${meta.systemName} соответствуют требованиям нормативов АВОК и СП 7.13130.`;
+    const conclusionText = `Заключение: Расчетные параметры системы противодымной вентиляции ${b2Sys} соответствуют требованиям нормативов АВОК и СП 7.13130.`;
 
     return `
       <div class="protocol-sheet-container">
@@ -1404,9 +1889,9 @@
 
         <div class="protocol-signs-row">
           <div class="sign-column">
-            <span>Протокол составил инженер-испытатель:</span>
+            <span>Выполнил:</span>
             <div class="sign-underline"></div>
-            <span>/ ${meta.engineer} /</span>
+            <span>/ ${b2Eng} /</span>
           </div>
           <div class="sign-column">
             <span>Представитель заказчика / технадзора:</span>
@@ -1422,6 +1907,22 @@
     if (state.currentBlock === 'block1' && !isBlock1Ready()) {
       alert('Для формирования отчёта необходимо ввести исходные параметры вентилятора и добавить хотя бы один этаж с размерами шахты и клапана.');
       return;
+    }
+    if (state.currentBlock === 'block2') {
+      const b2Sys = document.getElementById('b2_system_name')?.value?.trim();
+      const b2Obj = document.getElementById('b2_object_name')?.value?.trim();
+      const b2Addr = document.getElementById('b2_address')?.value?.trim();
+      const b2Eng = document.getElementById('b2_engineer')?.value?.trim();
+      if (b2Sys) state.protocolMeta.systemName = b2Sys;
+      if (b2Obj) state.protocolMeta.objectName = b2Obj;
+      if (b2Addr) state.protocolMeta.address = b2Addr;
+      if (b2Eng) state.protocolMeta.engineer = b2Eng;
+    }
+    if (state.currentBlock === 'block3') {
+      const b3Sys = document.getElementById('b3_system')?.value?.trim();
+      if (b3Sys) {
+        state.protocolMeta.systemName = b3Sys;
+      }
     }
     recalculateCurrent();
     const html = generateProtocolHTML();
@@ -1451,6 +1952,22 @@
     if (state.currentBlock === 'block1' && !isBlock1Ready()) {
       alert('Для формирования отчёта необходимо ввести исходные параметры вентилятора и добавить хотя бы один этаж с размерами шахты и клапана.');
       return;
+    }
+    if (state.currentBlock === 'block2') {
+      const b2Sys = document.getElementById('b2_system_name')?.value?.trim();
+      const b2Obj = document.getElementById('b2_object_name')?.value?.trim();
+      const b2Addr = document.getElementById('b2_address')?.value?.trim();
+      const b2Eng = document.getElementById('b2_engineer')?.value?.trim();
+      if (b2Sys) state.protocolMeta.systemName = b2Sys;
+      if (b2Obj) state.protocolMeta.objectName = b2Obj;
+      if (b2Addr) state.protocolMeta.address = b2Addr;
+      if (b2Eng) state.protocolMeta.engineer = b2Eng;
+    }
+    if (state.currentBlock === 'block3') {
+      const b3Sys = document.getElementById('b3_system')?.value?.trim();
+      if (b3Sys) {
+        state.protocolMeta.systemName = b3Sys;
+      }
     }
     recalculateCurrent();
     const bodyContent = generateProtocolHTML();

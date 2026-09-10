@@ -258,9 +258,21 @@
 
 @media (max-width: 600px) {
   .calc-grid-fields,
-  .calc-grid-fields--3cols {
+  .calc-grid-fields--3cols,
+  .calc-grid-fields--4cols {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+}
+
+.calc-grid-fields--4cols {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px 18px;
+}
+
+@media (max-width: 1024px) {
+  .calc-grid-fields--4cols {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -330,6 +342,13 @@
 
 .calc-field-input--with-unit {
   padding-right: 48px;
+}
+
+.calc-field-input--small {
+  height: 32px !important;
+  padding: 4px 8px !important;
+  font-size: 13px !important;
+  border-radius: 0 !important;
 }
 
 /* Quick Bar for Shaft Defaults (Block 1) */
@@ -423,6 +442,75 @@
   background: #ffffff;
   border-radius: 0 !important;
   width: 100%;
+}
+
+.b1-kms-cell-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  width: 100%;
+}
+
+.b1-kms-details {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.b1-kms-summary {
+  height: 34px;
+  padding: 4px 6px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  cursor: pointer;
+  border-radius: 0 !important;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.b1-kms-summary::-webkit-details-marker {
+  display: none;
+}
+
+.b1-kms-summary:hover {
+  border-color: var(--primary);
+  background: #ffffff;
+}
+
+.b1-kms-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 60;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  padding: 8px 10px;
+  min-width: 200px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: 0 !important;
+}
+
+.b1-kms-label {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text);
+  margin: 0;
+}
+
+.b1-kms-label:hover {
+  color: var(--primary-dark);
 }
 
 .calc-table-btns {
@@ -583,13 +671,8 @@
 #b1_row_Dev {
   display: flex;
   flex-direction: column;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  padding: 16px !important;
-  border-width: 1px !important;
-  border-style: solid !important;
-  margin-top: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 #b1_row_Dev .calc-metric-row__label {

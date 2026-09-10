@@ -317,6 +317,25 @@ function initSmoothScroll() {
     });
   });
 
+  // Обработчик для клика по логотипу: плавный скролл к началу без хэштегов
+  const logoLink = document.querySelector('.logo-link');
+  if (logoLink) {
+    logoLink.addEventListener('click', function (e) {
+      const isHomePage = window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.php');
+      if (isHomePage) {
+        e.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        if (window.location.hash) {
+          history.pushState('', document.title, window.location.pathname + window.location.search);
+        }
+        closeMenuDrawer();
+      }
+    });
+  }
+
   // Особый обработчик для ссылки на главную
   const homeLink = document.querySelector('a[href="#home"]');
   if (homeLink) {
@@ -326,8 +345,6 @@ function initSmoothScroll() {
         top: 0,
         behavior: 'smooth'
       });
-
-      // Закрываем меню если оно открыто
       closeMenuDrawer();
     });
   }

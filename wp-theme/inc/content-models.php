@@ -1983,4 +1983,275 @@ function bis_ajax_reorder_services() {
 }
 add_action('wp_ajax_bis_reorder_services', 'bis_ajax_reorder_services');
 
+/**
+ * ============================================================================
+ * VACANCIES CPT & MANAGEMENT (bis_vacancy)
+ * ============================================================================
+ */
+
+function bis_register_vacancy_cpt() {
+    $labels = array(
+        'name'               => 'Вакансии',
+        'singular_name'      => 'Вакансия',
+        'menu_name'          => 'Вакансии',
+        'name_admin_bar'     => 'Вакансия',
+        'add_new'            => 'Добавить вакансию',
+        'add_new_item'       => 'Добавить новую вакансию',
+        'edit_item'          => 'Редактировать вакансию',
+        'new_item'           => 'Новая вакансия',
+        'view_item'          => 'Просмотр вакансии',
+        'search_items'       => 'Искать вакансии',
+        'not_found'          => 'Вакансии не найдены',
+        'not_found_in_trash' => 'В корзине нет вакансий',
+        'all_items'          => 'Все вакансии',
+    );
+
+    register_post_type('bis_vacancy', array(
+        'labels'             => $labels,
+        'public'             => false,
+        'publicly_queryable' => false,
+        'show_ui'            => true,
+        'show_in_menu'       => true,
+        'query_var'          => false,
+        'rewrite'            => false,
+        'capability_type'    => 'post',
+        'has_archive'        => false,
+        'hierarchical'       => false,
+        'menu_position'      => 23,
+        'menu_icon'          => 'dashicons-businessman',
+        'supports'           => array('title', 'page-attributes'),
+    ));
+}
+add_action('init', 'bis_register_vacancy_cpt');
+
+function bis_add_vacancy_meta_boxes() {
+    add_meta_box(
+        'bis_vacancy_details',
+        'Параметры вакансии',
+        'bis_render_vacancy_metabox',
+        'bis_vacancy',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'bis_add_vacancy_meta_boxes');
+
+function bis_render_vacancy_metabox($post) {
+    wp_nonce_field('bis_vacancy_meta_nonce', 'bis_vacancy_meta_nonce_field');
+
+    $department  = get_post_meta($post->ID, 'bis_vacancy_department', true);
+    $location    = get_post_meta($post->ID, 'bis_vacancy_location', true);
+    $salary      = get_post_meta($post->ID, 'bis_vacancy_salary', true);
+    $salary_note = get_post_meta($post->ID, 'bis_vacancy_salary_note', true);
+    $chips       = get_post_meta($post->ID, 'bis_vacancy_chips', true);
+    $duties      = get_post_meta($post->ID, 'bis_vacancy_duties', true);
+    $reqs        = get_post_meta($post->ID, 'bis_vacancy_requirements', true);
+    $highlight   = get_post_meta($post->ID, 'bis_vacancy_requirements_highlight', true);
+    $conditions  = get_post_meta($post->ID, 'bis_vacancy_conditions', true);
+    $is_hidden   = get_post_meta($post->ID, 'bis_vacancy_is_hidden', true);
+    ?>
+    <div class="bis-project-box">
+        <div class="bis-project-box__header">
+            <div>
+                <h3>Основные параметры и публикация</h3>
+                <p>Управляйте видимостью вакансии, условиями работы и требованиями.</p>
+            </div>
+            <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #b91c1c; cursor: pointer; background: #fff; padding: 6px 12px; border: 1px solid #fca5a5; border-radius: 8px;">
+                <input type="checkbox" name="bis_vacancy_is_hidden" value="1" <?php checked($is_hidden, '1'); ?>>
+                Скрыть вакансию с сайта
+            </label>
+        </div>
+
+        <div class="bis-project-grid">
+            <div class="bis-field">
+                <label for="bis_vacancy_department">Направление / Отдел</label>
+                <input type="text" id="bis_vacancy_department" name="bis_vacancy_department" value="<?php echo esc_attr($department); ?>" placeholder="Например: Инженерия / АСУ ТП">
+            </div>
+
+            <div class="bis-field">
+                <label for="bis_vacancy_location">Локация / Регион</label>
+                <input type="text" id="bis_vacancy_location" name="bis_vacancy_location" value="<?php echo esc_attr($location); ?>" placeholder="Например: Москва и объекты РФ">
+            </div>
+
+            <div class="bis-field">
+                <label for="bis_vacancy_salary">Заработная плата</label>
+                <input type="text" id="bis_vacancy_salary" name="bis_vacancy_salary" value="<?php echo esc_attr($salary); ?>" placeholder="Например: от 170 000 ₽">
+            </div>
+
+            <div class="bis-field">
+                <label for="bis_vacancy_salary_note">Пояснение к зарплате</label>
+                <input type="text" id="bis_vacancy_salary_note" name="bis_vacancy_salary_note" value="<?php echo esc_attr($salary_note); ?>" placeholder="Например: за месяц, на руки">
+            </div>
+        </div>
+
+        <div class="bis-field">
+            <label for="bis_vacancy_chips">Метки-бейджи (chips) <small style="font-weight: normal; color: #6b7280;">(каждая метка с новой строки)</small></label>
+            <textarea id="bis_vacancy_chips" name="bis_vacancy_chips" rows="4" placeholder="Опыт: 1–3 года&#10;График: 5/2 (+ 2 субботы)&#10;Формат: разъездной&#10;Оформление по ТК РФ"><?php echo esc_textarea($chips); ?></textarea>
+        </div>
+
+        <div class="bis-field">
+            <label for="bis_vacancy_duties">Обязанности <small style="font-weight: normal; color: #6b7280;">(каждый пункт с новой строки)</small></label>
+            <textarea id="bis_vacancy_duties" name="bis_vacancy_duties" rows="6" placeholder="Введите список обязанностей..."><?php echo esc_textarea($duties); ?></textarea>
+        </div>
+
+        <div class="bis-field">
+            <label for="bis_vacancy_requirements">Требования к кандидату <small style="font-weight: normal; color: #6b7280;">(каждый пункт с новой строки)</small></label>
+            <textarea id="bis_vacancy_requirements" name="bis_vacancy_requirements" rows="6" placeholder="Введите список требований..."><?php echo esc_textarea($reqs); ?></textarea>
+        </div>
+
+        <div class="bis-field">
+            <label for="bis_vacancy_requirements_highlight">Выделенное примечание к требованиям <small style="font-weight: normal; color: #6b7280;">(будет выведено курсивом внизу блока требований)</small></label>
+            <input type="text" id="bis_vacancy_requirements_highlight" name="bis_vacancy_requirements_highlight" value="<?php echo esc_attr($highlight); ?>" placeholder="Например: Глубокий опыт ПНР вентиляции и гидравлики на старте не является обязательным — обучаем в процессе работы.">
+        </div>
+
+        <div class="bis-field">
+            <label for="bis_vacancy_conditions">Условия работы <small style="font-weight: normal; color: #6b7280;">(каждый пункт с новой строки)</small></label>
+            <textarea id="bis_vacancy_conditions" name="bis_vacancy_conditions" rows="6" placeholder="Введите список условий..."><?php echo esc_textarea($conditions); ?></textarea>
+        </div>
+    </div>
+    <?php
+}
+
+function bis_save_vacancy_meta($post_id) {
+    if (!isset($_POST['bis_vacancy_meta_nonce_field']) || !wp_verify_nonce($_POST['bis_vacancy_meta_nonce_field'], 'bis_vacancy_meta_nonce')) {
+        return;
+    }
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $is_hidden = !empty($_POST['bis_vacancy_is_hidden']) ? '1' : '0';
+    update_post_meta($post_id, 'bis_vacancy_is_hidden', $is_hidden);
+
+    $fields = array(
+        'bis_vacancy_department'              => 'sanitize_text_field',
+        'bis_vacancy_location'                => 'sanitize_text_field',
+        'bis_vacancy_salary'                  => 'sanitize_text_field',
+        'bis_vacancy_salary_note'             => 'sanitize_text_field',
+        'bis_vacancy_chips'                   => 'sanitize_textarea_field',
+        'bis_vacancy_duties'                  => 'sanitize_textarea_field',
+        'bis_vacancy_requirements'            => 'sanitize_textarea_field',
+        'bis_vacancy_requirements_highlight'  => 'sanitize_text_field',
+        'bis_vacancy_conditions'              => 'sanitize_textarea_field',
+    );
+
+    foreach ($fields as $field_key => $sanitize_fn) {
+        if (isset($_POST[$field_key])) {
+            update_post_meta($post_id, $field_key, call_user_func($sanitize_fn, $_POST[$field_key]));
+        } else {
+            delete_post_meta($post_id, $field_key);
+        }
+    }
+}
+add_action('save_post_bis_vacancy', 'bis_save_vacancy_meta');
+
+function bis_vacancy_admin_columns($columns) {
+    $new_columns = array(
+        'cb'          => $columns['cb'],
+        'title'       => 'Название вакансии',
+        'bis_dept'    => 'Отдел / Направление',
+        'bis_salary'  => 'Зарплата',
+        'bis_loc'     => 'Локация',
+        'bis_status'  => 'Статус на сайте',
+        'bis_order'   => 'Порядок',
+        'date'        => 'Дата',
+    );
+    return $new_columns;
+}
+add_filter('manage_bis_vacancy_posts_columns', 'bis_vacancy_admin_columns');
+
+function bis_vacancy_admin_custom_column($column, $post_id) {
+    switch ($column) {
+        case 'bis_dept':
+            echo esc_html(get_post_meta($post_id, 'bis_vacancy_department', true) ?: '—');
+            break;
+        case 'bis_salary':
+            $sal = get_post_meta($post_id, 'bis_vacancy_salary', true);
+            $note = get_post_meta($post_id, 'bis_vacancy_salary_note', true);
+            echo esc_html($sal ? ($sal . ($note ? " ($note)" : '')) : '—');
+            break;
+        case 'bis_loc':
+            echo esc_html(get_post_meta($post_id, 'bis_vacancy_location', true) ?: '—');
+            break;
+        case 'bis_status':
+            $hidden = get_post_meta($post_id, 'bis_vacancy_is_hidden', true);
+            $status = get_post_status($post_id);
+            if ($hidden === '1' || $status !== 'publish') {
+                echo '<span style="display:inline-block;padding:3px 8px;border-radius:4px;background:#fee2e2;color:#991b1b;font-weight:600;font-size:11px;">Скрыта</span>';
+            } else {
+                echo '<span style="display:inline-block;padding:3px 8px;border-radius:4px;background:#dcfce7;color:#166534;font-weight:600;font-size:11px;">Активна</span>';
+            }
+            break;
+        case 'bis_order':
+            $post = get_post($post_id);
+            echo intval($post->menu_order);
+            break;
+    }
+}
+add_action('manage_bis_vacancy_posts_custom_column', 'bis_vacancy_admin_custom_column', 10, 2);
+
+/**
+ * Auto-seed initial 2 vacancies if CPT is empty so nothing is lost.
+ */
+function bis_maybe_seed_vacancies() {
+    if (get_option('bis_vacancies_seeded_v3')) {
+        return;
+    }
+
+    $existing = get_posts(array(
+        'post_type'      => 'bis_vacancy',
+        'posts_per_page' => 1,
+        'post_status'    => 'any',
+    ));
+
+    if (empty($existing)) {
+        // Vacancy 1
+        $id1 = wp_insert_post(array(
+            'post_title'   => 'Инженер АСУ ТП систем ОВиК',
+            'post_type'    => 'bis_vacancy',
+            'post_status'  => 'publish',
+            'menu_order'   => 1,
+        ));
+        if ($id1 && !is_wp_error($id1)) {
+            update_post_meta($id1, 'bis_vacancy_department', 'Инженерия / АСУ ТП');
+            update_post_meta($id1, 'bis_vacancy_location', 'Москва и объекты РФ');
+            update_post_meta($id1, 'bis_vacancy_salary', 'от 170 000 ₽');
+            update_post_meta($id1, 'bis_vacancy_salary_note', 'за месяц, на руки');
+            update_post_meta($id1, 'bis_vacancy_chips', "Опыт: 1–3 года\nГрафик: 5/2 (+ 2 субботы)\nФормат: разъездной\nОформление по ТК РФ\nВыплаты: 2 раза в месяц");
+            update_post_meta($id1, 'bis_vacancy_duties', "Знание и умение программирования для сред АРМ и ПЛК.\nНаладка и испытания технологических функций АСУ ТП.\nОбследование объекта автоматизации, анализ исходных данных и формирование ТЗ.\nУчастие в разработке и согласовании разделов проектной документации АСУ ТП.\nУчастие в индивидуальных и комплексных пусконаладочных работах (ПНР) систем ОВиК совместно со специалистами команды.\nПроверка правильности подключения электродвигателей, приводов, датчиков и исполнительных механизмов.\nПроверка силовых и управляющих цепей, аудит шкафов автоматики и щитового оборудования (сборка, маркировка, коммутация).\nДиагностика и оперативный поиск неисправностей при запуске оборудования, корректировка принципиальных и функциональных схем.\nУчастие в подготовке исполнительной документации и фиксации результатов ПНР.");
+            update_post_meta($id1, 'bis_vacancy_requirements', "Высшее профессиональное (техническое) образование.\nЗнания в области электротехники, теплоэнергетики, разработки и проектирования АСУ ТП оборудования систем АОВ.\nУмение читать и составлять технологические схемы, структурные, принципиальные и монтажные схемы.\nУмение проверять правильность монтажа и выполнять наладку средств КИПиА (датчики давления, температуры, расхода, электроприводы арматуры).\nУверенное владение Microsoft Office.\nГотовность к командировкам (обязательно).");
+            update_post_meta($id1, 'bis_vacancy_requirements_highlight', "Глубокий опыт ПНР вентиляции и гидравлики на старте не является обязательным — обучаем в процессе работы.");
+            update_post_meta($id1, 'bis_vacancy_conditions', "Официальное оформление по ТК РФ, стабильная зарплата 2 раза в месяц.\nОплачиваемый отпуск и больничные листы.\nОплата профильных курсов и сертификаций для решения реальных проектных задач.\nПредоставление фирменной спецодежды и всех необходимых СИЗ.\nГрафик: 5/2 + две рабочие субботы в месяц (остальные две субботы — выходные).\nРабота на строительных площадках Москвы, МО, РФ; оборудованные офисы в Москве и Мытищах.");
+            update_post_meta($id1, 'bis_vacancy_is_hidden', '0');
+        }
+
+        // Vacancy 2
+        $id2 = wp_insert_post(array(
+            'post_title'   => 'Инженер-электрик ПНР ОВиК',
+            'post_type'    => 'bis_vacancy',
+            'post_status'  => 'publish',
+            'menu_order'   => 2,
+        ));
+        if ($id2 && !is_wp_error($id2)) {
+            update_post_meta($id2, 'bis_vacancy_department', 'Электрика / ПНР');
+            update_post_meta($id2, 'bis_vacancy_location', 'Москва и объекты РФ');
+            update_post_meta($id2, 'bis_vacancy_salary', 'от 170 000 ₽');
+            update_post_meta($id2, 'bis_vacancy_salary_note', 'за месяц, на руки');
+            update_post_meta($id2, 'bis_vacancy_chips', "Опыт: 1–3 года\nГрафик: 5/2 (+ 2 субботы)\nФормат: разъездной\nОформление по ТК РФ\nГруппа по ЭБ от III");
+            update_post_meta($id2, 'bis_vacancy_duties', "Выполнение пусконаладочных работ, индивидуальных испытаний и запусков инженерного оборудования.\nПроверка правильности подключения оборудования перед запуском (электродвигатели, приводы, датчики, исполнительные механизмы).\nДиагностика и поиск неисправностей в силовых и управляющих электрических цепях.\nАудит щитового оборудования: проверка сборки, маркировки, аппаратов защиты, коммутации и соответствия проекту.\nВыявление ошибок монтажа и проектирования, предложение обоснованных технических решений.\nСамостоятельное выполнение необходимых электромонтажных и наладочных работ на объекте.\nРабота с проектной и рабочей документацией (ЭОМ, автоматизация), разработка и корректировка схем в AutoCAD по фактическому исполнению.\nПодготовка исполнительной документации и актов по результатам ПНР.\nПостепенное подключение к комплексному ПНР вентиляции, систем тепло- и холодоснабжения, гидравлики и автоматики.");
+            update_post_meta($id2, 'bis_vacancy_requirements', "Профильное техническое образование (высшее или среднее профессиональное).\nПрактический опыт работы с электрооборудованием и инженерными системами.\nУверенное чтение принципиальных, однолинейных и монтажных электрических схем.\nНавыки работы в AutoCAD или аналогичном ПО для корректировки схем.\nЗнание ПУЭ и нормативных требований к электроустановкам.\nДействующая группа по электробезопасности не ниже III.\nГотовность работать непосредственно на объектах и отвечать за результат запуска.\nГотовность к командировкам.\nБудет преимуществом: опыт ПНР вентиляционных установок, насосов, КИПиА, частотных преобразователей.");
+            update_post_meta($id2, 'bis_vacancy_requirements_highlight', "Будет преимуществом: опыт ПНР вентиляционных установок, насосов, КИПиА, частотных преобразователей.");
+            update_post_meta($id2, 'bis_vacancy_conditions', "Работа по ТК РФ, стабильная выплата заработной платы 2 раза в месяц.\nОплачиваемый отпуск и больничные листы.\nРеальное обучение пусконаладке вентиляции, гидравлических систем и холодильного оборудования.\nОплата курсов повышения квалификации за счет компании.\nВыдача качественной спецодежды, СИЗ и профессионального инструмента.\nГрафик: 5/2 плюс две рабочие субботы в месяц.\nОбъекты в Москве, МО, РФ; комфортные офисы в Москве и Мытищах.");
+            update_post_meta($id2, 'bis_vacancy_is_hidden', '0');
+        }
+    }
+
+    update_option('bis_vacancies_seeded_v3', 1);
+}
+add_action('init', 'bis_maybe_seed_vacancies', 20);
+
+
 

@@ -53,7 +53,7 @@ function bis_admin_scripts($hook) {
 
     if (in_array($hook, array('post-new.php', 'post.php'), true)) {
         $screen = get_current_screen();
-        if ($screen && in_array($screen->post_type, array('bis_project', 'page', 'bis_gratitude', 'bis_service', 'bis_equipment', 'bis_news'), true)) {
+        if ($screen && in_array($screen->post_type, array('bis_project', 'page', 'bis_gratitude', 'bis_service', 'bis_equipment', 'bis_news', 'bis_vacancy'), true)) {
             wp_enqueue_media();
             wp_enqueue_script('jquery-ui-sortable');
             $admin_script_path = get_template_directory() . '/assets/js/admin-projects.js';

@@ -8,6 +8,7 @@ require_once get_template_directory() . '/inc/request-handlers.php';
 require_once get_template_directory() . '/inc/media.php';
 require_once get_template_directory() . '/inc/content-models.php';
 require_once get_template_directory() . '/inc/content-overrides.php';
+require_once get_template_directory() . '/inc/class-popular-pages.php';
 
 function bis_theme_scripts() {
     // Enqueue Google Fonts
@@ -353,7 +354,7 @@ function bis_get_social_share_image_data() {
     }
 
     if (empty($image_url)) {
-        $default_img_relative = '/assets/img/bis-black.png';
+        $default_img_relative = '/assets/img/removebg-preview.png';
         $image_url = get_template_directory_uri() . $default_img_relative;
         $file_path = get_template_directory() . $default_img_relative;
         if (file_exists($file_path)) {

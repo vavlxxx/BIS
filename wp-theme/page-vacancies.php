@@ -26,7 +26,7 @@ $banner_subtitle = $page_id ? get_post_meta($page_id, 'bis_page_banner_subtitle'
 $banner_title = $banner_title ? $banner_title : ($page_id ? get_the_title($page_id) : 'Вакансии в компании «БИС»');
 
 if (!$banner_subtitle) {
-    $banner_subtitle = 'Приглашаем инженеров в команду профессионалов. Стабильная работа на знаковых объектах, высокая заработная плата, обучение и развитие в области комплексного ПНР и автоматики.';
+    $banner_subtitle = 'Приглашаем инженеров в команду профессионалов.';
 }
 
 $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
@@ -69,7 +69,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16"/><path d="M7 15h0M2 9.5h20"/></svg>
                     </div>
                     <h3>Достойный доход</h3>
-                    <p>Зарплата от 170 000 ₽ на руки. Выплаты строго 2 раза в месяц без задержек.</p>
+                    <p>Выплаты строго 2 раза в месяц без задержек.</p>
                 </div>
                 <div class="vacancies-benefit-card">
                     <div class="vacancies-benefit-card__icon">
@@ -106,148 +106,137 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
             </div>
 
             <div class="vacancies-items">
-                <!-- Vacancy 1: Инженер АСУ ТП -->
-                <article class="vacancy-card" id="asutp">
-                    <div class="vacancy-card__head">
-                        <div class="vacancy-card__meta-top">
-                            <span class="vacancy-card__tag">Инженерия / АСУ ТП</span>
-                            <span class="vacancy-card__date">Москва и объекты РФ</span>
-                        </div>
-                        <h2 class="vacancy-card__title">Инженер АСУ ТП систем ОВиК</h2>
-                        <div class="vacancy-card__salary">от 170 000 ₽ <span class="vacancy-card__salary-note">за месяц, на руки</span></div>
-                        <div class="vacancy-card__chips">
-                            <span class="vacancy-chip">Опыт: 1–3 года</span>
-                            <span class="vacancy-chip">График: 5/2 (+ 2 субботы)</span>
-                            <span class="vacancy-chip">Формат: разъездной</span>
-                            <span class="vacancy-chip">Оформление по ТК РФ</span>
-                            <span class="vacancy-chip">Выплаты: 2 раза в месяц</span>
-                        </div>
-                    </div>
+                <?php
+                $vacancies_query = new WP_Query(array(
+                    'post_type'      => 'bis_vacancy',
+                    'posts_per_page' => -1,
+                    'post_status'    => 'publish',
+                    'orderby'        => array('menu_order' => 'ASC', 'date' => 'DESC'),
+                    'meta_query'     => array(
+                        'relation' => 'OR',
+                        array(
+                            'key'     => 'bis_vacancy_is_hidden',
+                            'compare' => 'NOT EXISTS',
+                        ),
+                        array(
+                            'key'     => 'bis_vacancy_is_hidden',
+                            'value'   => '1',
+                            'compare' => '!=',
+                        ),
+                    ),
+                ));
 
-                    <div class="vacancy-card__body">
-                        <div class="vacancy-section-block">
-                            <h4 class="vacancy-section-block__title">Обязанности:</h4>
-                            <ul class="vacancy-section-block__list">
-                                <li>Знание и умение программирования для сред АРМ и ПЛК.</li>
-                                <li>Наладка и испытания технологических функций АСУ ТП.</li>
-                                <li>Обследование объекта автоматизации, анализ исходных данных и формирование ТЗ.</li>
-                                <li>Участие в разработке и согласовании разделов проектной документации АСУ ТП.</li>
-                                <li>Участие в индивидуальных и комплексных пусконаладочных работах (ПНР) систем ОВиК совместно со специалистами команды.</li>
-                                <li>Проверка правильности подключения электродвигателей, приводов, датчиков и исполнительных механизмов.</li>
-                                <li>Проверка силовых и управляющих цепей, аудит шкафов автоматики и щитового оборудования (сборка, маркировка, коммутация).</li>
-                                <li>Диагностика и оперативный поиск неисправностей при запуске оборудования, корректировка принципиальных и функциональных схем.</li>
-                                <li>Участие в подготовке исполнительной документации и фиксации результатов ПНР.</li>
-                            </ul>
-                        </div>
+                if ($vacancies_query->have_posts()) :
+                    while ($vacancies_query->have_posts()) : $vacancies_query->the_post();
+                        $v_id        = get_the_ID();
+                        $v_title     = get_the_title();
+                        $department  = get_post_meta($v_id, 'bis_vacancy_department', true);
+                        $location    = get_post_meta($v_id, 'bis_vacancy_location', true);
+                        $salary      = get_post_meta($v_id, 'bis_vacancy_salary', true);
+                        $salary_note = get_post_meta($v_id, 'bis_vacancy_salary_note', true);
+                        $chips_raw   = get_post_meta($v_id, 'bis_vacancy_chips', true);
+                        $duties_raw  = get_post_meta($v_id, 'bis_vacancy_duties', true);
+                        $reqs_raw    = get_post_meta($v_id, 'bis_vacancy_requirements', true);
+                        $highlight   = get_post_meta($v_id, 'bis_vacancy_requirements_highlight', true);
+                        $cond_raw    = get_post_meta($v_id, 'bis_vacancy_conditions', true);
 
-                        <div class="vacancy-section-block">
-                            <h4 class="vacancy-section-block__title">Требования к кандидату:</h4>
-                            <ul class="vacancy-section-block__list">
-                                <li>Высшее профессиональное (техническое) образование.</li>
-                                <li>Знания в области электротехники, теплоэнергетики, разработки и проектирования АСУ ТП оборудования систем АОВ.</li>
-                                <li>Умение читать и составлять технологические схемы, структурные, принципиальные и монтажные схемы.</li>
-                                <li>Умение проверять правильность монтажа и выполнять наладку средств КИПиА (датчики давления, температуры, расхода, электроприводы арматуры).</li>
-                                <li>Уверенное владение Microsoft Office.</li>
-                                <li>Готовность к командировкам (обязательно).</li>
-                                <li class="vacancy-highlight"><em>Глубокий опыт ПНР вентиляции и гидравлики на старте не является обязательным — обучаем в процессе работы.</em></li>
-                            </ul>
-                        </div>
+                        $chips = array_filter(array_map('trim', explode("\n", (string)$chips_raw)));
+                        $duties = array_filter(array_map('trim', explode("\n", (string)$duties_raw)));
+                        $reqs = array_filter(array_map('trim', explode("\n", (string)$reqs_raw)));
+                        $conditions = array_filter(array_map('trim', explode("\n", (string)$cond_raw)));
+                        ?>
+                        <article class="vacancy-card" id="vacancy-<?php echo esc_attr($v_id); ?>">
+                            <div class="vacancy-card__head">
+                                <div class="vacancy-card__meta-top">
+                                    <?php if ($department) : ?>
+                                        <span class="vacancy-card__tag"><?php echo esc_html($department); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ($location) : ?>
+                                        <span class="vacancy-card__date"><?php echo esc_html($location); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <h2 class="vacancy-card__title"><?php echo esc_html($v_title); ?></h2>
+                                <?php if ($salary) : ?>
+                                    <div class="vacancy-card__salary">
+                                        <?php echo esc_html($salary); ?>
+                                        <?php if ($salary_note) : ?>
+                                            <span class="vacancy-card__salary-note"><?php echo esc_html($salary_note); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (!empty($chips)) : ?>
+                                    <div class="vacancy-card__chips">
+                                        <?php foreach ($chips as $chip) : ?>
+                                            <span class="vacancy-chip"><?php echo esc_html($chip); ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
 
-                        <div class="vacancy-section-block">
-                            <h4 class="vacancy-section-block__title">Условия работы:</h4>
-                            <ul class="vacancy-section-block__list">
-                                <li>Официальное оформление по ТК РФ, стабильная зарплата 2 раза в месяц.</li>
-                                <li>Оплачиваемый отпуск и больничные листы.</li>
-                                <li>Оплата профильных курсов и сертификаций для решения реальных проектных задач.</li>
-                                <li>Предоставление фирменной спецодежды и всех необходимых СИЗ.</li>
-                                <li>График: 5/2 + две рабочие субботы в месяц (остальные две субботы — выходные).</li>
-                                <li>Работа на строительных площадках Москвы, МО, РФ; оборудованные офисы в Москве и Мытищах.</li>
-                            </ul>
-                        </div>
-                    </div>
+                            <?php if (!empty($duties) || !empty($reqs) || !empty($conditions)) : ?>
+                                <div class="vacancy-card__body">
+                                    <?php if (!empty($duties)) : ?>
+                                        <div class="vacancy-section-block">
+                                            <h4 class="vacancy-section-block__title">Обязанности:</h4>
+                                            <ul class="vacancy-section-block__list">
+                                                <?php foreach ($duties as $d_item) : ?>
+                                                    <li><?php echo esc_html($d_item); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
 
-                    <div class="vacancy-card__foot">
-                        <button type="button" class="btn btn-primary open-vacancy-modal" data-vacancy="Инженер АСУ ТП систем ОВиК">
-                            Откликнуться на вакансию <span aria-hidden="true">→</span>
+                                    <?php if (!empty($reqs) || !empty($highlight)) : ?>
+                                        <div class="vacancy-section-block">
+                                            <h4 class="vacancy-section-block__title">Требования к кандидату:</h4>
+                                            <ul class="vacancy-section-block__list">
+                                                <?php foreach ($reqs as $r_item) : ?>
+                                                    <li><?php echo esc_html($r_item); ?></li>
+                                                <?php endforeach; ?>
+                                                <?php if (!empty($highlight)) : ?>
+                                                    <li class="vacancy-highlight"><em><?php echo esc_html($highlight); ?></em></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($conditions)) : ?>
+                                        <div class="vacancy-section-block">
+                                            <h4 class="vacancy-section-block__title">Условия работы:</h4>
+                                            <ul class="vacancy-section-block__list">
+                                                <?php foreach ($conditions as $c_item) : ?>
+                                                    <li><?php echo esc_html($c_item); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="vacancy-card__foot">
+                                <button type="button" class="btn btn-primary open-vacancy-modal" data-vacancy="<?php echo esc_attr($v_title); ?>">
+                                    Откликнуться на вакансию <span aria-hidden="true">→</span>
+                                </button>
+                                <a href="mailto:office@bis-rf.ru?subject=<?php echo esc_attr(rawurlencode('Отклик: ' . $v_title)); ?>" class="btn btn-outline">
+                                    Отправить резюме на почту
+                                </a>
+                            </div>
+                        </article>
+                        <?php
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+                    ?>
+                    <div class="vacancy-card" style="text-align: center; padding: 60px 24px;">
+                        <h3 style="font-size: 20px; font-weight: 700; color: var(--dark); margin-bottom: 12px;">В данный момент открытых вакансий нет</h3>
+                        <p style="color: var(--text-light); max-width: 600px; margin: 0 auto 24px;">
+                            Мы постоянно развиваемся и расширяем инженерную команду. Отправьте нам свое резюме, и мы свяжемся с вами при появлении подходящего проекта.
+                        </p>
+                        <button type="button" class="btn btn-primary open-vacancy-modal" data-vacancy="Инициативный отклик (Резюме)">
+                            Отправить резюме в команду БИС <span aria-hidden="true">→</span>
                         </button>
-                        <a href="mailto:office@bis-rf.ru?subject=Отклик: Инженер АСУ ТП систем ОВиК" class="btn btn-outline">
-                            Отправить резюме на почту
-                        </a>
                     </div>
-                </article>
-
-                <!-- Vacancy 2: Инженер-электрик ПНР -->
-                <article class="vacancy-card" id="electric">
-                    <div class="vacancy-card__head">
-                        <div class="vacancy-card__meta-top">
-                            <span class="vacancy-card__tag">Электрика / ПНР</span>
-                            <span class="vacancy-card__date">Москва и объекты РФ</span>
-                        </div>
-                        <h2 class="vacancy-card__title">Инженер-электрик ПНР ОВиК</h2>
-                        <div class="vacancy-card__salary">от 170 000 ₽ <span class="vacancy-card__salary-note">за месяц, на руки</span></div>
-                        <div class="vacancy-card__chips">
-                            <span class="vacancy-chip">Опыт: 1–3 года</span>
-                            <span class="vacancy-chip">График: 5/2 (+ 2 субботы)</span>
-                            <span class="vacancy-chip">Формат: разъездной</span>
-                            <span class="vacancy-chip">Оформление по ТК РФ</span>
-                            <span class="vacancy-chip">Группа по ЭБ от III</span>
-                        </div>
-                    </div>
-
-                    <div class="vacancy-card__body">
-                        <div class="vacancy-section-block">
-                            <h4 class="vacancy-section-block__title">Чем предстоит заниматься:</h4>
-                            <ul class="vacancy-section-block__list">
-                                <li>Выполнение пусконаладочных работ, индивидуальных испытаний и запусков инженерного оборудования.</li>
-                                <li>Проверка правильности подключения оборудования перед запуском (электродвигатели, приводы, датчики, исполнительные механизмы).</li>
-                                <li>Диагностика и поиск неисправностей в силовых и управляющих электрических цепях.</li>
-                                <li>Аудит щитового оборудования: проверка сборки, маркировки, аппаратов защиты, коммутации и соответствия проекту.</li>
-                                <li>Выявление ошибок монтажа и проектирования, предложение обоснованных технических решений.</li>
-                                <li>Самостоятельное выполнение необходимых электромонтажных и наладочных работ на объекте.</li>
-                                <li>Работа с проектной и рабочей документацией (ЭОМ, автоматизация), разработка и корректировка схем в AutoCAD по фактическому исполнению.</li>
-                                <li>Подготовка исполнительной документации и актов по результатам ПНР.</li>
-                                <li>Постепенное подключение к комплексному ПНР вентиляции, систем тепло- и холодоснабжения, гидравлики и автоматики.</li>
-                            </ul>
-                        </div>
-
-                        <div class="vacancy-section-block">
-                            <h4 class="vacancy-section-block__title">Что для нас важно:</h4>
-                            <ul class="vacancy-section-block__list">
-                                <li>Профильное техническое образование (высшее или среднее профессиональное).</li>
-                                <li>Практический опыт работы с электрооборудованием и инженерными системами.</li>
-                                <li>Уверенное чтение принципиальных, однолинейных и монтажных электрических схем.</li>
-                                <li>Навыки работы в AutoCAD или аналогичном ПО для корректировки схем.</li>
-                                <li>Знание ПУЭ и нормативных требований к электроустановкам.</li>
-                                <li>Действующая группа по электробезопасности не ниже III.</li>
-                                <li>Готовность работать непосредственно на объектах и отвечать за результат запуска.</li>
-                                <li>Готовность к командировкам.</li>
-                                <li class="vacancy-highlight"><em>Будет преимуществом: опыт ПНР вентиляционных установок, насосов, КИПиА, частотных преобразователей.</em></li>
-                            </ul>
-                        </div>
-
-                        <div class="vacancy-section-block">
-                            <h4 class="vacancy-section-block__title">Условия:</h4>
-                            <ul class="vacancy-section-block__list">
-                                <li>Работа по ТК РФ, стабильная выплата заработной платы 2 раза в месяц.</li>
-                                <li>Оплачиваемый отпуск и больничные листы.</li>
-                                <li>Реальное обучение пусконаладке вентиляции, гидравлических систем и холодильного оборудования.</li>
-                                <li>Оплата курсов повышения квалификации за счет компании.</li>
-                                <li>Выдача качественной спецодежды, СИЗ и профессионального инструмента.</li>
-                                <li>График: 5/2 плюс две рабочие субботы в месяц.</li>
-                                <li>Объекты в Москве, МО, РФ; комфортные офисы в Москве и Мытищах.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="vacancy-card__foot">
-                        <button type="button" class="btn btn-primary open-vacancy-modal" data-vacancy="Инженер-электрик ПНР ОВиК">
-                            Откликнуться на вакансию <span aria-hidden="true">→</span>
-                        </button>
-                        <a href="mailto:office@bis-rf.ru?subject=Отклик: Инженер-электрик ПНР ОВиК" class="btn btn-outline">
-                            Отправить резюме на почту
-                        </a>
-                    </div>
-                </article>
+                <?php endif; ?>
             </div>
         </div>
     </section>
