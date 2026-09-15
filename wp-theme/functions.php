@@ -206,7 +206,7 @@ function bis_theme_setup() {
 add_action('after_setup_theme', 'bis_theme_setup');
 
 function bis_get_seo_enabled_post_types() {
-    return array('bis_project', 'bis_service');
+    return array('bis_project', 'bis_service', 'bis_news');
 }
 
 function bis_get_post_seo_title($post_id) {

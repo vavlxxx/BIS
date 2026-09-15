@@ -78,6 +78,14 @@ function bis_register_override_meta() {
         'auth_callback'     => $post_auth,
     ));
 
+    register_post_meta('bis_news', 'bis_news_description', array(
+        'single'            => true,
+        'type'              => 'string',
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'auth_callback'     => $post_auth,
+    ));
+
     register_post_meta('bis_service', 'bis_service_image', array(
         'single'            => true,
         'type'              => 'string',
@@ -182,6 +190,15 @@ function bis_replace_custom_meta_boxes() {
         'normal',
         'high'
     );
+
+    add_meta_box(
+        'bis_news_description',
+        'Краткое описание',
+        'bis_render_news_description_metabox',
+        'bis_news',
+        'normal',
+        'high'
+    );
 }
 add_action('add_meta_boxes', 'bis_replace_custom_meta_boxes', 20);
 
@@ -202,7 +219,7 @@ function bis_render_page_banner_metabox_override($post) {
             </div>
         </div>
 
-        <div class="bis-project-media bis-project-media--banner">
+        <div class="bis-project-media bis-project-media--banner bis-project-media--column" style="max-width: 480px;">
             <div class="bis-project-media__preview <?php echo $banner_preview ? '' : 'is-empty'; ?>" data-image-preview="bis_page_banner_image" style="background-image: url('<?php echo esc_url($banner_preview); ?>');">
                 <?php if (!$banner_preview) : ?>
                     <span class="bis-project-media__placeholder">Нет изображения</span>
@@ -253,34 +270,36 @@ function bis_render_service_metabox_override($post) {
             </div>
         </div>
 
-        <div class="bis-project-media">
-            <div class="bis-project-media__preview <?php echo $preview ? '' : 'is-empty'; ?>" data-image-preview="bis_service_image" style="background-image: url('<?php echo esc_url($preview); ?>');">
-                <?php if (!$preview) : ?>
-                    <span class="bis-project-media__placeholder">Нет изображения</span>
-                <?php endif; ?>
-            </div>
-            <div class="bis-project-media__controls">
-                <label for="bis_service_image">Изображение превью</label>
-                <input type="text" id="bis_service_image" name="bis_service_image" value="<?php echo esc_url($preview); ?>" placeholder="https://" data-image-input data-preview-target="bis_service_image" data-meta-field="bis_service_image">
-                <div class="bis-project-media__buttons">
-                    <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_service_image">Выбрать в медиабиблиотеке</button>
-                    <button type="button" class="button bis-project-image-clear" data-target="bis_service_image">Убрать фото</button>
+        <div class="bis-project-media-grid">
+            <div class="bis-project-media bis-project-media--column">
+                <div class="bis-project-media__preview <?php echo $preview ? '' : 'is-empty'; ?>" data-image-preview="bis_service_image" style="background-image: url('<?php echo esc_url($preview); ?>');">
+                    <?php if (!$preview) : ?>
+                        <span class="bis-project-media__placeholder">Нет изображения</span>
+                    <?php endif; ?>
+                </div>
+                <div class="bis-project-media__controls">
+                    <label for="bis_service_image">Изображение превью</label>
+                    <input type="text" id="bis_service_image" name="bis_service_image" value="<?php echo esc_url($preview); ?>" placeholder="https://" data-image-input data-preview-target="bis_service_image" data-meta-field="bis_service_image">
+                    <div class="bis-project-media__buttons">
+                        <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_service_image">Выбрать в медиабиблиотеке</button>
+                        <button type="button" class="button bis-project-image-clear" data-target="bis_service_image">Убрать фото</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="bis-project-media bis-project-media--banner">
-            <div class="bis-project-media__preview <?php echo $banner_preview ? '' : 'is-empty'; ?>" data-image-preview="bis_service_banner_image" style="background-image: url('<?php echo esc_url($banner_preview); ?>');">
-                <?php if (!$banner_preview) : ?>
-                    <span class="bis-project-media__placeholder">Нет изображения</span>
-                <?php endif; ?>
-            </div>
-            <div class="bis-project-media__controls">
-                <label for="bis_service_banner_image">Главное изображение (баннер)</label>
-                <input type="text" id="bis_service_banner_image" name="bis_service_banner_image" value="<?php echo esc_url($banner_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_service_banner_image" data-meta-field="bis_service_banner_image">
-                <div class="bis-project-media__buttons">
-                    <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_service_banner_image">Выбрать в медиабиблиотеке</button>
-                    <button type="button" class="button bis-project-image-clear" data-target="bis_service_banner_image">Убрать фото</button>
+            <div class="bis-project-media bis-project-media--banner bis-project-media--column">
+                <div class="bis-project-media__preview <?php echo $banner_preview ? '' : 'is-empty'; ?>" data-image-preview="bis_service_banner_image" style="background-image: url('<?php echo esc_url($banner_preview); ?>');">
+                    <?php if (!$banner_preview) : ?>
+                        <span class="bis-project-media__placeholder">Нет изображения</span>
+                    <?php endif; ?>
+                </div>
+                <div class="bis-project-media__controls">
+                    <label for="bis_service_banner_image">Главное изображение (баннер)</label>
+                    <input type="text" id="bis_service_banner_image" name="bis_service_banner_image" value="<?php echo esc_url($banner_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_service_banner_image" data-meta-field="bis_service_banner_image">
+                    <div class="bis-project-media__buttons">
+                        <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_service_banner_image">Выбрать в медиабиблиотеке</button>
+                        <button type="button" class="button bis-project-image-clear" data-target="bis_service_banner_image">Убрать фото</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -492,37 +511,56 @@ function bis_render_news_images_metabox($post) {
             </div>
         </div>
 
-        <div class="bis-project-media">
-            <div class="bis-project-media__preview <?php echo $preview ? '' : 'is-empty'; ?>" data-image-preview="bis_news_image" style="background-image: url('<?php echo esc_url($preview); ?>');">
-                <?php if (!$preview) : ?>
-                    <span class="bis-project-media__placeholder">Нет изображения</span>
-                <?php endif; ?>
+        <div class="bis-project-media-grid">
+            <div class="bis-project-media bis-project-media--column">
+                <div class="bis-project-media__preview <?php echo $preview ? '' : 'is-empty'; ?>" data-image-preview="bis_news_image" style="background-image: url('<?php echo esc_url($preview); ?>');">
+                    <?php if (!$preview) : ?>
+                        <span class="bis-project-media__placeholder">Нет изображения</span>
+                    <?php endif; ?>
+                </div>
+                <div class="bis-project-media__controls">
+                    <label for="bis_news_image">Изображение превью</label>
+                    <input type="text" id="bis_news_image" name="bis_news_image" value="<?php echo esc_url($news_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_news_image" data-meta-field="bis_news_image" data-attachment-target="bis_news_image_id">
+                    <input type="hidden" id="bis_news_image_id" name="bis_news_image_id" value="<?php echo esc_attr($news_image_id); ?>" data-meta-field="bis_news_image_id">
+                    <div class="bis-project-media__buttons">
+                        <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_news_image" data-attachment-target="bis_news_image_id">Выбрать в медиабиблиотеке</button>
+                        <button type="button" class="button bis-project-image-clear" data-target="bis_news_image">Убрать фото</button>
+                    </div>
+                </div>
             </div>
-            <div class="bis-project-media__controls">
-                <label for="bis_news_image">Изображение превью</label>
-                <input type="text" id="bis_news_image" name="bis_news_image" value="<?php echo esc_url($news_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_news_image" data-meta-field="bis_news_image" data-attachment-target="bis_news_image_id">
-                <input type="hidden" id="bis_news_image_id" name="bis_news_image_id" value="<?php echo esc_attr($news_image_id); ?>" data-meta-field="bis_news_image_id">
-                <div class="bis-project-media__buttons">
-                    <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_news_image" data-attachment-target="bis_news_image_id">Выбрать в медиабиблиотеке</button>
-                    <button type="button" class="button bis-project-image-clear" data-target="bis_news_image">Убрать фото</button>
+
+            <div class="bis-project-media bis-project-media--banner bis-project-media--column">
+                <div class="bis-project-media__preview <?php echo $banner_preview ? '' : 'is-empty'; ?>" data-image-preview="bis_news_banner_image" style="background-image: url('<?php echo esc_url($banner_preview); ?>');">
+                    <?php if (!$banner_preview) : ?>
+                        <span class="bis-project-media__placeholder">Нет изображения</span>
+                    <?php endif; ?>
+                </div>
+                <div class="bis-project-media__controls">
+                    <label for="bis_news_banner_image">Изображение баннера</label>
+                    <input type="text" id="bis_news_banner_image" name="bis_news_banner_image" value="<?php echo esc_url($banner_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_news_banner_image" data-meta-field="bis_news_banner_image">
+                    <div class="bis-project-media__buttons">
+                        <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_news_banner_image">Выбрать в медиабиблиотеке</button>
+                        <button type="button" class="button bis-project-image-clear" data-target="bis_news_banner_image">Убрать фото</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <?php
+}
 
-        <div class="bis-project-media bis-project-media--banner">
-            <div class="bis-project-media__preview <?php echo $banner_preview ? '' : 'is-empty'; ?>" data-image-preview="bis_news_banner_image" style="background-image: url('<?php echo esc_url($banner_preview); ?>');">
-                <?php if (!$banner_preview) : ?>
-                    <span class="bis-project-media__placeholder">Нет изображения</span>
-                <?php endif; ?>
-            </div>
-            <div class="bis-project-media__controls">
-                <label for="bis_news_banner_image">Изображение баннера</label>
-                <input type="text" id="bis_news_banner_image" name="bis_news_banner_image" value="<?php echo esc_url($banner_image); ?>" placeholder="https://" data-image-input data-preview-target="bis_news_banner_image" data-meta-field="bis_news_banner_image">
-                <div class="bis-project-media__buttons">
-                    <button type="button" class="button button-primary bis-project-image-upload" data-target="bis_news_banner_image">Выбрать в медиабиблиотеке</button>
-                    <button type="button" class="button bis-project-image-clear" data-target="bis_news_banner_image">Убрать фото</button>
-                </div>
-            </div>
+function bis_render_news_description_metabox($post) {
+    wp_nonce_field('bis_news_description_nonce', 'bis_news_description_nonce_field');
+
+    $description = get_post_meta($post->ID, 'bis_news_description', true);
+    if ($description === '') {
+        $description = $post->post_excerpt;
+    }
+    ?>
+    <div class="bis-project-box">
+        <div class="bis-field">
+            <label for="bis_news_description">Описание</label>
+            <textarea id="bis_news_description" name="bis_news_description" rows="4" placeholder="Краткое описание материала" data-meta-field="bis_news_description"><?php echo esc_textarea($description); ?></textarea>
         </div>
     </div>
     <?php
@@ -700,6 +738,34 @@ function bis_save_news_override($post_id) {
     update_post_meta($post_id, 'bis_news_banner_image', $banner_image);
 }
 add_action('save_post', 'bis_save_news_override', 20);
+
+function bis_save_news_description($post_id) {
+    if (!isset($_POST['bis_news_description_nonce_field']) || !wp_verify_nonce($_POST['bis_news_description_nonce_field'], 'bis_news_description_nonce')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if ('bis_news' !== get_post_type($post_id) || !current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $description = isset($_POST['bis_news_description']) ? sanitize_textarea_field(wp_unslash($_POST['bis_news_description'])) : '';
+    update_post_meta($post_id, 'bis_news_description', $description);
+
+    $post = get_post($post_id);
+    if ($post instanceof WP_Post && $post->post_excerpt !== $description) {
+        remove_action('save_post', 'bis_save_news_description', 25);
+        wp_update_post(array(
+            'ID'           => $post_id,
+            'post_excerpt' => $description,
+        ));
+        add_action('save_post', 'bis_save_news_description', 25);
+    }
+}
+add_action('save_post', 'bis_save_news_description', 25);
 
 function bis_sync_news_featured_image_state($post_id, $post) {
     if (!($post instanceof WP_Post) || 'bis_news' !== $post->post_type) {

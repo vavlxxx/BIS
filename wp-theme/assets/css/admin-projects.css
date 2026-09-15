@@ -9,6 +9,16 @@
   gap: 18px;
 }
 
+.bis-project-box-clean {
+  background: #f8fafc;
+  border: none;
+  padding: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 .bis-project-box__header {
   display: flex;
   align-items: center;
@@ -104,6 +114,8 @@
 .bis-project-media__placeholder {
   color: #6b7280;
   font-size: 13px;
+  position: absolute;
+  top: 0;
 }
 
 .bis-project-media__controls label {
@@ -128,6 +140,115 @@
 
 .bis-project-media__buttons .button {
   margin-top: 0;
+}
+
+.bis-project-box--row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 2.4fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .bis-project-box--row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.bis-project-media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .bis-project-media-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.bis-project-media--column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100%;
+}
+
+.bis-project-media--column .bis-project-media__preview {
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+}
+
+.bis-project-media--column .bis-project-media__controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bis-project-media--column .bis-project-media__controls label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.bis-project-media--column .bis-project-media__controls input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.bis-project-media--column .bis-project-media__buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.bis-project-media--column .bis-project-media__buttons .button {
+  flex: 1 1 auto;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-align: center;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.bis-project-media--column .bis-project-image-upload {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #fff !important;
+}
+
+.bis-project-media--column .bis-project-image-upload:hover {
+  background-color: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+}
+
+.bis-project-media--column .bis-project-image-clear {
+  background: #fff !important;
+  border: 1px solid #2563eb !important;
+  color: #2563eb !important;
+}
+
+.bis-project-media--column .bis-project-image-clear:hover {
+  background: #eff6ff !important;
+  border-color: #1d4ed8 !important;
+  color: #1d4ed8 !important;
 }
 
 .bis-project-toggle {
