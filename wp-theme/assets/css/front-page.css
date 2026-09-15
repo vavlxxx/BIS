@@ -1691,36 +1691,45 @@
   right: 0;
   bottom: 0;
   z-index: 2;
-  display: block;
-  height: auto;
-  padding: 34px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 250px;
+  padding: 24px 30px 30px;
   color: #ffffff;
+  box-sizing: border-box;
 }
 
 .services .service-content-main {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .services .service-card h3 {
   display: -webkit-box;
-  margin: 0 0 12px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  margin: 0 0 12px;
   color: #ffffff;
   font-size: 20px;
   font-weight: 800;
-  line-height: 1.17;
-  -webkit-box-orient: vertical;
+  line-height: 1.25;
 }
 
 .services .service-card .experience-description {
   display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
   margin: 0;
   overflow: hidden;
   color: rgba(255, 255, 255, 0.88);
   font-size: 14px;
   line-height: 1.5;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
 }
 
 .experience-cta {
@@ -3135,21 +3144,29 @@
 }
 
 .services .service-content {
-  display: block;
-  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 250px;
 }
 
 .services .service-content-main {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .services .service-card h3 {
-  min-height: 0;
-  -webkit-line-clamp: initial;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
 }
 
 .services .service-card .experience-description {
-  min-height: 0;
   -webkit-line-clamp: 5;
 }
 
@@ -3174,6 +3191,24 @@
     height: 380px;
   }
 
+  .services .service-content {
+    height: 230px;
+    padding: 20px 20px 24px;
+  }
+
+  .services .service-card h3 {
+    height: 46px;
+    min-height: 46px;
+    max-height: 46px;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .services .service-card .experience-description {
+    -webkit-line-clamp: 4;
+    font-size: 13px;
+  }
+
   .services-grid--has-submenus {
     padding-bottom: 92px;
   }
@@ -3182,6 +3217,24 @@
 @media (max-width: 480px) {
   .services .service-card__main {
     height: 360px;
+  }
+
+  .services .service-content {
+    height: 220px;
+    padding: 18px 16px 20px;
+  }
+
+  .services .service-card h3 {
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+
+  .services .service-card .experience-description {
+    -webkit-line-clamp: 4;
+    font-size: 13px;
   }
 
   .services-grid--has-submenus {

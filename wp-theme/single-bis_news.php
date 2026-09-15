@@ -9,6 +9,10 @@ get_header();
             $news_id = get_the_ID();
             $cover = bis_get_news_banner_image_url($news_id);
             $news_tags = get_the_terms($news_id, 'bis_news_tag');
+            $news_description = get_post_meta($news_id, 'bis_news_description', true);
+            if ($news_description === '' && has_excerpt($news_id)) {
+                $news_description = get_the_excerpt($news_id);
+            }
             ?>
 
             <section class="news-hero news-hero--single" style="padding-inline: 8vw;">
@@ -17,6 +21,9 @@ get_header();
                 </div>
                 <div class="news-hero__overlay mw-1400px">
                     <h1 class="news-hero__title"><?php the_title(); ?></h1>
+                    <?php if (!empty($news_description)) : ?>
+                        <p class="news-hero__text"><?php echo nl2br(esc_html($news_description)); ?></p>
+                    <?php endif; ?>
                 </div>
             </section>
 
@@ -45,7 +52,7 @@ get_header();
 
             <section class="news-article">
                 <div class="news-article__container mw-1400px">
-                    <?php if (has_excerpt()) : ?>
+                    <?php if (has_excerpt() && empty($news_description)) : ?>
                         <p class="news-article__lead"><?php echo esc_html(get_the_excerpt()); ?></p>
                     <?php endif; ?>
                     <div class="news-article__content">
@@ -96,7 +103,13 @@ get_header();
                                         <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
                                     </a>
                                     <div class="news-item__body">
-                                        <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                                        <div class="news-item__meta">
+                                            <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                                            <?php if ($cat = bis_get_news_primary_category(get_the_ID())) : ?>
+                                                <span class="news-item__delimiter">·</span>
+                                                <a class="news-item__category" href="<?php echo esc_url(bis_get_news_filter_url(array('category' => $cat->slug))); ?>"><?php echo esc_html($cat->name); ?></a>
+                                            <?php endif; ?>
+                                        </div>
                                         <h3 class="news-item__title">
                                             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                         </h3>

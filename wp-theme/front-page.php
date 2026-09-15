@@ -900,7 +900,13 @@ $categories = get_terms(array(
                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
               </a>
               <div class="news-item__body">
-                <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                <div class="news-item__meta">
+                  <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                  <?php if ($cat = bis_get_news_primary_category(get_the_ID())) : ?>
+                    <span class="news-item__delimiter">·</span>
+                    <a class="news-item__category" href="<?php echo esc_url(bis_get_news_filter_url(array('category' => $cat->slug))); ?>"><?php echo esc_html($cat->name); ?></a>
+                  <?php endif; ?>
+                </div>
                 <h3 class="news-item__title">
                   <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                 </h3>
@@ -949,7 +955,13 @@ $categories = get_terms(array(
                   <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
                 </a>
                 <div class="news-item__body">
-                  <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                  <div class="news-item__meta">
+                    <time class="news-item__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d.m.Y')); ?></time>
+                    <?php if ($cat_badge = bis_get_news_primary_category(get_the_ID())) : ?>
+                      <span class="news-item__delimiter">·</span>
+                      <a class="news-item__category" href="<?php echo esc_url(bis_get_news_filter_url(array('category' => $cat_badge->slug))); ?>"><?php echo esc_html($cat_badge->name); ?></a>
+                    <?php endif; ?>
+                  </div>
                   <h3 class="news-item__title">
                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                   </h3>

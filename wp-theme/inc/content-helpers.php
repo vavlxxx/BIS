@@ -115,6 +115,14 @@ function bis_get_news_banner_image_url($post_id) {
     return bis_get_news_placeholder_image_url();
 }
 
+function bis_get_news_primary_category($post_id) {
+    $terms = get_the_terms($post_id, 'bis_news_category');
+    if (!empty($terms) && !is_wp_error($terms)) {
+        return reset($terms);
+    }
+    return null;
+}
+
 function bis_get_service_preview_image_url($post_id) {
     $custom = get_post_meta($post_id, 'bis_service_preview_image', true);
     if ($custom) {
