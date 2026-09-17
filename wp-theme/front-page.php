@@ -1198,7 +1198,6 @@ $categories = get_terms(array(
   </div>
 </section>
 
-<!-- Popular Services Block (Популярные услуги) -->
-<?php get_template_part('template-parts/popular-pages'); ?>
 <?php get_footer(); ?>
+
 

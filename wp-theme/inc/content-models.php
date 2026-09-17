@@ -1985,6 +1985,308 @@ add_action('wp_ajax_bis_reorder_services', 'bis_ajax_reorder_services');
 
 /**
  * ============================================================================
+ * SERVICES DRAG-AND-DROP ORDER MANAGEMENT (bis_service_order)
+ * ============================================================================
+ */
+
+function bis_service_order_submenu() {
+    add_submenu_page(
+        'edit.php?post_type=bis_service',
+        'Порядок услуг на сайте',
+        'Порядок услуг',
+        'edit_posts',
+        'bis_service_order',
+        'bis_render_service_order_page'
+    );
+}
+add_action('admin_menu', 'bis_service_order_submenu');
+
+function bis_handle_save_service_order() {
+    if (!current_user_can('edit_posts')) {
+        wp_die('Недостаточно прав.');
+    }
+    check_admin_referer('bis_save_service_order_nonce');
+
+    $submitted_ids = isset($_POST['bis_service_order']) && is_array($_POST['bis_service_order'])
+        ? array_values(array_unique(array_filter(array_map('absint', wp_unslash($_POST['bis_service_order'])))))
+        : array();
+
+    global $wpdb;
+    foreach ($submitted_ids as $index => $post_id) {
+        $order_val = ($index + 1) * 10;
+        $wpdb->update(
+            $wpdb->posts,
+            array('menu_order' => $order_val),
+            array('ID' => $post_id),
+            array('%d'),
+            array('%d')
+        );
+        update_post_meta($post_id, 'menu_order', $order_val);
+        clean_post_cache($post_id);
+    }
+
+    $tab = isset($_POST['tab']) ? sanitize_key($_POST['tab']) : 'root';
+    $parent_id = isset($_POST['parent_id']) ? absint($_POST['parent_id']) : 0;
+
+    wp_safe_redirect(add_query_arg(array(
+        'post_type' => 'bis_service',
+        'page'      => 'bis_service_order',
+        'tab'       => $tab,
+        'parent_id' => $parent_id,
+        'saved'     => '1',
+    ), admin_url('edit.php')));
+    exit;
+}
+add_action('admin_post_bis_save_service_order', 'bis_handle_save_service_order');
+
+function bis_render_service_order_page() {
+    $current_tab = isset($_GET['tab']) && $_GET['tab'] === 'children' ? 'children' : 'root';
+    $saved = !empty($_GET['saved']);
+
+    // Fetch root catalog services
+    $root_services = get_posts(array(
+        'post_type'      => 'bis_service',
+        'post_status'    => 'publish',
+        'post_parent'    => 0,
+        'posts_per_page' => -1,
+        'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
+    ));
+
+    $selected_parent_id = isset($_GET['parent_id']) ? absint($_GET['parent_id']) : 0;
+    if ($selected_parent_id === 0 && !empty($root_services)) {
+        $selected_parent_id = (int) $root_services[0]->ID;
+    }
+    $selected_parent = ($selected_parent_id > 0) ? get_post($selected_parent_id) : null;
+
+    $child_services = array();
+    if ($selected_parent_id > 0) {
+        $child_services = get_posts(array(
+            'post_type'      => 'bis_service',
+            'post_status'    => 'publish',
+            'post_parent'    => $selected_parent_id,
+            'posts_per_page' => -1,
+            'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
+        ));
+    }
+    ?>
+    <div class="wrap bis-order-wrap">
+        <div class="bis-order-header">
+            <h1>
+                <span class="dashicons dashicons-sort" style="font-size: 26px; width: 26px; height: 26px;"></span>
+                Порядок услуг на сайте
+            </h1>
+            <p>
+                Визуальное управление последовательностью вывода услуг. Перетаскивайте карточки мышью за ручку <code>☰</code> и нажимайте «Сохранить порядок».
+                Заданный порядок применяется в каталоге услуг <code>/services/</code>, слайдере на главной странице и в меню подуслуг.
+            </p>
+        </div>
+
+        <?php if ($saved) : ?>
+            <div class="bis-order-notice bis-order-notice--success">
+                <span><strong>✓ Порядок услуг успешно сохранен!</strong> Изменения применены на сайте.</span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Tabs Navigation -->
+        <div class="bis-order-tabs">
+            <a href="<?php echo esc_url(add_query_arg(array('post_type' => 'bis_service', 'page' => 'bis_service_order', 'tab' => 'root'), admin_url('edit.php'))); ?>" class="bis-order-tab-btn <?php echo ($current_tab === 'root') ? 'is-active' : ''; ?>">
+                <span class="dashicons dashicons-admin-generic"></span>
+                Основные услуги каталога (<?php echo count($root_services); ?>)
+            </a>
+            <a href="<?php echo esc_url(add_query_arg(array('post_type' => 'bis_service', 'page' => 'bis_service_order', 'tab' => 'children', 'parent_id' => $selected_parent_id), admin_url('edit.php'))); ?>" class="bis-order-tab-btn <?php echo ($current_tab === 'children') ? 'is-active' : ''; ?>">
+                <span class="dashicons dashicons-networking"></span>
+                Дочерние услуги (подуслуги)
+            </a>
+        </div>
+
+        <?php if ($current_tab === 'root') : ?>
+            <!-- TAB 1: ROOT CATALOG SERVICES -->
+            <div class="bis-order-card" style="max-width: 900px;">
+                <div class="bis-order-card-header">
+                    <div>
+                        <h2 class="bis-order-card-title">
+                            <span class="dashicons dashicons-admin-tools"></span>
+                            Основные услуги каталога
+                        </h2>
+                        <div class="bis-order-card-subtitle">
+                            Корневые услуги верхнего уровня. Порядок следования определяет их вывод в сетке и слайдере на сайте.
+                        </div>
+                    </div>
+                    <span class="bis-order-badge bis-order-badge--primary"><?php echo count($root_services); ?> услуг</span>
+                </div>
+
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <?php wp_nonce_field('bis_save_service_order_nonce'); ?>
+                    <input type="hidden" name="action" value="bis_save_service_order">
+                    <input type="hidden" name="tab" value="root">
+
+                    <div class="bis-order-card-body">
+                        <?php if (empty($root_services)) : ?>
+                            <div class="bis-order-empty">
+                                <p>Основные услуги пока не созданы.</p>
+                                <a href="<?php echo esc_url(admin_url('post-new.php?post_type=bis_service')); ?>" class="button button-primary" style="margin-top: 10px;">Добавить услугу</a>
+                            </div>
+                        <?php else : ?>
+                            <div class="bis-order-list" data-drag-sort data-row-selector=".bis-order-row">
+                                <?php foreach ($root_services as $index => $srv) : 
+                                    $srv_id = $srv->ID;
+                                    $children_count = count(bis_get_associated_services($srv_id));
+                                    $menu_ord = (int) $srv->menu_order;
+                                ?>
+                                    <div class="bis-order-row" data-id="<?php echo esc_attr($srv_id); ?>">
+                                        <span class="bis-drag-handle" title="Перетащите для изменения порядка">&#9776;</span>
+                                        <span class="bis-order-num"><?php echo ($index + 1); ?></span>
+                                        <input type="hidden" name="bis_service_order[]" value="<?php echo esc_attr($srv_id); ?>">
+                                        <div class="bis-order-row-main">
+                                            <div class="bis-order-row-title"><?php echo esc_html($srv->post_title); ?></div>
+                                            <div class="bis-order-row-meta">
+                                                <code>/services/<?php echo esc_html($srv->post_name); ?>/</code>
+                                                <?php if ($children_count > 0) : ?>
+                                                    &bull; подуслуг: <strong><?php echo $children_count; ?></strong>
+                                                <?php endif; ?>
+                                                <?php if ($menu_ord > 0) : ?>
+                                                    &bull; шаг: <?php echo $menu_ord; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="bis-order-row-actions">
+                                            <?php if ($children_count > 0) : ?>
+                                                <a href="<?php echo esc_url(add_query_arg(array('post_type' => 'bis_service', 'page' => 'bis_service_order', 'tab' => 'children', 'parent_id' => $srv_id), admin_url('edit.php'))); ?>" class="bis-btn-secondary" style="font-size: 12px; padding: 4px 8px;">
+                                                    Подуслуги (<?php echo $children_count; ?>)
+                                                </a>
+                                            <?php endif; ?>
+                                            <a href="<?php echo esc_url(get_edit_post_link($srv_id)); ?>" class="bis-btn-secondary" style="font-size: 12px; padding: 4px 8px;" target="_blank">
+                                                Изменить
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($root_services)) : ?>
+                        <div class="bis-order-card-footer">
+                            <button type="submit" class="bis-btn-save">
+                                <span class="dashicons dashicons-saved" style="margin-top:2px;"></span>
+                                Сохранить порядок основных услуг
+                            </button>
+                            <a href="<?php echo esc_url(admin_url('edit.php?post_type=bis_service')); ?>" class="bis-btn-secondary">
+                                Все услуги
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </form>
+            </div>
+
+        <?php else : ?>
+            <!-- TAB 2: CHILD SERVICES (SUBSERVICES) -->
+            <div class="bis-order-card" style="max-width: 900px;">
+                <div class="bis-order-card-header">
+                    <div>
+                        <h2 class="bis-order-card-title">
+                            <span class="dashicons dashicons-networking"></span>
+                            Дочерние услуги: <?php echo $selected_parent ? esc_html($selected_parent->post_title) : '—'; ?>
+                        </h2>
+                        <div class="bis-order-card-subtitle">
+                            Порядок отображения подуслуг в карточке родительской услуги и на её странице.
+                        </div>
+                    </div>
+                    <?php if (!empty($child_services)) : ?>
+                        <span class="bis-order-badge bis-order-badge--primary"><?php echo count($child_services); ?> подуслуг</span>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Parent Service Switcher -->
+                <div style="padding: 12px 20px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label for="bis_parent_service_select" style="font-weight: 600; font-size: 13px; color: #334155;">Родительская услуга:</label>
+                        <select id="bis_parent_service_select" class="bis-order-select" data-bis-category-filter data-base-url="<?php echo esc_url(add_query_arg(array('post_type' => 'bis_service', 'page' => 'bis_service_order', 'tab' => 'children'), admin_url('edit.php'))); ?>" data-param-name="parent_id">
+                            <?php foreach ($root_services as $rs) : 
+                                $c_cnt = count(bis_get_associated_services($rs->ID));
+                            ?>
+                                <option value="<?php echo esc_attr($rs->ID); ?>" <?php selected($rs->ID, $selected_parent_id); ?>>
+                                    <?php echo esc_html($rs->post_title); ?> (<?php echo $c_cnt; ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php if ($selected_parent_id > 0) : ?>
+                        <div>
+                            <a href="<?php echo esc_url(admin_url('post-new.php?post_type=bis_service&post_parent=' . $selected_parent_id)); ?>" class="bis-btn-secondary" style="font-size: 13px; padding: 5px 12px;" target="_blank">
+                                + Добавить подуслугу к этой
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <?php wp_nonce_field('bis_save_service_order_nonce'); ?>
+                    <input type="hidden" name="action" value="bis_save_service_order">
+                    <input type="hidden" name="tab" value="children">
+                    <input type="hidden" name="parent_id" value="<?php echo esc_attr($selected_parent_id); ?>">
+
+                    <div class="bis-order-card-body">
+                        <?php if (empty($child_services)) : ?>
+                            <div class="bis-order-empty">
+                                <span class="dashicons dashicons-info" style="font-size: 32px; width: 32px; height: 32px; color: #cbd5e1; margin-bottom: 8px;"></span>
+                                <p>У выбранной услуги пока нет привязанных подуслуг.</p>
+                                <?php if ($selected_parent_id > 0) : ?>
+                                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=bis_service&post_parent=' . $selected_parent_id)); ?>" class="button button-primary" style="margin-top: 12px;" target="_blank">
+                                        + Добавить подуслугу
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        <?php else : ?>
+                            <div class="bis-order-list" data-drag-sort data-row-selector=".bis-order-row">
+                                <?php foreach ($child_services as $index => $cs) : 
+                                    $cs_id = $cs->ID;
+                                    $cs_ord = (int) $cs->menu_order;
+                                ?>
+                                    <div class="bis-order-row" data-id="<?php echo esc_attr($cs_id); ?>">
+                                        <span class="bis-drag-handle" title="Перетащите для изменения порядка">&#9776;</span>
+                                        <span class="bis-order-num"><?php echo ($index + 1); ?></span>
+                                        <input type="hidden" name="bis_service_order[]" value="<?php echo esc_attr($cs_id); ?>">
+                                        <div class="bis-order-row-main">
+                                            <div class="bis-order-row-title"><?php echo esc_html($cs->post_title); ?></div>
+                                            <div class="bis-order-row-meta">
+                                                <code><?php echo esc_html(wp_make_link_relative(get_permalink($cs_id))); ?></code>
+                                                <?php if ($cs_ord > 0) : ?>
+                                                    &bull; шаг: <?php echo $cs_ord; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="bis-order-row-actions">
+                                            <a href="<?php echo esc_url(get_edit_post_link($cs_id)); ?>" class="bis-btn-secondary" style="font-size: 12px; padding: 4px 8px;" target="_blank">
+                                                Изменить
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($child_services)) : ?>
+                        <div class="bis-order-card-footer">
+                            <button type="submit" class="bis-btn-save">
+                                <span class="dashicons dashicons-saved" style="margin-top:2px;"></span>
+                                Сохранить порядок подуслуг
+                            </button>
+                            <a href="<?php echo esc_url(admin_url('edit.php?post_type=bis_service')); ?>" class="bis-btn-secondary">
+                                Все услуги
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
+/**
+ * ============================================================================
  * VACANCIES CPT & MANAGEMENT (bis_vacancy)
  * ============================================================================
  */

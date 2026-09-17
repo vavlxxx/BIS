@@ -23,10 +23,23 @@ class BIS_Popular_Pages_CPT
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
         add_action('save_post_popular_page', array($this, 'save_meta_box_data'), 10, 2);
 
-        // Submenu: Quick Add & Rubrics Management
+        // Submenu: Quick Add & Rubrics Management & Drag-and-Drop Order
         add_action('admin_menu', array($this, 'add_admin_submenus'));
         add_action('admin_init', array($this, 'handle_admin_actions'));
         add_action('admin_init', array($this, 'check_flush_rewrite_rules'));
+
+        // Drag & Drop Order Handlers
+        add_action('admin_post_bis_save_popular_category_order', array($this, 'handle_save_category_order'));
+        add_action('admin_post_bis_save_popular_page_order', array($this, 'handle_save_page_order'));
+
+        // Category order taxonomy fields and columns
+        add_action('popular_category_add_form_fields', array($this, 'add_category_order_field'));
+        add_action('popular_category_edit_form_fields', array($this, 'edit_category_order_field'));
+        add_action('created_popular_category', array($this, 'save_category_order_meta'));
+        add_action('edited_popular_category', array($this, 'save_category_order_meta'));
+        add_filter('manage_edit-popular_category_columns', array($this, 'category_order_column'));
+        add_filter('manage_popular_category_custom_column', array($this, 'render_category_order_column'), 10, 3);
+        add_filter('manage_edit-popular_category_sortable_columns', array($this, 'category_order_sortable_column'));
 
         // Flush rewrites on category taxonomy changes & post save
         add_action('created_popular_category', array($this, 'flush_rewrites'));
@@ -270,6 +283,15 @@ class BIS_Popular_Pages_CPT
      */
     public function add_admin_submenus()
     {
+        add_submenu_page(
+            'edit.php?post_type=popular_page',
+            'Порядок популярных услуг и рубрик',
+            'Порядок',
+            'edit_posts',
+            'bis_popular_order',
+            array($this, 'render_order_page')
+        );
+
         add_submenu_page(
             'edit.php?post_type=popular_page',
             'Управление рубриками и ссылками',
@@ -1221,6 +1243,432 @@ class BIS_Popular_Pages_CPT
     }
 
     /**
+     * Helper to retrieve popular categories sorted by bis_popular_category_order ASC, then name ASC.
+     *
+     * @param array $args Optional get_terms arguments.
+     * @return WP_Term[]
+     */
+    public static function get_ordered_categories($args = array())
+    {
+        $default_args = array(
+            'taxonomy'   => 'popular_category',
+            'hide_empty' => false,
+        );
+        $query_args = wp_parse_args($args, $default_args);
+        $terms = get_terms($query_args);
+
+        if (empty($terms) || is_wp_error($terms)) {
+            return array();
+        }
+
+        usort($terms, function ($a, $b) {
+            $order_a = get_term_meta($a->term_id, 'bis_popular_category_order', true);
+            if ($order_a === '' || $order_a === false) {
+                $order_a = get_term_meta($a->term_id, 'ecg_popular_category_order', true);
+            }
+            $order_b = get_term_meta($b->term_id, 'bis_popular_category_order', true);
+            if ($order_b === '' || $order_b === false) {
+                $order_b = get_term_meta($b->term_id, 'ecg_popular_category_order', true);
+            }
+
+            $num_a = ($order_a !== '' && $order_a !== false) ? (int) $order_a : 9999;
+            $num_b = ($order_b !== '' && $order_b !== false) ? (int) $order_b : 9999;
+
+            if ($num_a !== $num_b) {
+                return $num_a <=> $num_b;
+            }
+            return strcasecmp($a->name, $b->name);
+        });
+
+        return $terms;
+    }
+
+    /**
+     * Handle saving popular categories order (Admin Post)
+     */
+    public function handle_save_category_order()
+    {
+        if (!current_user_can('edit_posts')) {
+            wp_die('Недостаточно прав.');
+        }
+        check_admin_referer('bis_save_popular_category_order');
+
+        $term_ids = isset($_POST['bis_category_order']) && is_array($_POST['bis_category_order'])
+            ? array_values(array_unique(array_filter(array_map('absint', wp_unslash($_POST['bis_category_order'])))))
+            : array();
+
+        foreach ($term_ids as $index => $term_id) {
+            $val = ($index + 1) * 10;
+            update_term_meta($term_id, 'bis_popular_category_order', $val);
+            update_term_meta($term_id, 'ecg_popular_category_order', $val);
+        }
+
+        $category_id = isset($_POST['category_id']) ? absint($_POST['category_id']) : 0;
+        wp_safe_redirect(add_query_arg(array(
+            'post_type'   => 'popular_page',
+            'page'        => 'bis_popular_order',
+            'category_id' => $category_id,
+            'saved'       => 'categories',
+        ), admin_url('edit.php')));
+        exit;
+    }
+
+    /**
+     * Handle saving popular pages order (Admin Post)
+     */
+    public function handle_save_page_order()
+    {
+        global $wpdb;
+
+        if (!current_user_can('edit_posts')) {
+            wp_die('Недостаточно прав.');
+        }
+        check_admin_referer('bis_save_popular_page_order');
+
+        $submitted_ids = isset($_POST['bis_page_order']) && is_array($_POST['bis_page_order'])
+            ? array_values(array_unique(array_filter(array_map('absint', wp_unslash($_POST['bis_page_order'])))))
+            : array();
+
+        foreach ($submitted_ids as $index => $post_id) {
+            $order_val = ($index + 1) * 10;
+            $wpdb->update(
+                $wpdb->posts,
+                array('menu_order' => $order_val),
+                array('ID' => $post_id),
+                array('%d'),
+                array('%d')
+            );
+            update_post_meta($post_id, 'menu_order', $order_val);
+            clean_post_cache($post_id);
+        }
+
+        $category_id = isset($_POST['category_id']) ? absint($_POST['category_id']) : 0;
+        wp_safe_redirect(add_query_arg(array(
+            'post_type'   => 'popular_page',
+            'page'        => 'bis_popular_order',
+            'category_id' => $category_id,
+            'saved'       => 'pages',
+        ), admin_url('edit.php')));
+        exit;
+    }
+
+    /**
+     * Render Two-Column Drag & Drop Order Page
+     */
+    public function render_order_page()
+    {
+        $categories = self::get_ordered_categories(array('hide_empty' => false));
+        $selected_category_id = isset($_GET['category_id']) ? absint($_GET['category_id']) : 0;
+
+        if ($selected_category_id === 0 && !empty($categories)) {
+            $selected_category_id = (int) $categories[0]->term_id;
+        }
+
+        $selected_category = ($selected_category_id > 0) ? get_term($selected_category_id, 'popular_category') : null;
+
+        $pages_query = null;
+        if ($selected_category && !is_wp_error($selected_category)) {
+            $pages_query = new WP_Query(array(
+                'post_type'      => 'popular_page',
+                'post_status'    => 'publish',
+                'posts_per_page' => -1,
+                'orderby'        => array('menu_order' => 'ASC', 'title' => 'ASC'),
+                'tax_query'      => array(
+                    array(
+                        'taxonomy' => 'popular_category',
+                        'field'    => 'term_id',
+                        'terms'    => $selected_category_id,
+                    ),
+                ),
+            ));
+        }
+
+        $saved = isset($_GET['saved']) ? sanitize_key($_GET['saved']) : '';
+        ?>
+        <div class="wrap bis-order-wrap">
+            <div class="bis-order-header">
+                <h1>
+                    <span class="dashicons dashicons-sort" style="font-size: 26px; width: 26px; height: 26px;"></span>
+                    Порядок популярных услуг и рубрик
+                </h1>
+                <p>
+                    Перетаскивайте блоки мышью за ручку <code>☰</code> для настройки структуры блока «Популярные услуги» на сайте.
+                    Слева задается порядок колонок-рубрик (слева направо), а справа — порядок ссылок внутри выбранной рубрики (сверху вниз).
+                </p>
+            </div>
+
+            <?php if ($saved === 'categories') : ?>
+                <div class="bis-order-notice bis-order-notice--success">
+                    <span><strong>✓ Порядок рубрик успешно сохранен!</strong> Колонки блока «Популярные услуги» обновлены.</span>
+                </div>
+            <?php elseif ($saved === 'pages') : ?>
+                <div class="bis-order-notice bis-order-notice--success">
+                    <span><strong>✓ Порядок ссылок в рубрике успешно сохранен!</strong> Ссылки в блоке обновлены.</span>
+                </div>
+            <?php endif; ?>
+
+            <div class="bis-order-layout">
+                <!-- Left Column: Categories Order -->
+                <div class="bis-order-card">
+                    <div class="bis-order-card-header">
+                        <div>
+                            <h2 class="bis-order-card-title">
+                                <span class="dashicons dashicons-category"></span>
+                                Рубрики (колонки)
+                            </h2>
+                            <div class="bis-order-card-subtitle">Выводятся на сайте слева направо</div>
+                        </div>
+                        <span class="bis-order-badge bis-order-badge--primary"><?php echo count($categories); ?> рубр.</span>
+                    </div>
+
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                        <?php wp_nonce_field('bis_save_popular_category_order'); ?>
+                        <input type="hidden" name="action" value="bis_save_popular_category_order">
+                        <input type="hidden" name="category_id" value="<?php echo esc_attr($selected_category_id); ?>">
+
+                        <div class="bis-order-card-body">
+                            <?php if (empty($categories)) : ?>
+                                <div class="bis-order-empty">
+                                    <p>Рубрики пока не созданы.</p>
+                                    <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=popular_category&post_type=popular_page')); ?>" class="button button-small" style="margin-top: 10px;">Создать рубрику</a>
+                                </div>
+                            <?php else : ?>
+                                <div class="bis-order-list" data-drag-sort data-row-selector=".bis-order-row">
+                                    <?php foreach ($categories as $index => $cat) : 
+                                        $is_active = ($cat->term_id === $selected_category_id);
+                                        $cat_order = (int) get_term_meta($cat->term_id, 'bis_popular_category_order', true);
+                                    ?>
+                                        <div class="bis-order-row <?php echo $is_active ? 'is-selected' : ''; ?>" data-id="<?php echo esc_attr($cat->term_id); ?>">
+                                            <span class="bis-drag-handle" title="Перетащите для изменения порядка">&#9776;</span>
+                                            <span class="bis-order-num"><?php echo ($index + 1); ?></span>
+                                            <input type="hidden" name="bis_category_order[]" value="<?php echo esc_attr($cat->term_id); ?>">
+                                            <div class="bis-order-row-main">
+                                                <div class="bis-order-row-title"><?php echo esc_html($cat->name); ?></div>
+                                                <div class="bis-order-row-meta">
+                                                    Ссылок: <?php echo (int) $cat->count; ?>
+                                                    <?php if ($cat_order > 0) : ?>
+                                                        &bull; шаг: <?php echo esc_html($cat_order); ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <div class="bis-order-row-actions">
+                                                <a href="<?php echo esc_url(add_query_arg(array('post_type' => 'popular_page', 'page' => 'bis_popular_order', 'category_id' => $cat->term_id), admin_url('edit.php'))); ?>" class="bis-btn-secondary button-small" style="<?php echo $is_active ? 'background:#167b88!important;border-color:#167b88!important;color:#fff!important;' : ''; ?>">
+                                                    <?php echo $is_active ? '✓ Выбрана' : 'Выбрать'; ?>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if (!empty($categories)) : ?>
+                            <div class="bis-order-card-footer">
+                                <button type="submit" class="bis-btn-save">
+                                    <span class="dashicons dashicons-saved" style="margin-top:2px;"></span>
+                                    Сохранить порядок рубрик
+                                </button>
+                                <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=popular_category&post_type=popular_page')); ?>" class="bis-btn-secondary">
+                                    Все рубрики
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </form>
+                </div>
+
+                <!-- Right Column: Pages Order in Selected Category -->
+                <div class="bis-order-card">
+                    <div class="bis-order-card-header">
+                        <div>
+                            <h2 class="bis-order-card-title">
+                                <span class="dashicons dashicons-admin-links"></span>
+                                Ссылки в рубрике: <?php echo $selected_category ? esc_html($selected_category->name) : '—'; ?>
+                            </h2>
+                            <div class="bis-order-card-subtitle">Выводятся внутри колонки сверху вниз</div>
+                        </div>
+                        <?php if ($pages_query && $pages_query->have_posts()) : ?>
+                            <span class="bis-order-badge bis-order-badge--primary"><?php echo $pages_query->post_count; ?> ссылок</span>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($categories)) : ?>
+                        <div style="padding: 12px 20px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <label for="bis_cat_switcher" style="font-weight: 600; font-size: 13px; color: #334155;">Переключить рубрику:</label>
+                                <select id="bis_cat_switcher" class="bis-order-select" data-bis-category-filter data-base-url="<?php echo esc_url(admin_url('edit.php?post_type=popular_page&page=bis_popular_order')); ?>" data-param-name="category_id">
+                                    <?php foreach ($categories as $c) : ?>
+                                        <option value="<?php echo esc_attr($c->term_id); ?>" <?php selected($c->term_id, $selected_category_id); ?>>
+                                            <?php echo esc_html($c->name); ?> (<?php echo (int) $c->count; ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div>
+                                <a href="<?php echo esc_url(admin_url('edit.php?post_type=popular_page&page=bis-popular-quick-add&selected_cat=' . $selected_category_id)); ?>" class="bis-btn-secondary" style="font-size: 13px; padding: 5px 12px;">
+                                    ⚡ Быстрое добавление
+                                </a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                        <?php wp_nonce_field('bis_save_popular_page_order'); ?>
+                        <input type="hidden" name="action" value="bis_save_popular_page_order">
+                        <input type="hidden" name="category_id" value="<?php echo esc_attr($selected_category_id); ?>">
+
+                        <div class="bis-order-card-body">
+                            <?php if (!$pages_query || !$pages_query->have_posts()) : ?>
+                                <div class="bis-order-empty">
+                                    <span class="dashicons dashicons-info" style="font-size: 32px; width: 32px; height: 32px; color: #cbd5e1; margin-bottom: 8px;"></span>
+                                    <p>В этой рубрике пока нет ссылок.</p>
+                                    <a href="<?php echo esc_url(admin_url('edit.php?post_type=popular_page&page=bis-popular-quick-add&selected_cat=' . $selected_category_id)); ?>" class="button button-primary" style="margin-top: 12px;">
+                                        ⚡ Добавить ссылки через быстрое управление
+                                    </a>
+                                </div>
+                            <?php else : ?>
+                                <div class="bis-order-list" data-drag-sort data-row-selector=".bis-order-row">
+                                    <?php $p_idx = 0; while ($pages_query->have_posts()) : $pages_query->the_post(); $p_idx++;
+                                        $post_id = get_the_ID();
+                                        $url = get_post_meta($post_id, 'bis_popular_page_url', true);
+                                        if (empty($url)) {
+                                            $url = get_post_meta($post_id, 'ecg_popular_page_url', true);
+                                        }
+                                        $rel_url = !empty($url) ? (function_exists('bis_make_url_relative') ? bis_make_url_relative($url) : $url) : get_permalink($post_id);
+                                        $target_blank = (bool) get_post_meta($post_id, 'bis_popular_page_target_blank', true);
+                                    ?>
+                                        <div class="bis-order-row" data-id="<?php echo esc_attr($post_id); ?>">
+                                            <span class="bis-drag-handle" title="Перетащите для изменения порядка">&#9776;</span>
+                                            <span class="bis-order-num"><?php echo $p_idx; ?></span>
+                                            <input type="hidden" name="bis_page_order[]" value="<?php echo esc_attr($post_id); ?>">
+                                            <div class="bis-order-row-main">
+                                                <div class="bis-order-row-title">
+                                                    <?php the_title(); ?>
+                                                    <?php if ($target_blank) : ?>
+                                                        <span title="Открывается в новой вкладке" style="font-size: 11px; color: #94a3b8; font-weight: normal;">↗</span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="bis-order-row-meta">
+                                                    <a href="<?php echo esc_url($rel_url); ?>" target="_blank"><?php echo esc_html($rel_url); ?></a>
+                                                </div>
+                                            </div>
+                                            <div class="bis-order-row-actions">
+                                                <a href="<?php echo esc_url(get_edit_post_link($post_id)); ?>" class="bis-btn-secondary" style="font-size: 12px; padding: 4px 10px;" target="_blank">
+                                                    Изменить
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php endwhile; wp_reset_postdata(); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ($pages_query && $pages_query->have_posts()) : ?>
+                            <div class="bis-order-card-footer">
+                                <button type="submit" class="bis-btn-save">
+                                    <span class="dashicons dashicons-saved" style="margin-top:2px;"></span>
+                                    Сохранить порядок страниц
+                                </button>
+                                <a href="<?php echo esc_url(admin_url('edit.php?post_type=popular_page&page=bis-popular-quick-add&selected_cat=' . $selected_category_id)); ?>" class="bis-btn-secondary">
+                                    ⚡ Быстрое добавление
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Add Term Order Field to Popular Category Add Screen
+     */
+    public function add_category_order_field()
+    {
+        ?>
+        <div class="form-field term-order-wrap">
+            <label for="bis_popular_category_order">Порядок (сортировка)</label>
+            <input type="number" name="bis_popular_category_order" id="bis_popular_category_order" value="0" min="0" step="10">
+            <p>Позиция рубрики в блоке (10, 20, 30...). Меньшее число отображается левее.</p>
+        </div>
+        <?php
+    }
+
+    /**
+     * Add Term Order Field to Popular Category Edit Screen
+     */
+    public function edit_category_order_field($term)
+    {
+        $order = get_term_meta($term->term_id, 'bis_popular_category_order', true);
+        if ($order === '' || $order === false) {
+            $order = get_term_meta($term->term_id, 'ecg_popular_category_order', true);
+        }
+        ?>
+        <tr class="form-field term-order-wrap">
+            <th scope="row"><label for="bis_popular_category_order">Порядок (сортировка)</label></th>
+            <td>
+                <input type="number" name="bis_popular_category_order" id="bis_popular_category_order" value="<?php echo esc_attr((int) $order); ?>" min="0" step="10">
+                <p class="description">Позиция рубрики в блоке на сайте (10, 20, 30...). Меньшее число отображается левее.</p>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Save Term Order Meta
+     */
+    public function save_category_order_meta($term_id)
+    {
+        if (isset($_POST['bis_popular_category_order'])) {
+            $order = absint($_POST['bis_popular_category_order']);
+            update_term_meta($term_id, 'bis_popular_category_order', $order);
+            update_term_meta($term_id, 'ecg_popular_category_order', $order);
+        }
+    }
+
+    /**
+     * Category Order Column in Taxonomy Table
+     */
+    public function category_order_column($columns)
+    {
+        $new_cols = array();
+        foreach ($columns as $k => $v) {
+            if ($k === 'posts') {
+                $new_cols['bis_order'] = 'Порядок';
+            }
+            $new_cols[$k] = $v;
+        }
+        if (!isset($new_cols['bis_order'])) {
+            $new_cols['bis_order'] = 'Порядок';
+        }
+        return $new_cols;
+    }
+
+    /**
+     * Render Category Order Column Value
+     */
+    public function render_category_order_column($content, $column_name, $term_id)
+    {
+        if ($column_name === 'bis_order') {
+            $order = get_term_meta($term_id, 'bis_popular_category_order', true);
+            if ($order === '' || $order === false) {
+                $order = get_term_meta($term_id, 'ecg_popular_category_order', true);
+            }
+            return '<span class="bis-order-badge">' . esc_html((int) $order) . '</span>';
+        }
+        return $content;
+    }
+
+    /**
+     * Make Category Order Column Sortable
+     */
+    public function category_order_sortable_column($sortable)
+    {
+        $sortable['bis_order'] = 'bis_order';
+        return $sortable;
+    }
+
+    /**
      * Single post redirect if custom URL is provided
      */
     public function handle_single_redirect()
@@ -1379,21 +1827,7 @@ function bis_make_url_relative($url)
  */
 function bis_get_popular_pages_grouped()
 {
-    $terms = get_terms(array(
-        'taxonomy'   => 'popular_category',
-        'hide_empty' => true,
-        'orderby'    => 'term_order',
-        'order'      => 'ASC',
-    ));
-
-    if (empty($terms) || is_wp_error($terms)) {
-        $terms = get_terms(array(
-            'taxonomy'   => 'popular_category',
-            'hide_empty' => true,
-            'orderby'    => 'name',
-            'order'      => 'ASC',
-        ));
-    }
+    $terms = BIS_Popular_Pages_CPT::get_ordered_categories(array('hide_empty' => true));
 
     $grouped = array();
 

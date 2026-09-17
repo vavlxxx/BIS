@@ -1,3 +1,6 @@
+  <!-- Popular Services Block (Популярные услуги) -->
+  <?php get_template_part('template-parts/popular-pages'); ?>
+
   <!-- Footer -->
   <footer class="footer">
     <?php
