@@ -1,0 +1,373 @@
+/* ==========================================================================
+   BIS Admin Drag-and-Drop Ordering Styles (Popular Services & Catalog Services)
+   Strictly adheres to BIS Design System: Inter, #70C6D4, #167b88, #0f172a, 0 border-radius.
+   ========================================================================== */
+
+.bis-order-wrap {
+    max-width: 1400px;
+    margin: 20px 20px 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: #111827;
+}
+
+.bis-order-header {
+    margin-bottom: 24px;
+}
+
+.bis-order-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bis-order-header p {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    max-width: 800px;
+    line-height: 1.5;
+}
+
+/* Notices */
+.bis-order-notice {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-left: 4px solid #167b88;
+    background: #f0fdfa;
+    color: #115e59;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bis-order-notice--success {
+    border-left-color: #10b981;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+/* Two-column layout */
+.bis-order-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1080px) {
+    .bis-order-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Card container */
+.bis-order-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+}
+
+.bis-order-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.bis-order-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bis-order-card-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.bis-order-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #e2e8f0;
+    color: #334155;
+    border-radius: 0 !important;
+}
+
+.bis-order-badge--primary {
+    background: rgba(112, 198, 212, 0.2);
+    color: #167b88;
+}
+
+/* Card Body & Scroll Area */
+.bis-order-card-body {
+    padding: 16px 20px;
+}
+
+.bis-order-card-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* Draggable List & Rows */
+.bis-order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 50px;
+}
+
+.bis-order-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0 !important;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.bis-order-row:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+
+.bis-order-row.is-selected {
+    border-color: #70C6D4;
+    background: #f0fdfa;
+}
+
+.bis-order-row.bis-row-dragging {
+    opacity: 0.45;
+    background: #e0f2fe !important;
+    border: 2px dashed #70C6D4 !important;
+}
+
+/* Drag Handle */
+.bis-drag-handle {
+    cursor: grab;
+    font-size: 18px;
+    color: #94a3b8;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.bis-drag-handle:hover {
+    color: #167b88;
+    transform: scale(1.15);
+}
+
+.bis-drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Order Number Index */
+.bis-order-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 2px 6px;
+    min-width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+    border-radius: 0 !important;
+}
+
+/* Row Content */
+.bis-order-row-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.bis-order-row-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bis-order-row-meta {
+    font-size: 12px;
+    color: #64748b;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
+}
+
+.bis-order-row-meta a {
+    color: #167b88;
+    text-decoration: none;
+}
+
+.bis-order-row-meta a:hover {
+    text-decoration: underline;
+}
+
+.bis-order-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Buttons */
+.bis-btn-save {
+    background: #167b88 !important;
+    border: 1px solid #167b88 !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.4 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.bis-btn-save:hover {
+    background: #0f5963 !important;
+    border-color: #0f5963 !important;
+    color: #ffffff !important;
+}
+
+.bis-btn-secondary {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.4 !important;
+}
+
+.bis-btn-secondary:hover {
+    background: #f8fafc !important;
+    border-color: #94a3b8 !important;
+    color: #0f172a !important;
+}
+
+/* Filter / Switcher Bar */
+.bis-order-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.bis-order-select {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 0 !important;
+    background: #ffffff;
+    color: #0f172a;
+    min-width: 220px;
+    cursor: pointer;
+}
+
+.bis-order-select:focus {
+    border-color: #70C6D4;
+    outline: none;
+    box-shadow: 0 0 0 1px #70C6D4;
+}
+
+/* Tabs */
+.bis-order-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 24px;
+}
+
+.bis-order-tab-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-bottom: none;
+    cursor: pointer;
+    border-radius: 0 !important;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.bis-order-tab-btn:hover {
+    color: #0f172a;
+    background: #ffffff;
+}
+
+.bis-order-tab-btn.is-active {
+    color: #0f172a;
+    background: #ffffff;
+    border-color: #70C6D4 #70C6D4 #ffffff #70C6D4;
+    border-top: 3px solid #70C6D4;
+    margin-bottom: -2px;
+}
+
+/* Empty State */
+.bis-order-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: #94a3b8;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+}
+
+.bis-order-empty p {
+    margin: 8px 0 0 0;
+    font-size: 14px;
+}

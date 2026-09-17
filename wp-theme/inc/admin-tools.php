@@ -92,6 +92,20 @@ function bis_admin_scripts($hook) {
             ));
         }
     }
+
+    // Drag-and-Drop ordering pages for Popular Services and Catalog Services
+    $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+    if (in_array($page, array('bis_popular_order', 'bis-popular-quick-add', 'bis_service_order'), true)
+        || strpos($hook, 'bis_popular_order') !== false
+        || strpos($hook, 'bis_service_order') !== false) {
+        $order_css = get_template_directory() . '/assets/css/admin-order.css';
+        $order_js = get_template_directory() . '/assets/js/admin-order.js';
+        $css_ver = file_exists($order_css) ? (string) filemtime($order_css) : '1.0';
+        $js_ver = file_exists($order_js) ? (string) filemtime($order_js) : '1.0';
+
+        wp_enqueue_style('bis-admin-order', get_template_directory_uri() . '/assets/css/admin-order.css', array(), $css_ver);
+        wp_enqueue_script('bis-admin-order', get_template_directory_uri() . '/assets/js/admin-order.js', array(), $js_ver, true);
+    }
 }
 add_action('admin_enqueue_scripts', 'bis_admin_scripts');
 
