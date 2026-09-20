@@ -592,6 +592,7 @@ function bis_get_request_type_label($request_type) {
         'callback'     => 'Обратный звонок',
         'exit_intent'  => 'Лид-магнит при выходе',
         'vacancy'      => 'Отклик на вакансию',
+        'turnkey_calc' => 'Расчет под ключ',
     );
 
     return isset($type_labels[$request_type]) ? $type_labels[$request_type] : 'Заявка с сайта';
@@ -951,6 +952,11 @@ function bis_submit_estimate() {
         wp_send_json_error(array('message' => bis_get_upload_error_message($_FILES['project_doc']['error'])));
     }
 
+    $request_type = isset($_POST['request_type']) ? sanitize_key(wp_unslash($_POST['request_type'])) : 'estimate';
+    if (!in_array($request_type, array('estimate', 'turnkey_calc'), true)) {
+        $request_type = 'estimate';
+    }
+
     $post_id = wp_insert_post(array(
         'post_title' => $name . ' - ' . $phone,
         'post_type' => 'bis_request',
@@ -961,7 +967,7 @@ function bis_submit_estimate() {
             'bis_email' => $email,
             'bis_messenger' => $messenger,
             'bis_comment' => $comment,
-            'bis_request_type' => 'estimate',
+            'bis_request_type' => $request_type,
             'bis_status' => 'new',
             'bis_date' => current_time('mysql'),
         )),

@@ -108,8 +108,10 @@
 
   function bindEvents() {
     dom.blockNavBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
         const block = btn.dataset.block;
+        if (!block) return;
+        e.preventDefault();
         switchBlock(block);
       });
     });

@@ -459,6 +459,9 @@ add_filter('pre_handle_404', 'bis_calculators_pre_handle_404', 10, 2);
 
 function bis_protect_calculators_page() {
     $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators/turnkey' || strpos($path, 'calculators/turnkey') === 0 || get_query_var('bis_turnkey') || is_page('turnkey')) {
+        return;
+    }
     if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
         if (!is_user_logged_in()) {
             auth_redirect();
@@ -470,6 +473,9 @@ add_action('template_redirect', 'bis_protect_calculators_page');
 
 function bis_calculators_template_include($template) {
     $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators/turnkey' || strpos($path, 'calculators/turnkey') === 0 || get_query_var('bis_turnkey') || is_page('turnkey')) {
+        return $template;
+    }
     if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
         if (!is_user_logged_in()) {
             auth_redirect();
@@ -516,5 +522,89 @@ function bis_ensure_calculators_page() {
     update_option('bis_calculators_page_created_v2', 1);
 }
 add_action('init', 'bis_ensure_calculators_page');
+
+function bis_turnkey_rewrite_rules() {
+    add_rewrite_rule('^calculators/turnkey/?$', 'index.php?bis_turnkey=1', 'top');
+}
+add_action('init', 'bis_turnkey_rewrite_rules');
+
+function bis_turnkey_query_vars($vars) {
+    $vars[] = 'bis_turnkey';
+    return $vars;
+}
+add_filter('query_vars', 'bis_turnkey_query_vars');
+
+function bis_turnkey_pre_handle_404($preempt, $wp_query) {
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators/turnkey') {
+        return true;
+    }
+    return $preempt;
+}
+add_filter('pre_handle_404', 'bis_turnkey_pre_handle_404', 10, 2);
+
+function bis_turnkey_template_include($template) {
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if ($path === 'calculators/turnkey' || get_query_var('bis_turnkey') || is_page('turnkey')) {
+        $turnkey_template = get_template_directory() . '/page-turnkey.php';
+        if (file_exists($turnkey_template)) {
+            global $wp_query;
+            $wp_query->is_404 = false;
+            status_header(200);
+            return $turnkey_template;
+        }
+    }
+    return $template;
+}
+add_filter('template_include', 'bis_turnkey_template_include');
+
+function bis_ensure_turnkey_page() {
+    if (get_option('bis_turnkey_page_created_v1')) {
+        return;
+    }
+
+    $calc_page = get_page_by_path('calculators');
+    $parent_id = $calc_page ? $calc_page->ID : 0;
+
+    $existing = get_page_by_path('calculators/turnkey');
+    if (!$existing) {
+        $existing = get_page_by_path('turnkey');
+    }
+    if (!$existing) {
+        $existing_by_tpl = get_pages(array(
+            'meta_key'   => '_wp_page_template',
+            'meta_value' => 'page-turnkey.php',
+            'number'     => 1,
+        ));
+        if (!empty($existing_by_tpl)) {
+            $existing = $existing_by_tpl[0];
+        }
+    }
+
+    if (!$existing) {
+        $page_id = wp_insert_post(array(
+            'post_title'     => 'Расчет под ключ',
+            'post_name'      => 'turnkey',
+            'post_parent'    => $parent_id,
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+        ));
+        if ($page_id && !is_wp_error($page_id)) {
+            update_post_meta($page_id, '_wp_page_template', 'page-turnkey.php');
+        }
+    } else {
+        update_post_meta($existing->ID, '_wp_page_template', 'page-turnkey.php');
+        if ($parent_id && (int)$existing->post_parent !== $parent_id) {
+            wp_update_post(array(
+                'ID' => $existing->ID,
+                'post_parent' => $parent_id,
+            ));
+        }
+    }
+
+    update_option('bis_turnkey_page_created_v1', 1);
+}
+add_action('init', 'bis_ensure_turnkey_page', 35);
 
 
