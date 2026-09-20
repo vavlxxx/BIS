@@ -33,12 +33,18 @@
    -------------------------------------------------------------------------- */
 .calc-nav-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 32px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1200px) {
+  .calc-nav-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
   .calc-nav-grid {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -58,9 +64,20 @@
   transition: all 0.25s ease;
   border-radius: 0 !important;
   position: relative;
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
 .calc-nav-card:hover {
+  border-left-color: var(--primary);
+  background: #f8fafc;
+}
+
+.calc-nav-card--turnkey {
+  border-left-color: var(--border);
+}
+
+.calc-nav-card--turnkey:hover {
   border-left-color: var(--primary);
   background: #f8fafc;
 }

@@ -1499,4 +1499,84 @@ function initVacancyModal() {
 
 window.initVacancyModal = initVacancyModal;
 
+// Turnkey Calculation Page Form
+function initTurnkeyCalcForm() {
+  const form = document.getElementById('turnkeyCalcForm');
+  if (!form) return;
+
+  const phoneInput = document.getElementById('turnkeyPhone');
+  if (phoneInput && typeof formatPhoneNumber === 'function') {
+    phoneInput.addEventListener('input', (e) => {
+      formatPhoneNumber(e.target);
+    });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (!validateFormFields(form) || !validateHCaptcha(form)) {
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.append('action', 'bis_submit_estimate');
+    if (!formData.has('request_type')) {
+      formData.append('request_type', 'turnkey_calc');
+    }
+    appendLocationToFormData(formData);
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.textContent : 'Отправить';
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Отправка...';
+    }
+
+    fetch(bisAjaxUrl, {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          if (submitBtn) {
+            submitBtn.textContent = '✓ Отправлено!';
+            submitBtn.style.background = '#10b981';
+          }
+          clearHCaptchaError(form);
+
+          setTimeout(() => {
+            resetFormState(form);
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = originalText;
+              submitBtn.style.background = '';
+            }
+            showNotification('Спасибо! Инженер БИС свяжется с вами в течение 2 дней.', 'success');
+          }, 1500);
+        } else {
+          showNotification(data.data?.message || 'Ошибка отправки. Попробуйте позже.', 'error');
+          resetHCaptcha(form);
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        resetHCaptcha(form);
+        showNotification(error.message || 'Ошибка отправки. Попробуйте позже.', 'error');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      });
+  });
+}
+
+window.initTurnkeyCalcForm = initTurnkeyCalcForm;
+
+
 

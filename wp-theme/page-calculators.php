@@ -83,6 +83,12 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <span class="calc-nav-card__title">Калькулятор расчета герметичности воздуховодов</span>
                     <span class="calc-nav-card__desc">Расчет утечек и определение класса герметичности (A, B, C, D) воздуховодов систем вентиляции косвенным методом</span>
                 </div>
+
+                <a href="<?php echo esc_url(home_url('/calculators/turnkey/')); ?>" class="calc-nav-card calc-nav-card--turnkey">
+                    <span class="calc-nav-card__tag">Инженерный расчет • БИС</span>
+                    <span class="calc-nav-card__title">Расчет под ключ</span>
+                    <span class="calc-nav-card__desc">Расчет будет произведен инженерами «БИС - Баланс Инженерных Систем»</span>
+                </a>
             </div>
 
         <div id="panel-block1" class="calc-block-content" style="display: block;">
