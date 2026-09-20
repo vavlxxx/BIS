@@ -206,7 +206,7 @@ function bis_theme_setup() {
 add_action('after_setup_theme', 'bis_theme_setup');
 
 function bis_get_seo_enabled_post_types() {
-    return array('bis_project', 'bis_service', 'bis_news');
+    return array('bis_project', 'bis_service', 'bis_news', 'page');
 }
 
 function bis_get_post_seo_title($post_id) {
@@ -548,8 +548,20 @@ function bis_turnkey_template_include($template) {
     if ($path === 'calculators/turnkey' || get_query_var('bis_turnkey') || is_page('turnkey')) {
         $turnkey_template = get_template_directory() . '/page-turnkey.php';
         if (file_exists($turnkey_template)) {
-            global $wp_query;
+            global $wp_query, $post;
             $wp_query->is_404 = false;
+            $turnkey_page = get_page_by_path('calculators/turnkey');
+            if (!$turnkey_page) {
+                $turnkey_page = get_page_by_path('turnkey');
+            }
+            if ($turnkey_page) {
+                $wp_query->queried_object = $turnkey_page;
+                $wp_query->queried_object_id = $turnkey_page->ID;
+                $wp_query->post = $turnkey_page;
+                $post = $turnkey_page;
+                $wp_query->is_page = true;
+                $wp_query->is_singular = true;
+            }
             status_header(200);
             return $turnkey_template;
         }
