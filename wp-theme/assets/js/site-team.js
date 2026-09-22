@@ -83,9 +83,16 @@ function initTeamSlider() {
   };
 
   const setSizes = () => {
-    slideWidth = wrap.getBoundingClientRect().width;
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    slideWidth = Math.round(rect.width);
+    if (!slideWidth) return;
+
     allSlides.forEach((slide) => {
       slide.style.width = `${slideWidth}px`;
+      slide.style.minWidth = `${slideWidth}px`;
+      slide.style.maxWidth = `${slideWidth}px`;
+      slide.style.flex = `0 0 ${slideWidth}px`;
     });
     track.style.width = `${slideWidth * allSlides.length}px`;
     moveTo(currentIndex, false);
@@ -162,7 +169,10 @@ function initTeamSlider() {
     if (dragAxis !== 'x') {
       isDragging = false;
       dragAxis = null;
-      wrap.releasePointerCapture(event.pointerId);
+      try {
+        wrap.releasePointerCapture(event.pointerId);
+      } catch (e) {}
+      moveTo(currentIndex, true);
       return;
     }
 
@@ -178,7 +188,9 @@ function initTeamSlider() {
   const handlePointerUp = (event) => {
     if (!isDragging) return;
     isDragging = false;
-    wrap.releasePointerCapture(event.pointerId);
+    try {
+      wrap.releasePointerCapture(event.pointerId);
+    } catch (e) {}
     const delta = event.clientX - dragStartX;
     const threshold = slideWidth * 0.15;
 
@@ -193,6 +205,8 @@ function initTeamSlider() {
       } else {
         moveTo(currentIndex, true);
       }
+    } else {
+      moveTo(currentIndex, true);
     }
 
     dragAxis = null;
@@ -203,6 +217,17 @@ function initTeamSlider() {
   wrap.addEventListener('pointerup', handlePointerUp);
   wrap.addEventListener('pointercancel', handlePointerUp);
   wrap.addEventListener('dragstart', (event) => event.preventDefault());
+
+  if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => {
+      setSizes();
+    });
+    resizeObserver.observe(wrap);
+  }
+
+  window.addEventListener('load', () => {
+    setSizes();
+  });
 
   window.addEventListener('resize', () => {
     setSizes();
@@ -222,7 +247,7 @@ function initTeamSlider() {
 
       observer.disconnect();
       ensureTeamMediaReady();
-      moveTo(currentIndex, false);
+      setSizes();
     });
   }, {
     rootMargin: '250px 0px',
