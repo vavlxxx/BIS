@@ -1,5 +1,7 @@
   <!-- Popular Services Block (Популярные услуги) -->
-  <?php get_template_part('template-parts/popular-pages'); ?>
+  <?php if (!function_exists('bis_should_hide_popular_services') || !bis_should_hide_popular_services()) : ?>
+    <?php get_template_part('template-parts/popular-pages'); ?>
+  <?php endif; ?>
 
   <!-- Footer -->
   <footer class="footer">
