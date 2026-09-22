@@ -939,12 +939,18 @@
   .team-slide {
     grid-template-columns: 1fr;
     align-self: flex-start;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
   }
 
   .team-slide__photo {
     max-height: 384px;
     min-height: 384px;
     order: -1;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .team-slide__content {
@@ -1700,6 +1706,20 @@
 
 .project-content__body > * + * {
   margin-top: 1.4em;
+}
+
+.service-article__content a,
+.project-content__body a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.service-article__content a:hover,
+.service-article__content a:focus-visible,
+.project-content__body a:hover,
+.project-content__body a:focus-visible {
+  color: var(--primary);
 }
 
 .project-content__body img,

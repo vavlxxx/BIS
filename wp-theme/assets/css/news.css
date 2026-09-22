@@ -981,6 +981,17 @@ body.post-type-archive-bis_news {
   margin-top: 1.4em;
 }
 
+.news-article__content a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.news-article__content a:hover,
+.news-article__content a:focus-visible {
+  color: var(--primary);
+}
+
 .news-tags-section {
   padding: 24px 8vw 0;
   background: var(--bg);

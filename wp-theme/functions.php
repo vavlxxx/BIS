@@ -468,7 +468,7 @@ function bis_is_turnkey_page() {
 }
 
 function bis_should_hide_popular_services() {
-    return bis_is_calculators_page() || bis_is_turnkey_page();
+    return !is_front_page();
 }
 
 function bis_protect_calculators_page() {
