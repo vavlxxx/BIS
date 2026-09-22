@@ -681,15 +681,20 @@ function initExitIntentModal() {
   const closeButtons = document.querySelectorAll('[data-exit-intent-close]');
   const storageKey = 'bisExitIntentShown';
   const canTrackPointer = window.matchMedia ? window.matchMedia('(pointer:fine)').matches : true;
-  let hasShown = false;
 
   if (!overlay || !form || !canTrackPointer) {
     return;
   }
 
-  if (window.localStorage.getItem(storageKey) === '1') {
-    return;
+  // Очищаем старую запись в localStorage, чтобы модалка показывалась у всех посетителей
+  try {
+    window.localStorage.removeItem(storageKey);
+  } catch (e) {
+    // игнорируем ограничения хранилища
   }
+
+  let isCoolingDown = false;
+  let cooldownTimer = null;
 
   const phoneInput = form.querySelector('input[type="tel"]');
   if (phoneInput) {
@@ -717,23 +722,31 @@ function initExitIntentModal() {
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    window.localStorage.setItem(storageKey, '1');
     resetFormState(form, { clearErrors: true });
+    clearHCaptchaError(form);
+
+    // Кратковременный кулдаун, чтобы не сработало повторно в момент клика по крестику
+    isCoolingDown = true;
+    if (cooldownTimer) {
+      clearTimeout(cooldownTimer);
+    }
+    cooldownTimer = setTimeout(() => {
+      isCoolingDown = false;
+    }, 800);
   };
 
   const openOverlay = () => {
-    if (overlay.classList.contains('active') || hasShown) {
+    if (overlay.classList.contains('active') || isCoolingDown) {
       return;
     }
 
-    hasShown = true;
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   };
 
   const handleExitIntent = (event) => {
-    if (window.localStorage.getItem(storageKey) === '1') {
+    if (isCoolingDown || overlay.classList.contains('active')) {
       return;
     }
 
@@ -775,7 +788,6 @@ function initExitIntentModal() {
     }, {
       successMessage: 'Спасибо! Мы скоро свяжемся с вами.',
       onSuccess: () => {
-        window.localStorage.setItem(storageKey, '1');
         resetFormState(form);
         closeOverlay();
       }
