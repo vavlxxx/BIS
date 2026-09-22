@@ -4,6 +4,10 @@
  * Structure with categories/rubrics, links, fade mask, and "Show more" toggle.
  */
 
+if (function_exists('bis_should_hide_popular_services') && bis_should_hide_popular_services()) {
+    return;
+}
+
 $groups = bis_get_popular_pages_grouped();
 
 // If no items exist yet

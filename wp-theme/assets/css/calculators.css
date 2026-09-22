@@ -1321,5 +1321,8 @@
     width: 100% !important;
   }
 }
-
-
+/* Hide popular services section on calculators page */
+.calculators-page ~ .popular-services-section,
+body.page-template-page-calculators .popular-services-section {
+  display: none !important;
+}

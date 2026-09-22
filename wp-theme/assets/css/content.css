@@ -2795,6 +2795,9 @@
   font-weight: 700 !important;
   padding: 13px 24px !important;
   letter-spacing: 0.02em;
+/* Hide popular services section on turnkey calculation page */
+.turnkey-page ~ .popular-services-section,
+body.page-template-page-turnkey .popular-services-section {
+  display: none !important;
 }
-
 

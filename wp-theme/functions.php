@@ -457,12 +457,25 @@ function bis_calculators_pre_handle_404($preempt, $wp_query) {
 }
 add_filter('pre_handle_404', 'bis_calculators_pre_handle_404', 10, 2);
 
-function bis_protect_calculators_page() {
+function bis_is_calculators_page() {
     $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-    if ($path === 'calculators/turnkey' || strpos($path, 'calculators/turnkey') === 0 || get_query_var('bis_turnkey') || is_page('turnkey')) {
+    return $path === 'calculators' || (bool) get_query_var('bis_calculators') || is_page('calculators') || is_page_template('page-calculators.php');
+}
+
+function bis_is_turnkey_page() {
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    return $path === 'calculators/turnkey' || strpos($path, 'calculators/turnkey') === 0 || (bool) get_query_var('bis_turnkey') || is_page('turnkey') || is_page_template('page-turnkey.php');
+}
+
+function bis_should_hide_popular_services() {
+    return bis_is_calculators_page() || bis_is_turnkey_page();
+}
+
+function bis_protect_calculators_page() {
+    if (bis_is_turnkey_page()) {
         return;
     }
-    if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
+    if (bis_is_calculators_page()) {
         if (!is_user_logged_in()) {
             auth_redirect();
             exit;
@@ -472,11 +485,10 @@ function bis_protect_calculators_page() {
 add_action('template_redirect', 'bis_protect_calculators_page');
 
 function bis_calculators_template_include($template) {
-    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-    if ($path === 'calculators/turnkey' || strpos($path, 'calculators/turnkey') === 0 || get_query_var('bis_turnkey') || is_page('turnkey')) {
+    if (bis_is_turnkey_page()) {
         return $template;
     }
-    if ($path === 'calculators' || get_query_var('bis_calculators') || is_page('calculators')) {
+    if (bis_is_calculators_page()) {
         if (!is_user_logged_in()) {
             auth_redirect();
             exit;
