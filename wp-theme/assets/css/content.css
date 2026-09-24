@@ -2156,10 +2156,164 @@
   max-width: 1000px;
 }
 
-/* Service FAQ Section */
-/* Service FAQ Section: inherits exact styles from .faq-section / front-page.css */
+/* Service FAQ Section: full width 1400px container, compact headers, straight corners */
 .service-faq-section {
-  padding: 80px 32px 32px;
+  padding: 64px 8vw 32px;
+  background: var(--bg);
+}
+
+.service-faq-section .section-header {
+  max-width: 1400px;
+  margin: 0 auto 36px;
+  text-align: center;
+}
+
+.service-faq-section .faq-container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto 32px;
+}
+
+.service-faq-section .faq-item {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.service-faq-section .faq-item:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.service-faq-section .faq-item.active {
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.service-faq-section .faq-question {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.service-faq-section .faq-question:hover {
+  background: var(--bg-alt);
+}
+
+.service-faq-section .faq-question h3 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--dark);
+  margin: 0;
+  flex: 1;
+}
+
+.service-faq-section .faq-toggle {
+  font-size: 24px;
+  line-height: 1;
+  color: var(--primary);
+  margin-left: 18px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.service-faq-section .faq-item.active .faq-toggle {
+  transform: rotate(45deg);
+  color: var(--primary-dark);
+}
+
+.service-faq-section .faq-answer {
+  padding: 0 24px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-light);
+}
+
+.service-faq-section .faq-item.active .faq-answer {
+  padding: 0 24px 22px;
+  max-height: 5000px;
+}
+
+.service-faq-section .faq-answer p {
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+  margin: 0 0 1em;
+}
+
+.service-faq-section .faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.service-faq-section .faq-answer ul,
+.service-faq-section .faq-answer ol {
+  margin: 0 0 1em 1.25em;
+  padding: 0;
+  color: inherit;
+  line-height: inherit;
+}
+
+.service-faq-section .faq-answer li {
+  margin-bottom: 0.4em;
+}
+
+.service-faq-section .faq-answer li:last-child {
+  margin-bottom: 0;
+}
+
+.service-faq-section .faq-answer a {
+  color: var(--primary-dark);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.service-faq-section .faq-answer a:hover {
+  color: var(--primary);
+}
+
+.service-faq-section .faq-answer strong,
+.service-faq-section .faq-answer b {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.service-faq-section .faq-answer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  font-size: 14px;
+}
+
+.service-faq-section .faq-answer th,
+.service-faq-section .faq-answer td {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.service-faq-section .faq-answer th {
+  background: var(--bg-alt);
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.service-faq-section .faq-answer blockquote {
+  margin: 1em 0;
+  padding: 12px 18px;
+  background: var(--bg-alt);
+  border-left: 3px solid var(--primary);
+  color: var(--text);
+  font-style: italic;
 }
 
 .service-faq-section + .service-estimate-cta {
@@ -2168,7 +2322,25 @@
 
 @media (max-width: 768px) {
   .service-faq-section {
-    padding: 60px 20px 20px;
+    padding: 48px 20px 24px;
+  }
+
+  .service-faq-section .faq-question {
+    padding: 16px 18px;
+  }
+
+  .service-faq-section .faq-question h3 {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .service-faq-section .faq-answer {
+    padding: 0 18px;
+    font-size: 14px;
+  }
+
+  .service-faq-section .faq-item.active .faq-answer {
+    padding: 0 18px 18px;
   }
 
   .service-faq-section + .service-estimate-cta {

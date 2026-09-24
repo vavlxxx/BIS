@@ -1095,7 +1095,7 @@ $categories = get_terms(array(
         <span class="faq-toggle">+</span>
       </div>
       <div class="faq-answer">
-        <p><strong>Пусконаладочные работы</strong></p>
+        <p>Пусконаладочные работы</p>
       </div>
     </div>
 
@@ -1125,7 +1125,7 @@ $categories = get_terms(array(
         <span class="faq-toggle">+</span>
       </div>
       <div class="faq-answer">
-        <p><strong>7 – 10% от стоимости СМР</strong></p>
+        <p>7 – 10% от стоимости СМР</p>
       </div>
     </div>
 
