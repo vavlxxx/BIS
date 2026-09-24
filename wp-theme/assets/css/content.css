@@ -2241,7 +2241,7 @@
 
 .service-faq-section .faq-item.active .faq-answer {
   padding: 0 24px 22px;
-  max-height: 5000px;
+  max-height: unset !important;
 }
 
 .service-faq-section .faq-answer p {
