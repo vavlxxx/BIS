@@ -202,5 +202,288 @@
       const targetId = input.data('preview-target') || input.attr('id');
       updatePreview(getPreview(targetId), input.val());
     });
+
+    // FAQ Builder in Services
+    const faqList = $('#bis-service-faq-list');
+    const faqTemplate = $('#bis-service-faq-template');
+    const faqEmpty = $('#bis-service-faq-empty');
+
+    const updateFaqNumbers = () => {
+      if (!faqList.length) return;
+      faqList.children('.bis-faq-item').each(function (idx) {
+        $(this).find('.bis-faq-item__num').text(idx + 1);
+      });
+      if (faqList.children('.bis-faq-item').length === 0) {
+        faqEmpty.show();
+      } else {
+        faqEmpty.hide();
+      }
+    };
+
+    const triggerGutenbergDirty = () => {
+      if (hasBlockEditorStore) {
+        const currentMeta = wp.data.select('core/editor').getEditedPostAttribute('meta') || {};
+        wp.data.dispatch('core/editor').editPost({
+          meta: {
+            ...currentMeta,
+            bis_service_faq_dirty: String(Date.now())
+          }
+        });
+      }
+    };
+
+    $('#bis-service-faq-add').on('click', function (e) {
+      e.preventDefault();
+      if (!faqList.length || !faqTemplate.length) return;
+
+      const newIndex = 'item_' + Date.now();
+      const currentCount = faqList.children('.bis-faq-item').length;
+      let html = faqTemplate.html()
+        .replace(/__INDEX__/g, newIndex)
+        .replace(/__NUM__/g, currentCount + 1);
+
+      const newItem = $(html);
+      faqList.append(newItem);
+      updateFaqNumbers();
+      newItem.find('input[type="text"]').first().trigger('focus');
+      triggerGutenbergDirty();
+    });
+
+    if (faqList.length) {
+      faqList.on('click', '.bis-faq-item__remove', function (e) {
+        e.preventDefault();
+        $(this).closest('.bis-faq-item').remove();
+        updateFaqNumbers();
+        triggerGutenbergDirty();
+      });
+
+      faqList.on('input change', 'input, textarea', function () {
+        triggerGutenbergDirty();
+      });
+
+      if (faqList.sortable) {
+        faqList.sortable({
+          handle: '.bis-faq-item__handle',
+          axis: 'y',
+          opacity: 0.8,
+          update: function () {
+            updateFaqNumbers();
+            triggerGutenbergDirty();
+          }
+        });
+      }
+    }
+
+    // Child Services Searchable Dropdown
+    const childrenContainer = $('#bis-children-search-select');
+    if (childrenContainer.length) {
+      const trigger = $('#bis-children-select-trigger');
+      const searchInput = $('#bis-children-search-input');
+      const dropdown = $('#bis-children-dropdown');
+      const selectedList = $('#bis-children-selected-list');
+      const countEl = $('#bis-children-count');
+      const emptyEl = $('#bis-children-empty');
+      const noResultsEl = dropdown.find('.bis-search-select__no-results');
+
+      const updateChildrenCount = () => {
+        const count = selectedList.children('.bis-child-tag').length;
+        countEl.text(count);
+        if (count === 0) {
+          emptyEl.show();
+        } else {
+          emptyEl.hide();
+        }
+      };
+
+      const openDropdown = () => {
+        trigger.addClass('is-open');
+        dropdown.show();
+      };
+
+      const closeDropdown = () => {
+        trigger.removeClass('is-open');
+        dropdown.hide();
+        searchInput.val('');
+        filterOptions('');
+      };
+
+      const filterOptions = (query) => {
+        const q = (query || '').trim().toLowerCase();
+        let totalVisible = 0;
+
+        dropdown.find('.bis-search-select__group').each(function () {
+          const group = $(this);
+          const options = group.find('.bis-search-select__option');
+          let groupVisible = 0;
+
+          options.each(function () {
+            const opt = $(this);
+            const title = (opt.data('title') || '').toString().toLowerCase();
+            const badge = (opt.data('badge') || '').toString().toLowerCase();
+
+            if (!q || title.indexOf(q) !== -1 || badge.indexOf(q) !== -1) {
+              opt.show();
+              groupVisible++;
+              totalVisible++;
+            } else {
+              opt.hide();
+            }
+          });
+
+          if (groupVisible > 0) {
+            group.show();
+          } else {
+            group.hide();
+          }
+        });
+
+        if (totalVisible === 0 && q) {
+          noResultsEl.show();
+        } else {
+          noResultsEl.hide();
+        }
+      };
+
+      // Toggle dropdown on click
+      trigger.on('click', function (e) {
+        if (!trigger.hasClass('is-open')) {
+          openDropdown();
+          searchInput.trigger('focus');
+        } else if (e.target !== searchInput[0]) {
+          closeDropdown();
+        }
+      });
+
+      searchInput.on('focus', function () {
+        openDropdown();
+      });
+
+      searchInput.on('input', function () {
+        openDropdown();
+        filterOptions($(this).val());
+      });
+
+      // Close dropdown when clicking outside
+      $(document).on('click', function (e) {
+        if (!$(e.target).closest('#bis-children-search-select').length) {
+          closeDropdown();
+        }
+      });
+
+      // Handle item selection/deselection
+      dropdown.on('click', '.bis-search-select__option', function (e) {
+        e.preventDefault();
+        const opt = $(this);
+
+        // Reset all
+        if (opt.data('action') === 'reset') {
+          selectedList.empty();
+          dropdown.find('.bis-search-select__option').removeClass('is-selected').find('.bis-search-select__check').text('');
+          updateChildrenCount();
+          triggerGutenbergDirty();
+          closeDropdown();
+          return;
+        }
+
+        const id = opt.data('id');
+        const title = opt.data('title');
+        const badge = opt.data('badge');
+
+        if (opt.hasClass('is-selected')) {
+          // Deselect
+          opt.removeClass('is-selected');
+          opt.find('.bis-search-select__check').text('');
+          selectedList.find(`.bis-child-tag[data-id="${id}"]`).remove();
+        } else {
+          // Select
+          opt.addClass('is-selected');
+          opt.find('.bis-search-select__check').text('✓');
+          const tagHtml = `
+            <div class="bis-child-tag" data-id="${id}">
+              <span class="dashicons dashicons-menu bis-child-tag__handle" title="Перетащите для изменения порядка"></span>
+              <span class="bis-child-tag__title">${$('<div/>').text(title).html()}</span>
+              <span class="bis-child-tag__badge">${$('<div/>').text(badge).html()}</span>
+              <button type="button" class="bis-child-tag__remove" title="Удалить" aria-label="Удалить">&times;</button>
+              <input type="hidden" name="bis_service_children[]" value="${id}">
+            </div>`;
+          selectedList.append(tagHtml);
+        }
+
+        updateChildrenCount();
+        triggerGutenbergDirty();
+      });
+
+      // Handle "Выбрать раздел" in group header
+      dropdown.on('click', '.bis-search-select__group-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const group = $(this).closest('.bis-search-select__group');
+        const options = group.find('.bis-search-select__option');
+        const unselected = options.filter(':not(.is-selected)');
+
+        if (unselected.length > 0) {
+          // Select all in group
+          unselected.each(function () {
+            const opt = $(this);
+            const id = opt.data('id');
+            const title = opt.data('title');
+            const badge = opt.data('badge');
+
+            opt.addClass('is-selected');
+            opt.find('.bis-search-select__check').text('✓');
+            if (!selectedList.find(`.bis-child-tag[data-id="${id}"]`).length) {
+              const tagHtml = `
+                <div class="bis-child-tag" data-id="${id}">
+                  <span class="dashicons dashicons-menu bis-child-tag__handle" title="Перетащите для изменения порядка"></span>
+                  <span class="bis-child-tag__title">${$('<div/>').text(title).html()}</span>
+                  <span class="bis-child-tag__badge">${$('<div/>').text(badge).html()}</span>
+                  <button type="button" class="bis-child-tag__remove" title="Удалить" aria-label="Удалить">&times;</button>
+                  <input type="hidden" name="bis_service_children[]" value="${id}">
+                </div>`;
+              selectedList.append(tagHtml);
+            }
+          });
+        } else {
+          // Deselect all in group
+          options.each(function () {
+            const opt = $(this);
+            const id = opt.data('id');
+            opt.removeClass('is-selected');
+            opt.find('.bis-search-select__check').text('');
+            selectedList.find(`.bis-child-tag[data-id="${id}"]`).remove();
+          });
+        }
+
+        updateChildrenCount();
+        triggerGutenbergDirty();
+      });
+
+      // Handle tag remove button
+      selectedList.on('click', '.bis-child-tag__remove', function (e) {
+        e.preventDefault();
+        const tag = $(this).closest('.bis-child-tag');
+        const id = tag.data('id');
+
+        tag.remove();
+        const opt = dropdown.find(`.bis-search-select__option[data-id="${id}"]`);
+        opt.removeClass('is-selected');
+        opt.find('.bis-search-select__check').text('');
+
+        updateChildrenCount();
+        triggerGutenbergDirty();
+      });
+
+      // Drag and drop sorting
+      if (selectedList.sortable) {
+        selectedList.sortable({
+          handle: '.bis-child-tag__handle',
+          axis: 'y',
+          opacity: 0.8,
+          update: function () {
+            triggerGutenbergDirty();
+          }
+        });
+      }
+    }
   });
 })(jQuery);

@@ -74,11 +74,39 @@ $banner_image = bis_get_page_banner_image_url($page_id);
     </section>
 
     <section class="about-mission" id="about-mission">
-        <div class="about-mission__content mw-1400px">
-            <h2 class="section-title">Наша миссия</h2>
-            <p>Создавать инженерные системы, которые работают стабильно, безопасно и энергоэффективно, а заказчик чувствует уверенность в каждом этапе — от запуска до эксплуатации.</p>
-            <div class="about-mission__panel">
-                <p>Мы объединяем технологическую экспертизу и заботу о комфорте людей внутри объектов — от офисов и производств до жилых комплексов.</p>
+        <div class="mw-1400px">
+            <div class="about-mission__grid">
+                <div class="about-mission__intro">
+                    <span class="section-badge">Наша миссия</span>
+                    <h2 class="section-title">Инженерный баланс для надежной и безопасной работы объектов</h2>
+                    <p class="about-mission__lead">
+                        Создавать инженерные системы, которые работают стабильно, безопасно и энергоэффективно, а заказчик чувствует уверенность в каждом этапе — от первого пуска до многолетней эксплуатации.
+                    </p>
+                </div>
+                <div class="about-mission__card-wrap">
+                    <div class="about-mission__card">
+                        <div class="about-mission__card-header">
+                            <span class="about-mission__card-badge">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="22" y1="12" x2="18" y2="12"></line>
+                                    <line x1="6" y1="12" x2="2" y2="12"></line>
+                                    <line x1="12" y1="6" x2="12" y2="2"></line>
+                                    <line x1="12" y1="22" x2="12" y2="18"></line>
+                                </svg>
+                                Ключевой принцип
+                            </span>
+                        </div>
+                        <blockquote class="about-mission__quote">
+                            «Мы объединяем <span class="about-mission__highlight">технологическую экспертизу</span> и&nbsp;<span class="about-mission__highlight">заботу о&nbsp;комфорте людей</span> внутри объектов&nbsp;— от&nbsp;офисов и&nbsp;производств до&nbsp;жилых комплексов.»
+                        </blockquote>
+                        <div class="about-mission__tags">
+                            <span class="about-mission__tag">Офисы и БЦ класса А</span>
+                            <span class="about-mission__tag">Производства и логистика</span>
+                            <span class="about-mission__tag">Жилые кварталы</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -88,38 +116,162 @@ $banner_image = bis_get_page_banner_image_url($page_id);
             <div class="section-header">
                 <span class="section-badge">БИС в цифрах</span>
                 <h2 class="section-title">Опыт, подтверждённый результатами</h2>
-                <p class="section-subtitle">Собрали показатели, которые отражают масштаб нашей работы.</p>
-            </div>
-            <div class="stats about-stats__grid">
-                <div class="stat-item">
-                    <span class="stat-value">10</span>
-                    <span class="stat-label">лет на рынке</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">200</span>
-                    <span class="stat-label">реализованных проектов</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">80%</span>
-                    <span class="stat-label">клиентов возвращаются повторно</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">40 тыс</span>
-                    <span class="stat-label">индивидуальных испытаний</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">100 тыс</span>
-                    <span class="stat-label">м.п. воздуховодов проверено</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">20 тыс</span>
-                    <span class="stat-label">систем обследовано и налажено</span>
+                <p class="about-stats__hero-text">
+                    За 10 лет нашей работы мы сдали <strong>более 200 объектов</strong> общей площадью свыше <strong>3 миллионов квадратных метров</strong>: бизнес-центры класса А, торгово-развлекательные комплексы, жилые кварталы, медучреждения, производства, гостиницы, аэропорты. Каждый объект прошёл приёмку в ЗОС и ввод в эксплуатацию в срок и без нареканий надзорных органов.
+                </p>
+                <div class="about-stats__sectors">
+                    <span class="about-stats__sector-tag">Бизнес-центры класса А</span>
+                    <span class="about-stats__sector-tag">ТРЦ и моллы</span>
+                    <span class="about-stats__sector-tag">Жилые кварталы</span>
+                    <span class="about-stats__sector-tag">Медучреждения</span>
+                    <span class="about-stats__sector-tag">Производства</span>
+                    <span class="about-stats__sector-tag">Гостиницы</span>
+                    <span class="about-stats__sector-tag">Аэропорты</span>
                 </div>
             </div>
+
+            <div class="about-stats__summary-grid">
+                <div class="about-summary-card">
+                    <span class="about-summary-card__value">10</span>
+                    <span class="about-summary-card__unit">лет на рынке</span>
+                    <span class="about-summary-card__label">безупречной инженерной практики</span>
+                </div>
+                <div class="about-summary-card">
+                    <span class="about-summary-card__value">&gt;200</span>
+                    <span class="about-summary-card__unit">объектов</span>
+                    <span class="about-summary-card__label">успешно сданных в эксплуатацию</span>
+                </div>
+                <div class="about-summary-card">
+                    <span class="about-summary-card__value">&gt;3 млн</span>
+                    <span class="about-summary-card__unit">м² площади</span>
+                    <span class="about-summary-card__label">масштаб реализованных проектов</span>
+                </div>
+                <div class="about-summary-card">
+                    <span class="about-summary-card__value">100%</span>
+                    <span class="about-summary-card__unit">в срок</span>
+                    <span class="about-summary-card__label">приёмка в ЗОС без нареканий</span>
+                </div>
             </div>
+
+            <div class="about-econ">
+                <div class="about-econ__header">
+                    <span class="about-econ__pretitle">Финансовая эффективность</span>
+                    <h3 class="about-econ__title">Что мы сделали для заказчиков — в деньгах на 1 м²</h3>
+                </div>
+
+                <div class="about-econ__grid">
+                    <article class="about-econ-card">
+                        <div class="about-econ-card__top">
+                            <div class="about-econ-card__metric">
+                                <span class="about-econ-card__num">−420 ₽/м²</span>
+                                <span class="about-econ-card__period">в год</span>
+                            </div>
+                        </div>
+                        <h4 class="about-econ-card__title">Снизили затраты на энергопотребление</h4>
+                        <p class="about-econ-card__desc">
+                            Снизили затраты энергопотребление на 420 рублей за м² площади объекта в год. Что составило 12 млн рублей на объекте площадью 50 тыс м². Расходы на ПНР окупились в первый год эксплуатации.
+                        </p>
+                        <div class="about-econ-card__footer">
+                            <span class="about-econ-card__highlight">12 млн ₽ экономии на 50 тыс. м²</span>
+                        </div>
+                    </article>
+
+                    <article class="about-econ-card">
+                        <div class="about-econ-card__top">
+                            <div class="about-econ-card__metric">
+                                <span class="about-econ-card__num">100%</span>
+                                <span class="about-econ-card__period">в срок</span>
+                            </div>
+                        </div>
+                        <h4 class="about-econ-card__title">Сдали все объекты в срок</h4>
+                        <p class="about-econ-card__desc">
+                            Каждый месяц просрочки стоил бы 8 500 рублей за м², включая пени, упущенную аренду, проценты по кредиту. Что составило бы 427 млн на объекте 50 тыс м² ежемесячно. Мы исключили эти потери на каждом объекте.
+                        </p>
+                        <div class="about-econ-card__footer">
+                            <span class="about-econ-card__highlight">Исключили потери 427 млн ₽/мес</span>
+                        </div>
+                    </article>
+
+                    <article class="about-econ-card">
+                        <div class="about-econ-card__top">
+                            <div class="about-econ-card__metric">
+                                <span class="about-econ-card__num">100%</span>
+                                <span class="about-econ-card__period">возврат удержания</span>
+                            </div>
+                        </div>
+                        <h4 class="about-econ-card__title">Наши Заказчики вернули полностью Гарантийное удержание</h4>
+                        <p class="about-econ-card__desc">
+                            На всех объектах — минимальное количество обращений и нареканий в гарантийный период. Заказчики получили обратно 5–10% от стоимости контракта. Для 50 тыс м² при стоимости контракта 2,5 млрд, вернули 250 млн рублей.
+                        </p>
+                        <div class="about-econ-card__footer">
+                            <span class="about-econ-card__highlight">Вернули 250 млн ₽ при контракте 2,5 млрд</span>
+                        </div>
+                    </article>
+
+                    <article class="about-econ-card">
+                        <div class="about-econ-card__top">
+                            <div class="about-econ-card__metric">
+                                <span class="about-econ-card__num">в 1,5–2 раза</span>
+                                <span class="about-econ-card__period">дольше ресурс</span>
+                            </div>
+                        </div>
+                        <h4 class="about-econ-card__title">Продлили срок службы оборудования</h4>
+                        <p class="about-econ-card__desc">
+                            Продлили срок службы оборудования в 1,5–2 раза. На объектах, сданных 5–7 лет назад, оборудование работает без замены до сих пор.
+                        </p>
+                        <div class="about-econ-card__footer">
+                            <span class="about-econ-card__highlight">5–7 лет работы без замены</span>
+                        </div>
+                    </article>
+
+                    <article class="about-econ-card">
+                        <div class="about-econ-card__top">
+                            <div class="about-econ-card__metric">
+                                <span class="about-econ-card__num">−1 280 ₽/м²</span>
+                                <span class="about-econ-card__period">ежегодно</span>
+                            </div>
+                        </div>
+                        <h4 class="about-econ-card__title">Снизили годовые эксплуатационные затраты</h4>
+                        <p class="about-econ-card__desc">
+                            Снизили годовые эксплуатационные затраты на 1 280 рублей на каждый квадратный метр площади здания. На объекте 50 000 м² экономия составляет 64 миллиона рублей ежегодно.
+                        </p>
+                        <div class="about-econ-card__footer">
+                            <span class="about-econ-card__highlight">64 млн ₽ экономии ежегодно на 50 тыс. м²</span>
+                        </div>
+                    </article>
+
+                    <article class="about-econ-card">
+                        <div class="about-econ-card__top">
+                            <div class="about-econ-card__metric">
+                                <span class="about-econ-card__num">1,2 года</span>
+                                <span class="about-econ-card__period">окупаемость</span>
+                            </div>
+                        </div>
+                        <h4 class="about-econ-card__title">Быстрый срок окупаемости ПНР</h4>
+                        <p class="about-econ-card__desc">
+                            Срок окупаемости ПНР: при стоимости ПНР ~1 500 руб/м² — 1,2 года. Дальше — чистая экономия каждый год всего срока службы здания.
+                        </p>
+                        <div class="about-econ-card__footer">
+                            <span class="about-econ-card__highlight">Дальше — чистая экономия каждый год</span>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="about-stats-cta">
+                    <div class="about-stats-cta__content">
+                        <span class="about-stats-cta__badge">Подтвержденная практика</span>
+                        <h3 class="about-stats-cta__title">Мы не обещаем. Мы сделали это 200 раз.</h3>
+                        <p class="about-stats-cta__desc">90% Заказчиков обратились к нам повторно. Давайте обсудим Ваш объект.</p>
+                    </div>
+                    <div class="about-stats-cta__action">
+                        <button type="button" class="btn btn-primary open-estimate-modal">Обсудить объект</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="why-us about-why" id="about-why">
+    <section class="about-why" id="about-why">
     <div class="mw-1400px">  
     <div class="section-header">
             <span class="section-badge">Почему выбирают нас</span>
@@ -151,11 +303,11 @@ $banner_image = bis_get_page_banner_image_url($page_id);
     </section>
 
     <?php $team_members = bis_get_team_members(); ?>
-    <div class="section-header">
+    <div class="section-header about-team-header" id="about-team">
         <h2 class="section-title">Наша команда</h2>
         <p class="section-subtitle">Ведущие специалисты в области инженерных систем</p>
     </div>
-    <section class="structure-section team-section" id="about-team"
+    <section class="structure-section team-section"
         <?php if (empty($team_members)) : ?>
             style="padding: 60px 0;"
         <?php endif; ?>

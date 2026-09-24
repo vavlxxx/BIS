@@ -63,6 +63,32 @@ get_header();
                 </div>
             </section>
 
+            <?php
+            $faq_items = bis_get_service_faq($service_id);
+            ?>
+
+            <?php if (!empty($faq_items)) : ?>
+                <section class="faq-section service-faq-section" id="faq" aria-label="Часто задаваемые вопросы">
+                    <div class="section-header">
+                        <span class="section-badge">FAQ</span>
+                        <h2 class="section-title">Часто задаваемые вопросы</h2>
+                    </div>
+                    <div class="faq-container">
+                        <?php foreach ($faq_items as $faq_item) : ?>
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <h3><?php echo esc_html($faq_item['question']); ?></h3>
+                                    <span class="faq-toggle">+</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <?php echo wpautop(wp_kses_post($faq_item['answer'])); ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
+
             <section class="service-estimate-cta" aria-label="Расчет сметы">
                 <div class="service-estimate-cta__container mw-1400px">
                     <button class="btn btn-primary open-estimate-modal" type="button">Рассчитать смету и сроки</button>
