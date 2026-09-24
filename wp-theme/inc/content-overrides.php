@@ -1002,7 +1002,8 @@ function bis_render_service_faq_metabox($post) {
                             </div>
                             <div class="bis-field">
                                 <label>Ответ</label>
-                                <textarea name="bis_service_faq[<?php echo esc_attr($index); ?>][answer]" rows="3" placeholder="Введите подробный ответ. Поддерживаются абзацы и списки." data-faq-field="answer"><?php echo esc_textarea($a); ?></textarea>
+                                <textarea name="bis_service_faq[<?php echo esc_attr($index); ?>][answer]" rows="6" placeholder="Введите подробный ответ. Поддерживается разметка HTML (абзацы <p>, списки <ul>, ссылки <a>, таблицы <table>, жирный текст <strong> и т.д.)." data-faq-field="answer"><?php echo esc_textarea($a); ?></textarea>
+                                <span class="description" style="font-size: 11.5px; color: #64748b; margin-top: 4px; display: block;">Поддерживается разметка HTML (абзацы, списки, ссылки, таблицы). Скрипты и опасные теги автоматически блокируются (защита от XSS).</span>
                             </div>
                         </div>
                     </div>
@@ -1030,7 +1031,8 @@ function bis_render_service_faq_metabox($post) {
                     </div>
                     <div class="bis-field">
                         <label>Ответ</label>
-                        <textarea name="bis_service_faq[__INDEX__][answer]" rows="3" placeholder="Введите подробный ответ. Поддерживаются абзацы и списки." data-faq-field="answer"></textarea>
+                        <textarea name="bis_service_faq[__INDEX__][answer]" rows="6" placeholder="Введите подробный ответ. Поддерживается разметка HTML (абзацы <p>, списки <ul>, ссылки <a>, таблицы <table>, жирный текст <strong> и т.д.)." data-faq-field="answer"></textarea>
+                        <span class="description" style="font-size: 11.5px; color: #64748b; margin-top: 4px; display: block;">Поддерживается разметка HTML (абзацы, списки, ссылки, таблицы). Скрипты и опасные теги автоматически блокируются (защита от XSS).</span>
                     </div>
                 </div>
             </div>
@@ -1055,26 +1057,14 @@ function bis_save_service_faq($post_id) {
     $raw_faq = isset($_POST['bis_service_faq']) && is_array($_POST['bis_service_faq']) ? $_POST['bis_service_faq'] : array();
     $cleaned_faq = array();
 
-    $allowed_tags = array(
-        'a'      => array('href' => array(), 'title' => array(), 'target' => array(), 'rel' => array()),
-        'br'     => array(),
-        'em'     => array(),
-        'strong' => array(),
-        'b'      => array(),
-        'i'      => array(),
-        'p'      => array(),
-        'ul'     => array('class' => array()),
-        'ol'     => array('class' => array()),
-        'li'     => array(),
-        'span'   => array('class' => array()),
-    );
-
     foreach ($raw_faq as $item) {
         if (!is_array($item)) {
             continue;
         }
         $question = isset($item['question']) ? sanitize_text_field(wp_unslash($item['question'])) : '';
-        $answer   = isset($item['answer']) ? wp_kses(wp_unslash($item['answer']), $allowed_tags) : '';
+        // wp_kses_post allows safe rich HTML formatting (p, br, a, strong, em, ul, ol, li, table, blockquote, etc.)
+        // while strictly stripping malicious scripts, iframes, and on* event handlers to prevent XSS.
+        $answer   = isset($item['answer']) ? wp_kses_post(wp_unslash($item['answer'])) : '';
 
         if ($question !== '' || $answer !== '') {
             $cleaned_faq[] = array(
@@ -1091,4 +1081,5 @@ function bis_save_service_faq($post_id) {
     }
 }
 add_action('save_post', 'bis_save_service_faq', 25);
+
 

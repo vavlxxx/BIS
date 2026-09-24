@@ -988,44 +988,66 @@ function initCasesModal() {
 
 // FAQ Functionality
 function initFAQ() {
-  const faqContainers = document.querySelectorAll('.faq-container');
-
-  if (faqContainers.length > 0) {
-    faqContainers.forEach(container => {
-      const faqItems = container.querySelectorAll('.faq-item');
-
-      faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        if (!question) return;
-
-        question.addEventListener('click', () => {
-          // Закрываем все остальные элементы в этом контейнере
-          faqItems.forEach(otherItem => {
-            if (otherItem !== item && otherItem.classList.contains('active')) {
-              otherItem.classList.remove('active');
-            }
-          });
-
-          // Переключаем текущий элемент
-          item.classList.toggle('active');
-        });
-      });
-    });
-  } else {
-    const faqItems = document.querySelectorAll('.faq-item');
+  const setupAccordion = (faqItems) => {
     faqItems.forEach(item => {
       const question = item.querySelector('.faq-question');
-      if (!question) return;
+      const answer = item.querySelector('.faq-answer');
+      if (!question || !answer) return;
+
+      const closeItem = (targetItem) => {
+        const targetAnswer = targetItem.querySelector('.faq-answer');
+        if (!targetAnswer) return;
+
+        targetAnswer.style.overflow = 'hidden';
+        targetAnswer.style.maxHeight = targetAnswer.scrollHeight + 'px';
+        void targetAnswer.offsetHeight;
+        targetItem.classList.remove('active');
+        targetAnswer.style.maxHeight = '0px';
+      };
+
+      const openItem = (targetItem) => {
+        const targetAnswer = targetItem.querySelector('.faq-answer');
+        if (!targetAnswer) return;
+
+        targetItem.classList.add('active');
+        targetAnswer.style.overflow = 'hidden';
+        targetAnswer.style.maxHeight = targetAnswer.scrollHeight + 'px';
+
+        const onTransitionEnd = (e) => {
+          if (e.propertyName === 'max-height' && targetItem.classList.contains('active')) {
+            targetAnswer.style.maxHeight = 'none';
+            targetAnswer.style.overflow = 'visible';
+          }
+          targetAnswer.removeEventListener('transitionend', onTransitionEnd);
+        };
+        targetAnswer.addEventListener('transitionend', onTransitionEnd);
+      };
 
       question.addEventListener('click', () => {
+        const isCurrentlyActive = item.classList.contains('active');
+
         faqItems.forEach(otherItem => {
           if (otherItem !== item && otherItem.classList.contains('active')) {
-            otherItem.classList.remove('active');
+            closeItem(otherItem);
           }
         });
-        item.classList.toggle('active');
+
+        if (isCurrentlyActive) {
+          closeItem(item);
+        } else {
+          openItem(item);
+        }
       });
     });
+  };
+
+  const faqContainers = document.querySelectorAll('.faq-container');
+  if (faqContainers.length > 0) {
+    faqContainers.forEach(container => {
+      setupAccordion(Array.from(container.querySelectorAll('.faq-item')));
+    });
+  } else {
+    setupAccordion(Array.from(document.querySelectorAll('.faq-item')));
   }
 }
 

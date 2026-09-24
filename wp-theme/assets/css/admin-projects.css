@@ -542,6 +542,14 @@
   gap: 12px;
 }
 
+.bis-faq-item__body textarea {
+  width: 100%;
+  font-size: 13.5px;
+  line-height: 1.5;
+  min-height: 130px;
+  resize: vertical;
+}
+
 .bis-faq-empty {
   padding: 24px;
   text-align: center;
