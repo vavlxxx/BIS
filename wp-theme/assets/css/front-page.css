@@ -2332,7 +2332,7 @@
 
 .faq-answer {
   padding: 0 24px;
-  max-height: 0;
+  max-height: 0 !important;
   overflow: hidden;
   transition: max-height 0.35s ease, padding 0.35s ease;
   font-size: 15px;
