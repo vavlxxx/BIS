@@ -679,18 +679,50 @@ function initExitIntentModal() {
   const overlay = document.getElementById('exitIntentOverlay');
   const form = document.getElementById('exitIntentForm');
   const closeButtons = document.querySelectorAll('[data-exit-intent-close]');
-  const storageKey = 'bisExitIntentShown';
+  const storageKey = 'bis_exit_intent_shown';
   const canTrackPointer = window.matchMedia ? window.matchMedia('(pointer:fine)').matches : true;
 
   if (!overlay || !form || !canTrackPointer) {
     return;
   }
 
-  // Очищаем старую запись в localStorage, чтобы модалка показывалась у всех посетителей
+  // Очищаем старые ключи из localStorage при наличии
   try {
+    window.localStorage.removeItem('bisExitIntentShown');
     window.localStorage.removeItem(storageKey);
   } catch (e) {
     // игнорируем ограничения хранилища
+  }
+
+  // Проверка: было ли окно уже показано в текущей сессии браузера
+  const hasExitIntentBeenShown = () => {
+    try {
+      if (window.sessionStorage && window.sessionStorage.getItem(storageKey) === '1') {
+        return true;
+      }
+    } catch (e) {}
+
+    // Сессионный cookie доступен во всех вкладках текущей сессии браузера
+    return getBisCookie(storageKey) === '1';
+  };
+
+  // Сохраняем факт показа в сессионное хранилище и сессионный cookie
+  const markExitIntentShown = () => {
+    try {
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(storageKey, '1');
+      }
+    } catch (e) {}
+
+    // Cookie без max-age и expires является сессионным:
+    // он синхронизируется между всеми вкладками и сбрасывается при закрытии браузера
+    document.cookie = `${storageKey}=1; path=/; SameSite=Lax`;
+  };
+
+  // Если окно уже показывалось в текущей сессии, не навешиваем триггеры выхода
+  if (hasExitIntentBeenShown()) {
+    markExitIntentShown();
+    return;
   }
 
   let isCoolingDown = false;
@@ -719,6 +751,8 @@ function initExitIntentModal() {
   }
 
   const closeOverlay = () => {
+    markExitIntentShown();
+
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -735,10 +769,18 @@ function initExitIntentModal() {
     }, 800);
   };
 
+  const removeExitListeners = () => {
+    document.removeEventListener('mouseout', handleExitIntent);
+    document.documentElement.removeEventListener('mouseleave', handleExitIntent);
+  };
+
   const openOverlay = () => {
-    if (overlay.classList.contains('active') || isCoolingDown) {
+    if (hasExitIntentBeenShown() || overlay.classList.contains('active') || isCoolingDown) {
       return;
     }
+
+    markExitIntentShown();
+    removeExitListeners();
 
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
@@ -746,7 +788,8 @@ function initExitIntentModal() {
   };
 
   const handleExitIntent = (event) => {
-    if (isCoolingDown || overlay.classList.contains('active')) {
+    if (hasExitIntentBeenShown() || isCoolingDown || overlay.classList.contains('active')) {
+      removeExitListeners();
       return;
     }
 
@@ -782,6 +825,8 @@ function initExitIntentModal() {
     if (!validateFormFields(form) || !validateHCaptcha(form)) {
       return;
     }
+
+    markExitIntentShown();
 
     submitAjaxForm(form, 'bis_submit_general_request', {
       request_type: 'exit_intent'

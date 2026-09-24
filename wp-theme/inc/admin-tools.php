@@ -63,14 +63,6 @@ function bis_admin_scripts($hook) {
 
             wp_enqueue_script('bis-projects-admin', get_template_directory_uri() . '/assets/js/admin-projects.js', array('jquery', 'jquery-ui-sortable'), $admin_script_version, true);
             wp_enqueue_style('bis-projects-admin', get_template_directory_uri() . '/assets/css/admin-projects.css', array(), $admin_style_version);
-            wp_add_inline_style('bis-projects-admin', '
-                .bis-service-children-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;align-items:stretch}
-                .bis-service-child-option{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-sizing:border-box}
-                .bis-service-child-option input{flex:0 0 auto;margin-top:3px}
-                .bis-service-child-option span{display:flex;min-width:0;flex-direction:column;gap:4px}
-                .bis-service-child-option strong{display:block;color:#111827;line-height:1.35}
-                .bis-service-child-option em{display:block;color:#6b7280;font-size:12px;font-style:normal;line-height:1.35}
-            ');
         }
     }
 

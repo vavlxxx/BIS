@@ -988,23 +988,45 @@ function initCasesModal() {
 
 // FAQ Functionality
 function initFAQ() {
-  const faqItems = document.querySelectorAll('.faq-item');
+  const faqContainers = document.querySelectorAll('.faq-container');
 
-  faqItems.forEach(item => {
-    const question = item.querySelector('.faq-question');
+  if (faqContainers.length > 0) {
+    faqContainers.forEach(container => {
+      const faqItems = container.querySelectorAll('.faq-item');
 
-    question.addEventListener('click', () => {
-      // Закрываем все остальные элементы
-      faqItems.forEach(otherItem => {
-        if (otherItem !== item && otherItem.classList.contains('active')) {
-          otherItem.classList.remove('active');
-        }
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        if (!question) return;
+
+        question.addEventListener('click', () => {
+          // Закрываем все остальные элементы в этом контейнере
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item && otherItem.classList.contains('active')) {
+              otherItem.classList.remove('active');
+            }
+          });
+
+          // Переключаем текущий элемент
+          item.classList.toggle('active');
+        });
       });
-
-      // Переключаем текущий элемент
-      item.classList.toggle('active');
     });
-  });
+  } else {
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      if (!question) return;
+
+      question.addEventListener('click', () => {
+        faqItems.forEach(otherItem => {
+          if (otherItem !== item && otherItem.classList.contains('active')) {
+            otherItem.classList.remove('active');
+          }
+        });
+        item.classList.toggle('active');
+      });
+    });
+  }
 }
 
 function initNewsTabs() {
