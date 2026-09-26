@@ -4,17 +4,39 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: bis-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check PHP syntax
+        run: find wp-theme -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check JavaScript syntax
+        run: find wp-theme/assets/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Test service hierarchy
+        run: php tests/service-hierarchy.php
+
+  deploy:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,11 +47,20 @@ jobs:
       - name: Install lftp
         run: sudo apt-get install -y lftp
 
-      - name: Upload files via FTP
+      - name: Upload theme
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          PATH_TO_THEME: ${{ secrets.PATH_TO_THEME }}
         run: |
-          lftp -e "
-          open -u '${{ secrets.FTP_USER }}','${{ secrets.FTP_PASS }}' ${{ secrets.FTP_HOST }};
-          mirror -R ./wp-theme/ ${{ secrets.PATH_TO_THEME }};
-          quit
-          "
-
+          set -euo pipefail
+          : "${FTP_HOST:?FTP_HOST secret is missing}"
+          : "${FTP_USER:?FTP_USER secret is missing}"
+          : "${FTP_PASS:?FTP_PASS secret is missing}"
+          : "${PATH_TO_THEME:?PATH_TO_THEME secret is missing}"
+          if [[ ! "$PATH_TO_THEME" =~ ^/[a-zA-Z0-9._/-]+$ ]]; then
+            echo 'PATH_TO_THEME must be an absolute theme directory path' >&2
+            exit 1
+          fi
+          lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "set cmd:fail-exit yes; mirror -R ./wp-theme/ ${PATH_TO_THEME%/}; bye"

@@ -277,7 +277,9 @@ function bis_render_service_metabox_override($post) {
     $thumbnail = get_the_post_thumbnail_url($post->ID, 'full');
     $preview = $preview_image ? $preview_image : ($legacy_image ? $legacy_image : $thumbnail);
     $banner_preview = $banner_image ? $banner_image : ($preview ? $preview : $thumbnail);
-    $is_visible = $show_in_catalog === '' ? ((int) $post->post_parent === 0) : $show_in_catalog === '1';
+    $is_visible = (int) $post->post_parent === 0
+        && $post->post_status !== 'auto-draft'
+        && ($show_in_catalog === '1' || $show_in_catalog === '');
     ?>
     <div class="bis-project-box">
         <div class="bis-project-box__header">
@@ -591,7 +593,6 @@ function bis_assign_service_child_ids($parent_id, $selected_ids) {
             'ID' => (int) $child_id,
             'post_parent' => $parent_id,
         ));
-        update_post_meta((int) $child_id, 'bis_service_show_in_catalog', '0');
     }
 
     foreach ($valid_ids as $order_index => $child_id) {
@@ -599,6 +600,7 @@ function bis_assign_service_child_ids($parent_id, $selected_ids) {
             'ID'         => (int) $child_id,
             'menu_order' => $order_index,
         ));
+        update_post_meta((int) $child_id, 'bis_service_show_in_catalog', '0');
     }
 
     $is_updating = false;
@@ -720,6 +722,11 @@ function bis_save_page_banner_override($post_id) {
 add_action('save_post', 'bis_save_page_banner_override', 20);
 
 function bis_save_service_override($post_id) {
+    // wp_update_post() for a child fires save_post again with the parent's form in $_POST.
+    if (!isset($_POST['post_ID']) || (int) $_POST['post_ID'] !== (int) $post_id) {
+        return;
+    }
+
     if (!isset($_POST['bis_service_override_nonce_field']) || !wp_verify_nonce($_POST['bis_service_override_nonce_field'], 'bis_service_override_nonce')) {
         return;
     }
@@ -746,6 +753,10 @@ function bis_save_service_override($post_id) {
 add_action('save_post', 'bis_save_service_override', 20);
 
 function bis_save_service_children($post_id) {
+    if (!isset($_POST['post_ID']) || (int) $_POST['post_ID'] !== (int) $post_id) {
+        return;
+    }
+
     if (!isset($_POST['bis_service_children_nonce_field']) || !wp_verify_nonce($_POST['bis_service_children_nonce_field'], 'bis_service_children_nonce')) {
         return;
     }
@@ -1042,6 +1053,10 @@ function bis_render_service_faq_metabox($post) {
 }
 
 function bis_save_service_faq($post_id) {
+    if (!isset($_POST['post_ID']) || (int) $_POST['post_ID'] !== (int) $post_id) {
+        return;
+    }
+
     if (!isset($_POST['bis_service_faq_nonce_field']) || !wp_verify_nonce($_POST['bis_service_faq_nonce_field'], 'bis_service_faq_nonce')) {
         return;
     }
@@ -1081,5 +1096,3 @@ function bis_save_service_faq($post_id) {
     }
 }
 add_action('save_post', 'bis_save_service_faq', 25);
-
-

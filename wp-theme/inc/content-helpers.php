@@ -185,6 +185,11 @@ function bis_service_should_show_in_catalog($post_id) {
         return false;
     }
 
+    // Catalog cards are always root services, even if old metadata says otherwise.
+    if ((int) $post->post_parent !== 0) {
+        return false;
+    }
+
     $show_in_catalog = get_post_meta($post_id, 'bis_service_show_in_catalog', true);
     if ($show_in_catalog === '1') {
         return true;
@@ -194,7 +199,7 @@ function bis_service_should_show_in_catalog($post_id) {
         return false;
     }
 
-    return (int) $post->post_parent === 0;
+    return true;
 }
 
 function bis_get_catalog_services($args = array()) {

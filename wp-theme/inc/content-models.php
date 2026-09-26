@@ -1618,6 +1618,10 @@ function bis_save_page_banner($post_id) {
 add_action('save_post', 'bis_save_page_banner');
 
 function bis_save_service_details($post_id) {
+    if (!isset($_POST['post_ID']) || (int) $_POST['post_ID'] !== (int) $post_id) {
+        return;
+    }
+
     if (!isset($_POST['bis_service_details_nonce_field']) || !wp_verify_nonce($_POST['bis_service_details_nonce_field'], 'bis_service_details_nonce')) {
         return;
     }
@@ -1639,6 +1643,10 @@ function bis_save_service_details($post_id) {
 add_action('save_post', 'bis_save_service_details');
 
 function bis_save_service_children_order($post_id) {
+    if (!isset($_POST['post_ID']) || (int) $_POST['post_ID'] !== (int) $post_id) {
+        return;
+    }
+
     if (!isset($_POST['bis_service_children_nonce_field']) || !wp_verify_nonce($_POST['bis_service_children_nonce_field'], 'bis_service_children_nonce')) {
         return;
     }
@@ -1673,6 +1681,10 @@ function bis_save_service_children_order($post_id) {
 add_action('save_post', 'bis_save_service_children_order');
 
 function bis_save_seo_meta($post_id) {
+    if (isset($_POST['post_ID']) && (int) $_POST['post_ID'] !== (int) $post_id) {
+        return;
+    }
+
     if (!isset($_POST['bis_seo_nonce_field']) || !wp_verify_nonce($_POST['bis_seo_nonce_field'], 'bis_seo_nonce')) {
         return;
     }
@@ -2554,6 +2566,5 @@ function bis_maybe_seed_vacancies() {
     update_option('bis_vacancies_seeded_v3', 1);
 }
 add_action('init', 'bis_maybe_seed_vacancies', 20);
-
 
 
