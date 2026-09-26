@@ -160,6 +160,17 @@ function bis_register_override_meta() {
 }
 add_action('init', 'bis_register_override_meta');
 
+function bis_initialize_service_catalog_visibility($post_id, $post, $update) {
+    if ($update || !($post instanceof WP_Post) || 'bis_service' !== $post->post_type) {
+        return;
+    }
+
+    if (!metadata_exists('post', $post_id, 'bis_service_show_in_catalog')) {
+        update_post_meta($post_id, 'bis_service_show_in_catalog', '0');
+    }
+}
+add_action('wp_insert_post', 'bis_initialize_service_catalog_visibility', 10, 3);
+
 function bis_replace_custom_meta_boxes() {
     remove_meta_box('bis_page_banner', 'page', 'normal');
     add_meta_box(
