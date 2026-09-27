@@ -63,4 +63,5 @@ jobs:
             echo 'PATH_TO_THEME must be an absolute theme directory path' >&2
             exit 1
           fi
-          lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "set cmd:fail-exit yes; mirror -R ./wp-theme/ ${PATH_TO_THEME%/}; bye"
+          # Upload PHP dependencies before functions.php can reference new files.
+          lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "set cmd:fail-exit yes; mirror -R ./wp-theme/inc/ ${PATH_TO_THEME%/}/inc/; mirror -R ./wp-theme/ ${PATH_TO_THEME%/}; bye"

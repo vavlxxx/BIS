@@ -8,7 +8,10 @@ require_once get_template_directory() . '/inc/request-handlers.php';
 require_once get_template_directory() . '/inc/media.php';
 require_once get_template_directory() . '/inc/content-models.php';
 require_once get_template_directory() . '/inc/content-overrides.php';
-require_once get_template_directory() . '/inc/service-hierarchy-repair.php';
+$hierarchy_repair_file = get_template_directory() . '/inc/service-hierarchy-repair.php';
+if (is_file($hierarchy_repair_file)) {
+    require_once $hierarchy_repair_file;
+}
 require_once get_template_directory() . '/inc/class-popular-pages.php';
 
 function bis_theme_scripts() {
@@ -631,4 +634,3 @@ function bis_ensure_turnkey_page() {
     update_option('bis_turnkey_page_created_v1', 1);
 }
 add_action('init', 'bis_ensure_turnkey_page', 35);
-
