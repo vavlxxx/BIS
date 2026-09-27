@@ -351,23 +351,6 @@ function bis_render_service_metabox_override($post) {
     <?php
 }
 
-function bis_service_has_child_services($service_id) {
-    $service_id = (int) $service_id;
-    if ($service_id <= 0) {
-        return false;
-    }
-
-    $children = get_posts(array(
-        'post_type'   => 'bis_service',
-        'post_parent' => $service_id,
-        'post_status' => array('publish', 'draft', 'pending', 'future', 'private'),
-        'posts_per_page' => 1,
-        'fields'      => 'ids',
-    ));
-
-    return !empty($children);
-}
-
 function bis_get_service_child_ids($service_id) {
     $service_id = (int) $service_id;
     if ($service_id <= 0) {
@@ -386,6 +369,27 @@ function bis_get_service_child_ids($service_id) {
     return array_map('intval', array_values($children));
 }
 
+function bis_service_would_create_cycle($parent_id, $child_id) {
+    $parent_id = (int) $parent_id;
+    $child_id = (int) $child_id;
+    $visited = array();
+
+    while ($parent_id > 0) {
+        if ($parent_id === $child_id || isset($visited[$parent_id])) {
+            return true;
+        }
+
+        $visited[$parent_id] = true;
+        $parent = get_post($parent_id);
+        if (!($parent instanceof WP_Post) || 'bis_service' !== $parent->post_type) {
+            break;
+        }
+        $parent_id = (int) $parent->post_parent;
+    }
+
+    return false;
+}
+
 function bis_get_service_children_candidates($service_id) {
     $service_id = (int) $service_id;
     $services = get_posts(array(
@@ -401,7 +405,7 @@ function bis_get_service_children_candidates($service_id) {
             return false;
         }
 
-        return !bis_service_has_child_services($service->ID);
+        return !bis_service_would_create_cycle($service_id, $service->ID);
     }));
 }
 
@@ -463,7 +467,7 @@ function bis_render_service_children_metabox($post) {
         <?php endif; ?>
 
         <?php if (empty($candidates)) : ?>
-            <p class="bis-field__hint">Нет доступных услуг для добавления. Текущая услуга и услуги, которые уже являются родительскими, в список не попадают.</p>
+            <p class="bis-field__hint">Нет доступных услуг для добавления. Текущую услугу и ее родительские услуги выбрать нельзя.</p>
         <?php else : ?>
             <div class="bis-search-select" id="bis-children-search-select">
                 <label class="bis-search-select__label" for="bis-children-search-input">
@@ -576,7 +580,7 @@ function bis_assign_service_child_ids($parent_id, $selected_ids) {
     $valid_ids = array();
 
     foreach ($selected_ids as $candidate_id) {
-        if ($candidate_id === $parent_id || bis_service_has_child_services($candidate_id)) {
+        if (bis_service_would_create_cycle($parent_id, $candidate_id)) {
             continue;
         }
 
@@ -629,7 +633,7 @@ function bis_prevent_invalid_service_hierarchy($post_id) {
         return;
     }
 
-    if ((int) $post->post_parent === (int) $post_id || bis_service_has_child_services($post_id)) {
+    if (bis_service_would_create_cycle($post->post_parent, $post_id)) {
         $is_fixing = true;
         wp_update_post(array(
             'ID' => (int) $post_id,
