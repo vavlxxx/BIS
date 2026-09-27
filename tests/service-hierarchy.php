@@ -244,6 +244,37 @@ $posts[926]->menu_order = 37;
 bis_repair_pnr_service_hierarchy();
 check($posts[926]->menu_order === 37, 'completed repair ran again');
 
+// The published ventilation service was hidden from the catalog and used to be
+// excluded from the picker because it has its own five child services.
+$posts[763] = new WP_Post(763);
+$posts[763]->post_title = '1 Подготовительный этап и проверка монтажа общеобменной вентиляции';
+$posts[765] = new WP_Post(765, 763);
+$posts[783] = new WP_Post(783, 759);
+$posts[924] = new WP_Post(924, 759);
+update_post_meta(763, 'bis_service_show_in_catalog', '0');
+check(!bis_service_should_show_in_catalog(763)
+    && in_array($posts[763], bis_get_service_children_candidates(759), true),
+    'the hidden ventilation service is still missing from the picker');
+check(function_exists('bis_repair_ventilation_service_hierarchy'),
+    'the ventilation hierarchy repair is missing');
+$posts[763]->post_parent = 99;
+bis_repair_ventilation_service_hierarchy();
+check($posts[763]->post_parent === 99 && !get_option('bis_ventilation_hierarchy_repaired_20260927'),
+    'ventilation repair overwrote an unrelated parent');
+$posts[763]->post_parent = 0;
+bis_repair_ventilation_service_hierarchy();
+check($posts[763]->post_parent === 759 && $posts[765]->post_parent === 763,
+    'ventilation repair did not restore the third-level hierarchy');
+check($posts[783]->post_parent === 759 && $posts[924]->post_parent === 759
+    && get_post_meta(763, 'bis_service_show_in_catalog') === '0',
+    'ventilation repair changed existing siblings or catalog visibility');
+check(get_option('bis_ventilation_hierarchy_repaired_20260927') === '1'
+    && get_option('bis_ventilation_hierarchy_backup_20260927')['post_parent'] === 0,
+    'ventilation repair did not record completion and backup');
+$posts[763]->menu_order = 37;
+bis_repair_ventilation_service_hierarchy();
+check($posts[763]->menu_order === 37, 'completed ventilation repair ran again');
+
 // The services table has separate AJAX handlers for drag sorting and numeric order.
 $_POST = array('orders' => array('2' => '7', '4' => '3'));
 bis_ajax_reorder_services();
