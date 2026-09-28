@@ -29,6 +29,9 @@ jobs:
       - name: Check JavaScript syntax
         run: find wp-theme/assets/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
 
+      - name: Test calculator calculations and protocols
+        run: node --test tests/calculators.test.js
+
       - name: Test service hierarchy
         run: php tests/service-hierarchy.php
 

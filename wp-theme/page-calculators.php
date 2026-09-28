@@ -105,9 +105,9 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
 
                         <div class="calc-grid-fields calc-grid-fields--3cols">
                             <div class="calc-form-group">
-                                <label for="b1_Lpr">Проектный расход Lпр <small>Расход вентилятора</small></label>
+                                <label for="b1_Lpr">Проектный расход Lпр <small>Справочно, не заменяет характеристику вентилятора</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_Lpr" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 27500" step="50">
+                                    <input type="number" id="b1_Lpr" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Необязательно" step="50">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -121,9 +121,17 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             </div>
 
                             <div class="calc-form-group">
-                                <label for="b1_Tpg">Температура горения Тпг <small>В очаге пожара</small></label>
+                                <label for="b1_Tpg">Температура продуктов горения Тпг <small>При входе в дымоприемное устройство</small></label>
                                 <div class="calc-field-wrap">
                                     <input type="number" id="b1_Tpg" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 760">
+                                    <span class="calc-field-unit">К</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-form-group">
+                                <label for="b1_Tv">Температура газов у вентилятора <small>По проекту или измерению</small></label>
+                                <div class="calc-field-wrap">
+                                    <input type="number" id="b1_Tv" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 619" step="0.1">
                                     <span class="calc-field-unit">К</span>
                                 </div>
                             </div>
@@ -137,7 +145,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             </div>
 
                             <div class="calc-form-group">
-                                <label for="b1_h_top">Отметка выброса <small>Верх шахты / вентилятор</small></label>
+                                <label for="b1_h_top">Отметка входа вентилятора <small>Фактическое расположение входного устройства</small></label>
                                 <div class="calc-field-wrap">
                                     <input type="number" id="b1_h_top" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="например, 10.0" step="0.1">
                                     <span class="calc-field-unit">м</span>
@@ -161,7 +169,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             </div>
 
                             <div class="calc-form-group">
-                                <label for="b1_out_Pdiagr">Давление по диаграмме <small>1,2·Psa / ρv по формуле (3)</small></label>
+                                <label for="b1_out_Pdiagr">Давление для характеристики вентилятора <small>1,2·Psa / ρv по формуле Б.3</small></label>
                                 <div class="calc-field-wrap">
                                     <input type="text" id="b1_out_Pdiagr" class="calc-field-input" readonly style="background: #f8fafc; font-weight: 700; color: #166534;" value="—">
                                     <span class="calc-field-unit">Па</span>
@@ -169,9 +177,9 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             </div>
 
                             <div class="calc-form-group">
-                                <label for="b1_La">Расход по диаграмме La <small>Перед расчётом по этажам</small></label>
+                                <label for="b1_La">Расход с характеристики вентилятора La <small>При показанном выше приведённом давлении</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b1_La" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="по диаграмме (или = Lпр)" step="10">
+                                    <input type="number" id="b1_La" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="по реальной характеристике вентилятора" step="10">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -195,7 +203,9 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <th style="width: 90px;">Длина li</th>
                                         <th style="width: 140px;">Сечение шахты A×B</th>
                                         <th style="width: 185px;" title="Суммарный коэффициент местного сопротивления участка шахты (ручной ввод или выбор из списка)">КМС (Σξ)</th>
+                                        <th style="width: 75px;" title="Коэффициент трения этого участка по проекту">λ</th>
                                         <th style="width: 140px;">Клапан a×b</th>
+                                        <th style="width: 95px;" title="Сопротивление воздухопроницанию клапана по паспорту">S клапана</th>
                                         <th>Давление Psi</th>
                                         <th>Утечка Gdpn</th>
                                         <th>Расход Li</th>
@@ -268,27 +278,21 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                 <div class="avok-tabs-header">Выберите подкалькулятор по методике АВОК:</div>
                 <div class="avok-tabs-list">
                     <div class="avok-tab-item active" data-avok="du4_1">
-                        <span class="code">ДУ4-1</span>
                         <span>Дымоудаление из коридора</span>
                     </div>
                     <div class="avok-tab-item" data-avok="pd4_1">
-                        <span class="code">ПД4-1</span>
                         <span>Подпор в лестничную клетку (ЛК)</span>
                     </div>
                     <div class="avok-tab-item" data-avok="pd4_2">
-                        <span class="code">ПД4-2</span>
                         <span>Подпор в шахту лифта</span>
                     </div>
                     <div class="avok-tab-item" data-avok="pd4_7">
-                        <span class="code">ПД4-7</span>
                         <span>Зона ПБЗ (открытая дверь)</span>
                     </div>
                     <div class="avok-tab-item" data-avok="pd4_8">
-                        <span class="code">ПД4-8</span>
                         <span>Тамбур-шлюз перед ЛК</span>
                     </div>
                     <div class="avok-tab-item" data-avok="pd7_a">
-                        <span class="code">ПД7-а</span>
                         <span>Зона ПБЗ (закрытая дверь)</span>
                     </div>
                 </div>
@@ -306,25 +310,25 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div class="calc-form-group">
                         <label for="b2_system_name">Наименование системы <small>Маркировка по проекту</small></label>
                         <div class="calc-field-wrap">
-                            <input type="text" id="b2_system_name" class="calc-field-input calc-auto-recalc" value="Система ДУ1" placeholder="например, Система ДУ1">
+                            <input type="text" id="b2_system_name" class="calc-field-input calc-auto-recalc" placeholder="Маркировка системы по проекту">
                         </div>
                     </div>
                     <div class="calc-form-group">
                         <label for="b2_object_name">Наименование объекта <small>Здание / комплекс</small></label>
                         <div class="calc-field-wrap">
-                            <input type="text" id="b2_object_name" class="calc-field-input calc-auto-recalc" value="Торговый центр «Академический»" placeholder="название объекта">
+                            <input type="text" id="b2_object_name" class="calc-field-input calc-auto-recalc" placeholder="Название объекта">
                         </div>
                     </div>
                     <div class="calc-form-group">
                         <label for="b2_address">Адрес объекта <small>Местонахождение</small></label>
                         <div class="calc-field-wrap">
-                            <input type="text" id="b2_address" class="calc-field-input calc-auto-recalc" value="СПб, Гражданский проспект, квартал 9А" placeholder="адрес">
+                            <input type="text" id="b2_address" class="calc-field-input calc-auto-recalc" placeholder="Адрес объекта">
                         </div>
                     </div>
                     <div class="calc-form-group">
                         <label for="b2_engineer">Выполнил <small>Инженер-составитель</small></label>
                         <div class="calc-field-wrap">
-                            <input type="text" id="b2_engineer" class="calc-field-input calc-auto-recalc" value="Иванов И.И." placeholder="ФИО инженера">
+                            <input type="text" id="b2_engineer" class="calc-field-input calc-auto-recalc" placeholder="ФИО инженера">
                         </div>
                     </div>
                 </div>
@@ -336,8 +340,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div id="avok-du4_1" class="avok-calc-content" style="display: block;">
                         <div class="calc-card">
                             <div class="calc-card__head">
-                                <h2 class="calc-card__title">Расчет ДУ4-1: Дымоудаление из коридора</h2>
-                                <span class="calc-norm-pill">АВОК 5.5.1-2018</span>
+                                <h2 class="calc-card__title">Дымоудаление из коридора</h2>
+                                <span class="calc-norm-pill">АВОК: требуется проверка методики</span>
                             </div>
                             <div class="calc-grid-fields">
                                 <div class="calc-form-group">
@@ -390,8 +394,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div id="avok-pd4_1" class="avok-calc-content" style="display: none;">
                         <div class="calc-card">
                             <div class="calc-card__head">
-                                <h2 class="calc-card__title">Расчет ПД4-1: Подпор воздуха в лестничную клетку (ЛК)</h2>
-                                <span class="calc-norm-pill">АВОК / СП 7.13130</span>
+                                <h2 class="calc-card__title">Подпор воздуха в лестничную клетку (ЛК)</h2>
+                                <span class="calc-norm-pill">АВОК: требуется проверка методики</span>
                             </div>
                             <div class="calc-grid-fields">
                                 <div class="calc-form-group">
@@ -401,7 +405,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                 <div class="calc-form-group">
                                     <label for="pd4_1_building_type">Назначение здания</label>
                                     <select id="pd4_1_building_type" class="calc-field-select calc-auto-recalc">
-                                        <option value="living" selected>Жилое здание (V в двери ≥ 1.3 м/с)</option>
+                                        <option value="">Выберите</option>
+                                        <option value="living">Жилое здание (V в двери ≥ 1.3 м/с)</option>
                                         <option value="public">Общественное здание (V в двери ≥ 1.5 м/с)</option>
                                     </select>
                                 </div>
@@ -427,8 +432,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div id="avok-pd4_2" class="avok-calc-content" style="display: none;">
                         <div class="calc-card">
                             <div class="calc-card__head">
-                                <h2 class="calc-card__title">Расчет ПД4-2: Подпор в шахту лифта</h2>
-                                <span class="calc-norm-pill">АВОК / СП 7.13130</span>
+                                <h2 class="calc-card__title">Подпор в шахту лифта</h2>
+                                <span class="calc-norm-pill">АВОК: требуется проверка методики</span>
                             </div>
                             <div class="calc-grid-fields">
                                 <div class="calc-form-group">
@@ -447,8 +452,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div id="avok-pd4_7" class="avok-calc-content" style="display: none;">
                         <div class="calc-card">
                             <div class="calc-card__head">
-                                <h2 class="calc-card__title">Расчет ПД4-7: Зона ПБЗ (открытая дверь)</h2>
-                                <span class="calc-norm-pill">АВОК / СП 7.13130</span>
+                                <h2 class="calc-card__title">Зона ПБЗ (открытая дверь)</h2>
+                                <span class="calc-norm-pill">АВОК: требуется проверка методики</span>
                             </div>
                             <div class="calc-grid-fields">
                                 <div class="calc-form-group">
@@ -480,8 +485,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div id="avok-pd4_8" class="avok-calc-content" style="display: none;">
                         <div class="calc-card">
                             <div class="calc-card__head">
-                                <h2 class="calc-card__title">Расчет ПД4-8: Тамбур-шлюз перед ЛК</h2>
-                                <span class="calc-norm-pill">АВОК / СП 7.13130</span>
+                                <h2 class="calc-card__title">Тамбур-шлюз перед ЛК</h2>
+                                <span class="calc-norm-pill">АВОК: требуется проверка методики</span>
                             </div>
                             <div class="calc-grid-fields">
                                 <div class="calc-form-group">
@@ -506,8 +511,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div id="avok-pd7_a" class="avok-calc-content" style="display: none;">
                         <div class="calc-card">
                             <div class="calc-card__head">
-                                <h2 class="calc-card__title">Расчет ПД7-а: Зона ПБЗ (закрытая дверь)</h2>
-                                <span class="calc-norm-pill">АВОК / СП 7.13130</span>
+                                <h2 class="calc-card__title">Зона ПБЗ (закрытая дверь)</h2>
+                                <span class="calc-norm-pill">АВОК: требуется проверка методики</span>
                             </div>
                             <div class="calc-grid-fields">
                                 <div class="calc-form-group">
@@ -549,7 +554,8 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <span id="avok_res_sub2_val" class="calc-metric-row__value">— <span class="unit"></span></span>
                         </div>
 
-                        <button type="button" class="btn-calc-cta" onclick="window.calcEngineOpenProtocol()">
+                        <p id="avok_validation_status" role="status" style="margin: 16px 0; color: var(--text-light);">Численный расчет по АВОК ожидает проверки методики.</p>
+                        <button type="button" class="btn-calc-cta btn-disabled" disabled title="Формулы расчета ожидают проверки методики">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                             Сформировать протокол
                         </button>
@@ -575,13 +581,13 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                         <div class="calc-grid-fields calc-grid-fields--3cols">
                             <div class="calc-form-group">
                                 <label for="b3_system">Наименование системы <small>Обозначение в проекте</small></label>
-                                <input type="text" id="b3_system" class="calc-field-input calc-auto-recalc" placeholder="например, П11 или В11" value="П11">
+                                <input type="text" id="b3_system" class="calc-field-input calc-auto-recalc" placeholder="Маркировка системы по проекту">
                             </div>
 
                             <div class="calc-form-group">
                                 <label for="b3_area">Развёрнутая площадь воздуховодов ΣAi <small>Общая площадь поверхности</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_area" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="145.925" step="0.001" value="145.925">
+                                    <input type="number" id="b3_area" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Введите площадь" step="0.001">
                                     <span class="calc-field-unit">м²</span>
                                 </div>
                             </div>
@@ -589,15 +595,33 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b3_pressure">Статическое давление p <small>Измеренное в системе</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_pressure" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="116" step="1" value="116">
+                                    <input type="number" id="b3_pressure" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Введите давление" step="1">
                                     <span class="calc-field-unit">Па</span>
                                 </div>
+                            </div>
+                            <div class="calc-form-group">
+                                <label for="b3_pressure_direction">Направление давления</label>
+                                <select id="b3_pressure_direction" class="calc-field-select calc-auto-recalc">
+                                    <option value="">Выберите</option>
+                                    <option value="positive">Положительное</option>
+                                    <option value="negative">Отрицательное</option>
+                                </select>
+                            </div>
+                            <div class="calc-form-group">
+                                <label for="b3_target_class">Класс герметичности по проекту</label>
+                                <select id="b3_target_class" class="calc-field-select calc-auto-recalc">
+                                    <option value="">Выберите</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
                             </div>
 
                             <div class="calc-form-group">
                                 <label for="b3_Lvent">Расход у вентилятора Lвент.ф <small>Фактический замер после установки</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_Lvent" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="4111.2" step="0.1" value="4111.2">
+                                    <input type="number" id="b3_Lvent" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Введите измеренный расход" step="0.1">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -605,7 +629,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b3_Lgrille">Расход по решёткам Lр-ки.ф <small>Сумма расходов по оконечным устр.</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_Lgrille" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="4015.27" step="0.1" value="4015.27">
+                                    <input type="number" id="b3_Lgrille" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Введите сумму измерений" step="0.1">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -613,7 +637,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b3_Lproject">Проектный расход Lпр <small>Для официального отчёта</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_Lproject" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="3950" step="10" value="3950">
+                                    <input type="number" id="b3_Lproject" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Необязательно" step="10">
                                     <span class="calc-field-unit">м³/ч</span>
                                 </div>
                             </div>
@@ -621,7 +645,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b3_net_resistance">Проектное сопротивление <small>Давление сети по проекту</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_net_resistance" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="180" step="1" value="180">
+                                    <input type="number" id="b3_net_resistance" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Необязательно" step="1">
                                     <span class="calc-field-unit">Па</span>
                                 </div>
                             </div>
@@ -629,7 +653,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b3_P_fan_total">Полное давление вентилятора <small>Рп.вент при замере</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_P_fan_total" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="685" step="1" value="685">
+                                    <input type="number" id="b3_P_fan_total" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Необязательно" step="1">
                                     <span class="calc-field-unit">Па</span>
                                 </div>
                             </div>
@@ -637,7 +661,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                             <div class="calc-form-group">
                                 <label for="b3_frequency">Частота электродвигателя <small>На частотном преобразователе</small></label>
                                 <div class="calc-field-wrap">
-                                    <input type="number" id="b3_frequency" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="50" step="0.5" value="50">
+                                    <input type="number" id="b3_frequency" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" placeholder="Необязательно" step="0.5">
                                     <span class="calc-field-unit">Гц</span>
                                 </div>
                             </div>
@@ -681,7 +705,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                 + Добавить точку замера (решётку)
                             </button>
                             <span id="b3GrillesSumLabel" style="font-size: 13px; font-weight: 600; color: var(--dark);">
-                                Сумма по решёткам: <strong id="b3GrillesSumVal">0</strong> м³/ч
+                                Сумма по решёткам: <strong id="b3GrillesSumVal">—</strong> м³/ч
                             </span>
                         </div>
                     </div>
@@ -693,15 +717,13 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                                 Нормативные критерии классов герметичности (ГОСТ 34060-2017)
                             </h2>
-                            <span class="calc-norm-pill">Таблица 5 / СП 60.13330</span>
+                            <span class="calc-norm-pill">ГОСТ 34060-2017, п. 7.3–7.5</span>
                         </div>
                         <div class="calc-table-container">
                             <table class="calc-clean-table">
                                 <thead>
                                     <tr>
                                         <th>Класс</th>
-                                        <th>Предельное давление Ps+, Па</th>
-                                        <th>Предельное давление Ps-, Па</th>
                                         <th>Предельная удельная утечка f max, м³/(ч·м²)</th>
                                         <th>Область применения</th>
                                     </tr>
@@ -709,35 +731,28 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                 <tbody>
                                     <tr>
                                         <td><strong>А</strong></td>
-                                        <td>500</td>
-                                        <td>500</td>
                                         <td><code>0,097 · p<sup>0,65</sup></code></td>
                                         <td>Открытые воздуховоды в помещении, перепад ≤ 150 Па</td>
                                     </tr>
                                     <tr>
                                         <td><strong>В</strong></td>
-                                        <td>1000</td>
-                                        <td>750</td>
                                         <td><code>0,032 · p<sup>0,65</sup></code></td>
-                                        <td>Воздуховоды вне помещений или перепад > 150 Па (стандарт)</td>
+                                        <td>Воздуховоды вне вентилируемого пространства или перепад > 150 Па</td>
                                     </tr>
                                     <tr>
                                         <td><strong>С</strong></td>
-                                        <td>2000</td>
-                                        <td>750</td>
-                                        <td><code>0,0108 · p<sup>0,65</sup></code></td>
-                                        <td>Перепад давления > 1500 Па, чистые помещения</td>
+                                        <td><code>0,011 · p<sup>0,65</sup></code></td>
+                                        <td>Специальные системы по программе, разработанной согласно рабочей документации</td>
                                     </tr>
                                     <tr>
                                         <td><strong>D</strong></td>
-                                        <td>2000</td>
-                                        <td>750</td>
-                                        <td><code>0,0036 · p<sup>0,65</sup></code></td>
-                                        <td>Специальные технологические системы по спецТЗ</td>
+                                        <td><code>0,004 · p<sup>0,65</sup></code></td>
+                                        <td>Специальные системы по программе, разработанной согласно рабочей документации</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <p class="calc-norm-note">Дополнительно по п. 7.5 потери или подсосы не должны превышать 8 % расхода воздуха воздуховода.</p>
                     </div>
                 </div>
 
@@ -784,14 +799,14 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                         </div>
 
                         <div id="b3_class_banner" style="margin-top: 16px; padding: 14px; background: #ecfeff; border: 1px solid #a5f3fc; text-align: center;">
-                            <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; color: var(--primary-dark); letter-spacing: 0.05em; margin-bottom: 4px;">Фактический класс герметичности:</div>
-                            <div id="b3_res_Class" style="font-size: 20px; font-weight: 800; color: var(--dark);">Класс В</div>
-                            <div id="b3_res_StatusText" style="font-size: 12px; color: #047857; margin-top: 4px; font-weight: 500;">Утечки в пределах нормы ГОСТ 34060 (≤ 8%)</div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; color: var(--primary-dark); letter-spacing: 0.05em; margin-bottom: 4px;">Класс по величине удельной утечки:</div>
+                            <div id="b3_res_Class" style="font-size: 20px; font-weight: 800; color: var(--dark);">—</div>
+                            <div id="b3_res_StatusText" style="font-size: 12px; color: var(--text-light); margin-top: 4px; font-weight: 500;">Заполните исходные данные</div>
                         </div>
 
-                        <button type="button" class="btn-calc-cta" id="b3_btn_protocol" onclick="window.calcEngineOpenProtocol()" style="margin-top: 16px;">
+                        <button type="button" class="btn-calc-cta btn-disabled" id="b3_btn_protocol" onclick="window.calcEngineOpenProtocol()" disabled style="margin-top: 16px;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                            Сформировать официальный отчёт
+                            Сформировать расчётный протокол
                         </button>
                     </div>
                 </div>
@@ -805,7 +820,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
     <div id="calcProtocolModal" class="calc-modal-overlay">
         <div class="calc-modal-box">
             <div class="calc-modal-box__head">
-                <h3 class="calc-modal-box__title">Официальный протокол расчета и испытаний</h3>
+                <h3 class="calc-modal-box__title">Протокол расчета</h3>
                 <button type="button" class="calc-modal-box__close" onclick="window.calcEngineCloseProtocol()">&times;</button>
             </div>
 
@@ -818,35 +833,35 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                     <div class="calc-grid-fields calc-grid-fields--4cols">
                         <div class="calc-form-group">
                             <label><small>Шифр / № Расчёта</small></label>
-                            <input type="text" class="calc-field-input" value="109.005/П-02" oninput="window.calcEngineUpdateMeta('number', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="Номер расчета" oninput="window.calcEngineUpdateMeta('number', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Дата составления</small></label>
-                            <input type="date" class="calc-field-input" value="<?php echo date('Y-m-d'); ?>" oninput="window.calcEngineUpdateMeta('date', this.value)">
+                            <input type="date" id="calc_protocol_date" class="calc-field-input" value="<?php echo esc_attr(current_time('Y-m-d')); ?>" oninput="window.calcEngineUpdateMeta('date', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Наименование объекта</small></label>
-                            <input type="text" class="calc-field-input" value="Торговый центр «Академический»" oninput="window.calcEngineUpdateMeta('objectName', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="Название объекта" oninput="window.calcEngineUpdateMeta('objectName', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Адрес объекта</small></label>
-                            <input type="text" class="calc-field-input" value="СПб, Гражданский проспект, квартал 9А" oninput="window.calcEngineUpdateMeta('address', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="Адрес объекта" oninput="window.calcEngineUpdateMeta('address', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Наименование системы</small></label>
-                            <input type="text" class="calc-field-input" value="Система ДУ1" oninput="window.calcEngineUpdateMeta('systemName', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="Маркировка по проекту" oninput="window.calcEngineUpdateMeta('systemName', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Испытываемый участок</small></label>
-                            <input type="text" class="calc-field-input" value="Цокольный этаж, клапан №1" oninput="window.calcEngineUpdateMeta('section', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="Участок системы" oninput="window.calcEngineUpdateMeta('section', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Инженер-составитель</small></label>
-                            <input type="text" class="calc-field-input" value="Иванов И.И." oninput="window.calcEngineUpdateMeta('engineer', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="ФИО инженера" oninput="window.calcEngineUpdateMeta('engineer', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Руководитель лаборатории</small></label>
-                            <input type="text" class="calc-field-input" value="Петров П.П." oninput="window.calcEngineUpdateMeta('approver', this.value)">
+                            <input type="text" class="calc-field-input" placeholder="ФИО руководителя" oninput="window.calcEngineUpdateMeta('approver', this.value)">
                         </div>
                     </div>
                 </div>
