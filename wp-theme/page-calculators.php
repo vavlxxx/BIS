@@ -849,7 +849,7 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                         </div>
                         <div class="calc-form-group">
                             <label><small>Наименование системы</small></label>
-                            <input type="text" class="calc-field-input" placeholder="Маркировка по проекту" oninput="window.calcEngineUpdateMeta('systemName', this.value)">
+                            <input type="text" id="calc_protocol_system_name" class="calc-field-input" placeholder="Маркировка по проекту" oninput="window.calcEngineUpdateMeta('systemName', this.value)">
                         </div>
                         <div class="calc-form-group">
                             <label><small>Испытываемый участок</small></label>

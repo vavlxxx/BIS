@@ -11,12 +11,12 @@
       date: '',
       objectName: '',
       address: '',
-      systemName: '',
       section: '',
       instruments: '',
       engineer: '',
       approver: ''
     },
+    systemNames: { block1: null, block3: null },
     lastResults: {}
   };
 
@@ -88,6 +88,7 @@
 
     document.addEventListener('input', e => {
       if (e.target.matches('.calc-auto-recalc')) {
+        if (e.target.id === 'b3_system') state.systemNames.block3 = null;
         recalculateCurrent();
       }
     });
@@ -572,7 +573,9 @@
       ? state.lastResults.block1 : state.lastResults.block3;
     if (!result) throw new Error('Заполните исходные данные для расчета');
     const meta = { ...state.protocolMeta };
-    if (state.currentBlock === 'block3') meta.systemName = rawValue('b3_system') || meta.systemName;
+    const name = state.systemNames[state.currentBlock];
+    meta.systemName = name === null
+      ? (state.currentBlock === 'block3' ? rawValue('b3_system') : '') : name;
     return window.BISCalculatorCore.renderProtocol(result, meta);
   }
 
@@ -580,6 +583,12 @@
     recalculateCurrent();
     try {
       const html = generateProtocolHTML();
+      const systemNameInput = document.getElementById('calc_protocol_system_name');
+      if (systemNameInput) {
+        const name = state.systemNames[state.currentBlock];
+        systemNameInput.value = name === null
+          ? (state.currentBlock === 'block3' ? rawValue('b3_system') : '') : name;
+      }
       if (dom.protocolPrintArea) dom.protocolPrintArea.innerHTML = html;
       if (dom.protocolModal) dom.protocolModal.classList.add('active');
     } catch (error) {
@@ -592,7 +601,8 @@
   };
 
   window.calcEngineUpdateMeta = function (field, value) {
-    state.protocolMeta[field] = value;
+    if (field === 'systemName') state.systemNames[state.currentBlock] = value;
+    else state.protocolMeta[field] = value;
     try {
       if (dom.protocolPrintArea) dom.protocolPrintArea.innerHTML = generateProtocolHTML();
     } catch (error) {

@@ -138,6 +138,7 @@ test('website displays the current duct result and blocks stale protocols after 
   smokeNav.dataset.block = 'block1';
   const modal = element('calcProtocolModal');
   const report = element('protocolPrintArea');
+  const modalSystemName = element('calc_protocol_system_name');
   const button = element('b3_btn_protocol');
   element('b3_system', 'Реальная система');
   element('b3_area', '145.925');
@@ -173,6 +174,10 @@ test('website displays the current duct result and blocks stale protocols after 
   window.calcEngineOpenProtocol();
   assert.match(report.innerHTML, /95[,.]933/);
   assert.match(report.innerHTML, /Реальная система/);
+  assert.equal(modalSystemName.value, 'Реальная система');
+  window.calcEngineUpdateMeta('systemName', 'Маркировка инженера');
+  assert.match(report.innerHTML, /Маркировка инженера/);
+  assert.doesNotMatch(report.innerHTML, /Реальная система/);
 
   terminal.value = '3893.688';
   listeners.input({ target: { matches: () => true } });
@@ -180,6 +185,11 @@ test('website displays the current duct result and blocks stale protocols after 
   assert.equal(elements.get('b3_res_Class').textContent, 'Класс A');
   assert.match(report.innerHTML, /217[,.]512/);
   assert.match(report.innerHTML, /класса B не соответствует/);
+
+  elements.get('b3_system').value = 'Новая система';
+  listeners.input({ target: { id: 'b3_system', matches: () => true } });
+  window.calcEngineOpenProtocol();
+  assert.match(report.innerHTML, /Новая система/);
 
   window.calcEngineCloseProtocol();
   elements.get('b3_area').value = '';
