@@ -361,6 +361,12 @@
   padding-right: 48px;
 }
 
+.calc-field-input--multiline {
+  height: auto;
+  min-height: 6rem;
+  resize: vertical;
+}
+
 .calc-field-input--small {
   height: 32px !important;
   padding: 4px 8px !important;
@@ -1326,3 +1332,25 @@
 body.page-template-page-calculators .popular-services-section {
   display: none !important;
 }
+
+.calc-report {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.calc-report h1 { font-size: 1.5rem; margin: 0 0 20px; }
+.calc-report h2 { font-size: 1.1rem; margin: 24px 0 10px; }
+.calc-report table { width: 100%; border-collapse: collapse; }
+.calc-report th, .calc-report td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.calc-report th { width: 58%; font-weight: 500; }
+.calc-report-conclusion { border: 1px solid var(--border); padding: 12px; }
+
+.calc-norm-note { margin: 12px 18px 18px; color: var(--text-light); }
