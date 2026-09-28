@@ -32,6 +32,9 @@ jobs:
       - name: Test calculator calculations and protocols
         run: node --test tests/calculators.test.js
 
+      - name: Test calculator source-data forms
+        run: php tests/calculator-forms.php
+
       - name: Test service hierarchy
         run: php tests/service-hierarchy.php
 

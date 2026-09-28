@@ -361,6 +361,12 @@
   padding-right: 48px;
 }
 
+.calc-field-input--multiline {
+  height: auto;
+  min-height: 6rem;
+  resize: vertical;
+}
+
 .calc-field-input--small {
   height: 32px !important;
   padding: 4px 8px !important;

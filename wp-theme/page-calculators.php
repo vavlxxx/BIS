@@ -386,6 +386,83 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <span class="calc-field-unit">м</span>
                                     </div>
                                 </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_distance">От ДПУ до наиболее удалённого помещения</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_distance" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_receivers">Количество дымоприёмных устройств в коридоре</label>
+                                    <input type="number" id="du4_1_receivers" class="calc-field-input calc-auto-recalc" min="1" step="1">
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_shaft_width">Ширина шахты дымоудаления</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_shaft_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_shaft_height">Высота шахты дымоудаления</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_shaft_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_indoor_temp">Температура внутреннего воздуха</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_indoor_temp" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">°C</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_outdoor_temp">Температура наружного воздуха</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_outdoor_temp" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">°C</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_wind_speed">Скорость ветра</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_wind_speed" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.1">
+                                        <span class="calc-field-unit">м/с</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_upper_floor_elevation">Отметка верхнего обслуживаемого этажа</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_upper_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_exhaust_elevation">Отметка выбросного отверстия</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="du4_1_exhaust_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_building_type">Тип здания</label>
+                                    <select id="du4_1_building_type" class="calc-field-select calc-auto-recalc">
+                                        <option value="">Выберите</option>
+                                        <option value="residential">Жилое</option>
+                                        <option value="public">Общественное</option>
+                                    </select>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="du4_1_corridor_shape">Конфигурация коридора</label>
+                                    <select id="du4_1_corridor_shape" class="calc-field-select calc-auto-recalc">
+                                        <option value="">Выберите</option>
+                                        <option value="straight">Прямолинейный</option>
+                                        <option value="corner">Угловой</option>
+                                        <option value="ring">Кольцевой</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -424,6 +501,74 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <span class="calc-field-unit">м</span>
                                     </div>
                                 </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_stair_type">Тип лестничной клетки</label>
+                                    <select id="pd4_1_stair_type" class="calc-field-select calc-auto-recalc">
+                                        <option value="">Выберите</option>
+                                        <option value="N1">Н1</option>
+                                        <option value="N2">Н2</option>
+                                        <option value="N3">Н3</option>
+                                        <option value="N2+N3">Н2+Н3</option>
+                                    </select>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_has_airlock">Тамбур-шлюз перед ЛК</label>
+                                    <select id="pd4_1_has_airlock" class="calc-field-select calc-auto-recalc">
+                                        <option value="">Выберите</option>
+                                        <option value="yes">Есть</option>
+                                        <option value="no">Нет</option>
+                                    </select>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_outdoor_doors">Количество дверей из ЛК на улицу</label>
+                                    <input type="number" id="pd4_1_outdoor_doors" class="calc-field-input calc-auto-recalc" min="1" step="1">
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_outdoor_door_sizes">Размеры дверей из ЛК на улицу <small>Ширина × высота каждой двери, м; по одной двери в строке</small></label>
+                                    <textarea id="pd4_1_outdoor_door_sizes" class="calc-field-input calc-field-input--multiline calc-auto-recalc" rows="3" placeholder="0,9 × 2,1"></textarea>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_indoor_temp">Температура внутреннего воздуха</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_1_indoor_temp" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">°C</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_outdoor_temp">Температура наружного воздуха</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_1_outdoor_temp" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">°C</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_stair_width">Ширина лестничной клетки</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_1_stair_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_stair_length">Длина лестничной клетки</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_1_stair_length" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_lower_floor_elevation">Отметка пола нижнего этажа ЛК</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_1_lower_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_1_upper_floor_elevation">Отметка пола верхнего этажа ЛК</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_1_upper_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -443,6 +588,56 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                 <div class="calc-form-group">
                                     <label for="pd4_2_elevators">Количество шахт лифтов в группе</label>
                                     <input type="number" id="pd4_2_elevators" class="calc-field-input calc-auto-recalc" value="" placeholder="например, 1">
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_elevator_type">Тип лифта</label>
+                                    <select id="pd4_2_elevator_type" class="calc-field-select calc-auto-recalc">
+                                        <option value="">Выберите</option>
+                                        <option value="passenger">Пассажирский</option>
+                                        <option value="freight">Грузовой</option>
+                                    </select>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_portal_width">Ширина лифтового портала</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_2_portal_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_portal_height">Высота лифтового портала</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_2_portal_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_lower_floor_elevation">Отметка нижнего обслуживаемого этажа</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_2_lower_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_intake_elevation">Отметка забора воздуха вентилятором</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_2_intake_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_indoor_temp">Температура внутреннего воздуха</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_2_indoor_temp" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">°C</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_2_outdoor_temp">Температура наружного воздуха</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_2_outdoor_temp" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">°C</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -477,6 +672,48 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <span class="calc-field-unit">м/с</span>
                                     </div>
                                 </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_7_damper_width">Ширина клапана</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_7_damper_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_7_damper_height">Высота клапана</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_7_damper_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_7_shaft_width">Ширина шахты</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_7_shaft_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_7_shaft_height">Высота шахты</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_7_shaft_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_7_lower_floor_elevation">Отметка нижнего обслуживаемого этажа</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_7_lower_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_7_intake_elevation">Отметка забора воздуха вентилятором</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_7_intake_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -503,6 +740,48 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                         <span class="calc-field-unit">м</span>
                                     </div>
                                 </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_8_damper_width">Ширина клапана</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_8_damper_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_8_damper_height">Высота клапана</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_8_damper_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_8_shaft_width">Ширина шахты</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_8_shaft_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_8_shaft_height">Высота шахты</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_8_shaft_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_8_lower_floor_elevation">Отметка нижнего обслуживаемого этажа</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_8_lower_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd4_8_intake_elevation">Отметка забора воздуха вентилятором</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd4_8_intake_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -524,6 +803,62 @@ $banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
                                     <div class="calc-field-wrap">
                                         <input type="number" id="pd7_a_reqP" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" value="" placeholder="например, 20" step="5">
                                         <span class="calc-field-unit">Па</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_w">Ширина дверного проёма ПБЗ</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_w" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_h">Высота дверного проёма ПБЗ</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_h" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_damper_width">Ширина клапана</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_damper_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_damper_height">Высота клапана</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_damper_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_shaft_width">Ширина шахты</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_shaft_width" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_shaft_height">Высота шахты</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_shaft_height" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" min="0" step="0.01">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_lower_floor_elevation">Отметка нижнего обслуживаемого этажа</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_lower_floor_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
+                                    </div>
+                                </div>
+                                <div class="calc-form-group">
+                                    <label for="pd7_a_intake_elevation">Отметка забора воздуха вентилятором</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="pd7_a_intake_elevation" class="calc-field-input calc-field-input--with-unit calc-auto-recalc" step="0.1">
+                                        <span class="calc-field-unit">м</span>
                                     </div>
                                 </div>
                             </div>
