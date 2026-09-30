@@ -7,6 +7,7 @@ require_once get_template_directory() . '/inc/admin-tools.php';
 require_once get_template_directory() . '/inc/request-handlers.php';
 require_once get_template_directory() . '/inc/media.php';
 require_once get_template_directory() . '/inc/content-models.php';
+require_once get_template_directory() . '/inc/service-tag-import.php';
 require_once get_template_directory() . '/inc/content-overrides.php';
 $hierarchy_repair_file = get_template_directory() . '/inc/service-hierarchy-repair.php';
 if (is_file($hierarchy_repair_file)) {

@@ -38,6 +38,11 @@ jobs:
       - name: Test service hierarchy
         run: php tests/service-hierarchy.php
 
+      - name: Test bulk service tags
+        run: |
+          php tests/service-tags.php
+          node --test tests/service-tags.test.js
+
   deploy:
     needs: verify
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
