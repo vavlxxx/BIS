@@ -43,6 +43,9 @@ jobs:
           php tests/service-tags.php
           node --test tests/service-tags.test.js
 
+      - name: Test object carousel content and images
+        run: php tests/object-carousel.php
+
   deploy:
     needs: verify
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

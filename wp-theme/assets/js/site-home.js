@@ -658,146 +658,102 @@ function initEquipmentSlider() {
   });
 }
 
-// Слайдер для объектов (мобильный)
+// Object types carousel: native touch scrolling with responsive page navigation.
 function initObjectsSlider() {
-  const objectsGrid = document.querySelector('.objects-grid');
-  if (!objectsGrid) return;
+  const section = document.querySelector('.objects-section');
+  const track = section?.querySelector('.objects-grid');
+  const nav = section?.querySelector('.objects-slider-nav');
+  if (!track || !nav) return;
 
-  const objectCards = objectsGrid.querySelectorAll('.object-card');
-  const prevBtn = document.querySelector('.objects-slider-nav .slider-prev');
-  const nextBtn = document.querySelector('.objects-slider-nav .slider-next');
-  const dotsContainer = document.querySelector('.objects-slider-nav .slider-dots');
-
-  if (objectCards.length === 0) return;
-
-  const resetButton = (selector) => {
-    const btn = document.querySelector(selector);
-    if (btn) {
-      const clone = btn.cloneNode(true);
-      btn.parentNode.replaceChild(clone, btn);
-    }
-  };
-
-  const isMobile = window.innerWidth <= 768;
-
-  if (!isMobile) {
-    if (objectsGrid.dataset.sliderInitialized === 'true') {
-      if (objectsGrid._scrollHandler) {
-        objectsGrid.removeEventListener('scroll', objectsGrid._scrollHandler);
-        objectsGrid._scrollHandler = null;
-      }
-      if (objectsGrid._resizeObserver) {
-        objectsGrid._resizeObserver.disconnect();
-        objectsGrid._resizeObserver = null;
-      }
-      if (objectsGrid._scrollEndTimer) {
-        clearTimeout(objectsGrid._scrollEndTimer);
-        objectsGrid._scrollEndTimer = null;
-      }
-    }
-
-    objectsGrid.removeAttribute('data-slider-initialized');
-    if (dotsContainer) dotsContainer.innerHTML = '';
-    resetButton('.objects-slider-nav .slider-prev');
-    resetButton('.objects-slider-nav .slider-next');
+  if (track._objectsCarousel) {
+    track._objectsCarousel.refresh();
     return;
   }
 
-  if (objectsGrid.dataset.sliderInitialized === 'true') return;
+  const cards = Array.from(track.querySelectorAll('.object-card'));
+  if (!cards.length) return;
+  const prev = nav.querySelector('.slider-prev');
+  const next = nav.querySelector('.slider-next');
+  const dotsContainer = nav.querySelector('.slider-dots');
+  const status = nav.querySelector('.objects-slider-status');
+  let starts = [];
+  let currentPage = 0;
+  let visible = 1;
+  let dots = [];
+  let scrollTimer;
 
-  objectsGrid.dataset.sliderInitialized = 'true';
+  const targetLeft = (page) => {
+    const card = cards[starts[page]];
+    const left = card ? card.offsetLeft - cards[0].offsetLeft : 0;
+    return Math.max(0, Math.min(left, track.scrollWidth - track.clientWidth));
+  };
 
-  let currentSlide = 0;
-  const totalSlides = objectCards.length;
-
-  if (dotsContainer) {
-    dotsContainer.innerHTML = '';
-    objectCards.forEach((_, index) => {
-      const dot = document.createElement('div');
-      dot.className = 'slider-dot';
-      if (index === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => goToSlide(index));
-      dotsContainer.appendChild(dot);
+  const updateNavigation = () => {
+    prev.disabled = currentPage === 0;
+    next.disabled = currentPage === starts.length - 1;
+    dots.forEach((dot, index) => {
+      const active = index === currentPage;
+      dot.classList.toggle('active', active);
+      dot.setAttribute('aria-current', active ? 'true' : 'false');
     });
-  }
+    status.textContent = `Страница ${currentPage + 1} из ${starts.length}`;
+    nav.hidden = starts.length <= 1;
+  };
 
-  const dots = dotsContainer ? dotsContainer.querySelectorAll('.slider-dot') : [];
-
-  function updateNavigation() {
-    if (prevBtn) prevBtn.disabled = currentSlide === 0;
-    if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
-    dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
-  }
-
-  function getTargetLeft(index) {
-    const targetCard = objectCards[index];
-    const maxScrollLeft = objectsGrid.scrollWidth - objectsGrid.clientWidth;
-    const offset = targetCard.offsetLeft - (objectsGrid.clientWidth - targetCard.offsetWidth) / 2;
-    return Math.max(0, Math.min(Math.round(offset), maxScrollLeft));
-  }
-
-  function goToSlide(slideIndex, behavior = 'smooth') {
-    currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - 1));
-    if (objectsGrid.scrollTo) {
-      objectsGrid.scrollTo({ left: getTargetLeft(currentSlide), behavior });
-    } else {
-      objectsGrid.scrollLeft = getTargetLeft(currentSlide);
-    }
+  const goToPage = (page, behavior = 'smooth') => {
+    currentPage = Math.max(0, Math.min(page, starts.length - 1));
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    track.scrollTo({ left: targetLeft(currentPage), behavior: reducedMotion ? 'auto' : behavior });
     updateNavigation();
-  }
-
-  const goPrev = () => {
-    if (currentSlide > 0) goToSlide(currentSlide - 1);
   };
 
-  const goNext = () => {
-    if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
+  const refresh = () => {
+    const anchor = starts[currentPage] || 0;
+    visible = Math.max(1, parseInt(getComputedStyle(track).getPropertyValue('--objects-visible'), 10) || 1);
+    const maxStart = Math.max(0, cards.length - visible);
+    starts = Array.from({ length: Math.ceil(cards.length / visible) }, (_, index) => Math.min(index * visible, maxStart));
+    currentPage = Math.min(Math.floor(anchor / visible), starts.length - 1);
+    if (dots.length !== starts.length) {
+      dotsContainer.replaceChildren();
+      dots = starts.map((start, index) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'slider-dot';
+        dot.setAttribute('aria-label', `Показать объекты ${start + 1}–${Math.min(start + visible, cards.length)}`);
+        dot.setAttribute('aria-controls', track.id);
+        dot.addEventListener('click', () => goToPage(index));
+        dotsContainer.appendChild(dot);
+        return dot;
+      });
+    }
+    goToPage(currentPage, 'auto');
   };
 
-  if (prevBtn) prevBtn.addEventListener('click', goPrev);
-  if (nextBtn) nextBtn.addEventListener('click', goNext);
-
-  const getClosestSlideIndex = () => {
-    const center = objectsGrid.scrollLeft + objectsGrid.clientWidth / 2;
-    let closestIndex = 0;
-    let minDiff = Number.POSITIVE_INFINITY;
-
-    objectCards.forEach((card, index) => {
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const diff = Math.abs(cardCenter - center);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIndex = index;
-      }
-    });
-
-    return closestIndex;
-  };
-
-  const handleScroll = () => {
-    objectsGrid._scrollEndTimer = setTimeout(() => {
-      const newIndex = getClosestSlideIndex();
-      if (newIndex !== currentSlide) {
-        currentSlide = newIndex;
-        updateNavigation();
-      }
+  prev.addEventListener('click', () => goToPage(currentPage - 1));
+  next.addEventListener('click', () => goToPage(currentPage + 1));
+  track.addEventListener('keydown', (event) => {
+    const pages = { ArrowLeft: currentPage - 1, ArrowRight: currentPage + 1, Home: 0, End: starts.length - 1 };
+    if (Object.prototype.hasOwnProperty.call(pages, event.key)) {
+      event.preventDefault();
+      goToPage(pages[event.key]);
+    }
+  });
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      currentPage = starts.reduce((closest, _, index) =>
+        Math.abs(targetLeft(index) - track.scrollLeft) < Math.abs(targetLeft(closest) - track.scrollLeft) ? index : closest, 0);
+      updateNavigation();
     }, 120);
-  };
+  }, { passive: true });
 
-  objectsGrid.addEventListener('scroll', handleScroll, { passive: true });
-  objectsGrid._scrollHandler = handleScroll;
-
+  track._objectsCarousel = { refresh };
   if (window.ResizeObserver) {
-    const resizeObserver = new ResizeObserver(() => {
-      if (window.innerWidth <= 768) {
-        goToSlide(currentSlide, 'auto');
-      }
-    });
-    resizeObserver.observe(objectsGrid);
-    objectsGrid._resizeObserver = resizeObserver;
+    const observer = new ResizeObserver(refresh);
+    observer.observe(track);
+    track._objectsCarousel.observer = observer;
   }
-
-  goToSlide(0, 'auto');
+  refresh();
 }
 
 function initExperienceModal() {

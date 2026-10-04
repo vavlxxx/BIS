@@ -130,47 +130,65 @@ $has_hero_slider = !empty($hero_images);
 
 
 <!-- Objects Section -->
-<section class="objects-section" id="objects">
+<section class="objects-section" id="objects" aria-labelledby="objects-title">
   <div class="objects-container">
     <div class="section-header">
       <span class="section-badge">Типы объектов</span>
-      <h2 class="section-title">Объекты, на которых мы работаем</h2>
+      <h2 class="section-title" id="objects-title">Объекты, на которых мы работаем</h2>
       <p class="section-subtitle">Работаем с инженерными системами на разных типах площадок — от производственных комплексов до жилых объектов.</p>
     </div>
 
+    <?php
+    $object_types = array(
+        array('offices', 'Офисы и бизнес-центры', 'Рабочие пространства, деловые центры и офисные комплексы.'),
+        array('data-center', 'Центры обработки данных', 'Серверные помещения и площадки с непрерывной работой оборудования.'),
+        array('industrial', 'Производственные предприятия', 'Заводы, цеха и промышленные комплексы.'),
+        array('warehouses', 'Складские и логистические комплексы', 'Склады, распределительные центры и логистические терминалы.'),
+        array('retail', 'Торговые центры и магазины', 'Торговые галереи, магазины и объекты розничных сетей.'),
+        array('restaurants', 'Рестораны, кафе и бары', 'Обеденные залы, кухни и предприятия общественного питания.'),
+        array('hotels', 'Отели и санатории', 'Гостиницы, санатории, пансионаты и комплексы отдыха.'),
+        array('pools', 'СПА-комплексы и бассейны', 'Бассейны, водные зоны и оздоровительные пространства.'),
+        array('administrative', 'Административные здания', 'Общественные здания, учреждения и административные комплексы.'),
+        array('medical-education', 'Медицинские и образовательные учреждения', 'Клиники, больницы, школы и учебные корпуса.'),
+        array('sports', 'Спортивные комплексы', 'Фитнес-клубы, спортивные залы и развлекательные объекты.'),
+        array('residential', 'Жилые здания', 'Многоквартирные дома, апартаменты и частные резиденции.'),
+    );
+    $object_image_base = get_template_directory_uri() . '/assets/img/object-types/';
+    ?>
     <div class="objects-slider-wrapper">
-      <div class="objects-grid">
-        <div class="object-card">
-          <h3>Промышленные</h3>
-          <p>Производственные здания, склады и чистые помещения.</p>
-        </div>
-        <div class="object-card">
-          <h3>Административные</h3>
-          <p>Офисы, общественные пространства и коммерческие здания.</p>
-        </div>
-        <div class="object-card">
-          <h3>Жилые</h3>
-          <p>Многоквартирные дома, апартаменты и частные резиденции.</p>
-        </div>
+      <div class="objects-grid" id="objects-track" tabindex="0" role="group" aria-roledescription="карусель" aria-label="Типы объектов">
+        <?php foreach ($object_types as $index => $object_type) : ?>
+        <article class="object-card" role="group" aria-roledescription="слайд" aria-label="<?php echo esc_attr(($index + 1) . ' из ' . count($object_types)); ?>">
+          <img class="object-card__image"
+               src="<?php echo esc_url($object_image_base . $object_type[0] . '.webp'); ?>"
+               srcset="<?php echo esc_attr($object_image_base . $object_type[0] . '-480.webp'); ?> 480w, <?php echo esc_attr($object_image_base . $object_type[0] . '.webp'); ?> 960w"
+               sizes="(min-width: 1025px) 360px, (min-width: 641px) 45vw, 90vw"
+               width="960" height="540" alt="" loading="lazy" decoding="async">
+          <div class="object-card__body">
+            <h3><?php echo esc_html($object_type[1]); ?></h3>
+            <p><?php echo esc_html($object_type[2]); ?></p>
+          </div>
+        </article>
+        <?php endforeach; ?>
       </div>
 
-      <div class="objects-slider-nav">
-        <button class="slider-prev" aria-label="Предыдущий объект">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <div class="objects-slider-nav" hidden>
+        <button type="button" class="slider-prev" aria-label="Предыдущие объекты" aria-controls="objects-track">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <div class="slider-dots objects-slider-dots"></div>
-        <button class="slider-next" aria-label="Следующий объект">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <div class="slider-dots objects-slider-dots" aria-label="Страницы карусели"></div>
+        <button type="button" class="slider-next" aria-label="Следующие объекты" aria-controls="objects-track">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+        <span class="objects-slider-status" role="status" aria-live="polite"></span>
       </div>
     </div>
   </div>
 </section>
-
 
 
   <section class="services" id="services">

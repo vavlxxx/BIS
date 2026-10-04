@@ -1820,15 +1820,13 @@
   .services-slider-shell,
   .equipment-park,
   .experience-slider-shell,
-  .objects-slider-wrapper,
   .gratitude-slider-wrapper {
     position: relative;
   }
 
   .services-slider-nav.is-visible,
   .equipment-section.slider-enabled .equipment-slider-nav.is-visible,
-  .experience.slider-enabled .experience-slider-nav.is-visible,
-  .objects-slider-nav {
+  .experience.slider-enabled .experience-slider-nav.is-visible {
     position: absolute;
     inset: 0;
     display: block;
@@ -1845,8 +1843,6 @@
   .equipment-slider-nav .slider-next,
   .experience-slider-nav .slider-prev,
   .experience-slider-nav .slider-next,
-  .objects-slider-nav .slider-prev,
-  .objects-slider-nav .slider-next,
   .gratitude-nav {
     position: absolute;
     top: calc(50% - 38px);
@@ -1862,7 +1858,6 @@
   .services-slider-nav .slider-prev,
   .equipment-slider-nav .slider-prev,
   .experience-slider-nav .slider-prev,
-  .objects-slider-nav .slider-prev,
   .gratitude-prev {
     left: 10px;
   }
@@ -1870,15 +1865,13 @@
   .services-slider-nav .slider-next,
   .equipment-slider-nav .slider-next,
   .experience-slider-nav .slider-next,
-  .objects-slider-nav .slider-next,
   .gratitude-next {
     right: 10px;
   }
 
   .services-slider-nav .slider-dots,
   .equipment-slider-nav .slider-dots,
-  .experience-slider-nav .slider-dots,
-  .objects-slider-nav .slider-dots {
+  .experience-slider-nav .slider-dots {
     position: absolute;
     left: 50%;
     bottom: 4px;
@@ -3481,4 +3474,3 @@
 body.page-template-page-turnkey .popular-services-section {
   display: none !important;
 }
-

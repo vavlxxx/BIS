@@ -1,0 +1,67 @@
+{
+  "generator": "Built-in image_gen tool",
+  "purpose": "Illustrative object types for BIS homepage carousel. Generated scenes do not document completed projects.",
+  "format": "960×540 and 480×270 WebP, quality 82",
+  "assets": [
+    {
+      "asset": "wp-theme/assets/img/object-types/offices.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/offices-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: bright modern office and business center interior, open-plan workspaces with orderly desks and glass meeting rooms, large windows, discreet ceiling ventilation diffusers, realistic accessible working environment."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/data-center.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/data-center-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: modern data center interior, straight aisle between orderly black server racks with subtle small status lights and organized overhead cable trays, technically plausible cooling infrastructure, clean white and gray room. Neutral white lighting with restrained blue accents."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/industrial.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/industrial-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape website carousel photograph for an engineering ventilation company, 16:9 composition. Primary request: realistic modern industrial production facility interior, a spacious clean factory workshop with steel roof trusses, neatly engineered galvanized ventilation ductwork and production equipment, no people. Style: professional architectural photography, realistic materials and technical construction, restrained cool neutral colors, natural daylight, level camera, wide-angle view without distortion. Full-bleed photograph only. No text, labels, logos, watermarks, collage, frame, or UI."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/warehouses.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/warehouses-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: spacious modern warehouse and logistics center interior, organized high racks with cardboard boxes on pallets along a straight aisle, steel roof structure and discreet ceiling ventilation, polished concrete floor, believable practical industrial setting."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/retail.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/retail-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: modern shopping center interior with a spacious bright atrium, realistic storefront glass without any signage, clean escalator and broad walkways, discreet ceiling ventilation, balanced architectural lines and daylight."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/restaurants.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/restaurants-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: modern restaurant and cafe interior, comfortable orderly dining tables and chairs, light wood and neutral upholstery, glass windows and discreet ceiling ventilation, realistic contemporary mid-range establishment, soft warm daylight."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/hotels.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/hotels-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: comfortable contemporary hotel room with a neatly made double bed, practical bedside lighting, light neutral upholstery, large window and discreet linear ceiling ventilation, realistic hospitality interior, calm daylight."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/pools.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/pools-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: bright modern indoor swimming pool and spa interior, clear blue water, realistic tiled pool edges and glazed facade, high ceiling with technically plausible ventilation grilles, tidy calm wellness setting, soft daylight."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/administrative.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/administrative-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: exterior of a modern civic administrative building, mid-rise institutional architecture with organized facade, large glazing and light stone, broad main entrance and modest landscaping, plausible public-service setting, no signs or lettering, soft daylight."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/medical-education.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/medical-education-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: clean contemporary medical clinic examination room, practical examination couch, modest medical cabinetry and stainless steel washbasin, bright window and discreet ceiling ventilation diffusers, realistic accessible healthcare environment, balanced white and pale blue materials, no instruments with unrealistic details."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/sports.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/sports-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: bright modern fitness and sports club interior, orderly realistic treadmills near large windows and a well-spaced exercise area with free-weight racks, exposed ceiling with neat ventilation ducts, practical rubber flooring, believable sports facility."
+    },
+    {
+      "asset": "wp-theme/assets/img/object-types/residential.webp",
+      "smallAsset": "wp-theme/assets/img/object-types/residential-480.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:9 website carousel photograph for an engineering ventilation company. Style: professional architectural photography, photorealistic everyday material textures, level wide-angle camera without distortion, natural lighting, restrained cool neutral colors. One full-bleed photograph, no people, text, logos, watermark, collage, frames or UI. Primary request: exterior of a modern residential apartment complex, mid-rise buildings with light stone and brick facade, landscaped courtyard, realistic windows and balconies, contemporary Russian urban context, soft morning daylight, no signage, no cars dominating foreground."
+    }
+  ]
+}
