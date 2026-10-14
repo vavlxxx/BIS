@@ -3506,13 +3506,13 @@ body.page-template-page-turnkey .popular-services-section {
 .bis-messenger-links .btn { min-width: 0; padding: .7rem 1.2rem; }
 .bis-messenger-links img { width: 120px; height: 120px; }
 .exit-intent-modal { max-height: calc(100dvh - 32px); overflow-y: auto; }
-.bis-service-message { position: fixed; z-index: 1000; right: 1.5rem; top: 7rem; width: min(420px,calc(100vw - 32px)); padding: 2rem; background: var(--bg); color: var(--text); border-left: 4px solid var(--primary); box-shadow: 0 12px 32px #0003; transform: translateX(calc(100% + 2rem)); transition: transform .4s ease; }
+.bis-service-message { position: fixed; z-index: 1000; right: 1.5rem; top: 7rem; width: min(420px,calc(100vw - 32px)); padding: 2rem; background: var(--bg); color: var(--text); border-left: 4px solid var(--primary); box-shadow: 0 12px 32px color-mix(in srgb, var(--dark) 20%, transparent); transform: translateX(calc(100% + 2rem)); transition: transform .4s ease; }
 .bis-service-message.is-visible { transform: translateX(0); }
 .bis-service-message > button:first-child { position: absolute; right: .7rem; top: .5rem; border: 0; background: transparent; color: var(--text); font-size: 1.8rem; cursor: pointer; }
 .bis-service-message p { line-height: 1.65; margin-bottom: 1rem; overflow-wrap: anywhere; }
 .bis-service-message-visible .floating-estimate-wrapper { visibility: hidden; }
 .bis-photo-dialog { border: 0; padding: 2.5rem 1rem 1rem; background: var(--dark); max-width: 95vw; max-height: 95dvh; }
-.bis-photo-dialog::backdrop { background: #000b; }
+.bis-photo-dialog::backdrop { background: color-mix(in srgb, var(--dark) 70%, transparent); }
 .bis-photo-dialog img { max-height: 80dvh; max-width: 90vw; object-fit: contain; }
 .bis-photo-dialog button { position: absolute; top: .3rem; right: 1rem; color: var(--bg); background: transparent; border: 0; font-size: 2rem; cursor: pointer; }
 .form-consent a { color: var(--primary-dark); text-decoration: underline; }
