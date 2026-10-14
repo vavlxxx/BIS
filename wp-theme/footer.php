@@ -89,17 +89,17 @@
         <?php endif; ?>
         <p><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></p>
         <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></p>
-        <p><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></p>
+        <p><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></p><p><a href="<?php echo esc_url(home_url('/gallery/')); ?>">Фото / Видео</a></p>
         <p><a href="<?php echo esc_url(home_url('/vacancies/')); ?>">Вакансии</a></p>
         <p><a href="#contact">Контакты</a></p>
-        <p><a href="#faq">F.A.Q</a></p>
+        <p><a href="<?php echo esc_url(home_url('/faq/')); ?>">F.A.Q</a></p>
       </div>
       <div class="footer-section">
         <h3>Контакты</h3>
         <p style="display: flex; align-items: center; gap: 12px;">
           <a class="footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a>
         </p>
-        <p><a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a></p>
+        <p><a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br><button type="button" class="callback-btn bis-callback-link">Заказать обратный звонок</button></p>
         <p><a href="mailto:office@bis-rf.ru">office@bis-rf.ru</a></p>
         <p style="display: flex; align-items: center; gap: 12px; margin-top: 20px;">
           <a href="https://t.me/+79264380770" target="_blank" rel="noopener" aria-label="Telegram" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; transition: opacity 0.3s ease;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
@@ -132,9 +132,45 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; <?php echo date('Y'); ?> Баланс Инженерных Систем. Все права защищены. | <a href="#privacy" class="privacy-link">Политика конфиденциальности</a></p>
+      <p>&copy; <?php echo date('Y'); ?> Баланс Инженерных Систем. Все права защищены. | <a href="<?php echo esc_url(bis_privacy_url()); ?>" class="privacy-link">Политика конфиденциальности</a></p>
     </div>
   </footer>
+
+  <!-- Callback Modal -->
+<div class="popup-overlay" id="callbackOverlay">
+  <div class="popup-form">
+    <button type="button" class="popup-close" id="callbackClose" aria-label="Закрыть форму обратного звонка">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <h2>Обратный звонок</h2>
+    <p>Оставьте ФИО и телефон — мы свяжемся с вами.</p>
+
+    <form class="contact-form" id="callbackForm">
+      <div class="form-group">
+        <label for="callbackName">ФИО</label>
+        <input type="text" id="callbackName" name="name" required placeholder="Ваше имя" autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label for="callbackPhone">Телефон</label>
+        <input type="tel" id="callbackPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
+      </div>
+
+      <div class="form-group">
+        <label for="callbackMessage">Сообщение (необязательно)</label>
+        <textarea id="callbackMessage" name="message" placeholder="Кратко опишите ваш вопрос"></textarea>
+      </div>
+
+      <?php echo bis_render_captcha(); ?>
+      <button type="submit" class="btn btn-primary">Отправить</button>
+      <?php bis_render_form_consent(); ?>
+    </form>
+  </div>
+</div>
+
 
   <?php get_template_part('estimate-modal'); ?>
   <?php get_template_part('vacancy-modal'); ?>
@@ -150,20 +186,23 @@
         </svg>
       </button>
       <div class="exit-intent-modal__tag">Специальное предложение</div>
-      <h2 class="exit-intent-modal__title">Уже уходите не получив предложение?</h2>
-      <p class="exit-intent-modal__text">Просто оставьте телефон.</p>
+      <h2 class="exit-intent-modal__title">Сделаем расчет сметы и проведем обследование.</h2>
+      <p class="exit-intent-modal__text">Выезд на осмотр объекта для составления коммерческого предложения полностью бесплатный!</p>
+      <?php get_template_part('template-parts/messenger-links'); ?>
       <form class="contact-form exit-intent-modal__form" id="exitIntentForm">
         <div class="form-group">
           <label for="exitIntentPhone">Телефон</label>
           <input type="tel" id="exitIntentPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
         </div>
-        <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
+        <?php echo bis_render_captcha(); ?>
         <button type="submit" class="btn btn-primary">Отправить</button>
+        <?php bis_render_form_consent(); ?>
       </form>
     </div>
   </div>
   <?php wp_footer(); ?>
-  <div class="floating-estimate-wrapper">
+  <?php bis_render_service_message(); ?>
+  <div class="floating-estimate-wrapper visible">
     <div class="floating-socials-panel" data-floating-social-panel>
       <div class="floating-socials-panel__head">
         <span class="floating-socials-panel__title">Свяжитесь с нами</span>
@@ -174,7 +213,7 @@
       <p class="floating-socials-panel__text">Выберите удобный способ связи, и мы быстро ответим.</p>
       <div class="floating-socials-panel__contacts">
         <a class="floating-socials-panel__contact footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a>
-        <a class="floating-socials-panel__contact footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a>
+        <a class="floating-socials-panel__contact footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br><button type="button" class="callback-btn bis-callback-link">Заказать обратный звонок</button>
         <a class="floating-socials-panel__contact" href="mailto:office@bis-rf.ru">office@bis-rf.ru</a>
       </div>
       <div class="floating-socials">

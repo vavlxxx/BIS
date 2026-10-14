@@ -174,6 +174,7 @@ function clearHCaptchaError(form) {
 }
 
 function validateHCaptcha(form) {
+  if (window.bisSiteConfig?.captchaEnabled === false) return true;
   if (!form) return true;
 
   const widgets = getHCaptchaContainers(form);
@@ -219,7 +220,7 @@ function formatRussianPhone(value) {
     digits = digits.slice(1);
   }
 
-  digits = digits.substring(0, 10);
+  if (digits.length > 10) return `+7 ${digits}`;
 
   const parts = {
     area: digits.substring(0, 3),
@@ -1094,11 +1095,13 @@ function validateFormFields(form) {
     }
   });
 
+  if (!isValid) form.querySelector('.error')?.focus();
   return isValid;
 }
 
 function showError(field, message) {
   field.classList.add('error');
+  field.setAttribute('aria-invalid', 'true');
   field.style.borderColor = '#ef4444';
 
   let errorElement = field.parentElement.querySelector('.error-message');
@@ -1117,6 +1120,7 @@ function showError(field, message) {
 // Очистить ошибку
 function clearError(field) {
   field.classList.remove('error');
+  field.removeAttribute('aria-invalid');
   field.style.borderColor = '';
 
   const errorElement = field.parentElement.querySelector('.error-message');

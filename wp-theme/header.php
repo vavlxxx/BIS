@@ -13,7 +13,7 @@
   <title><?php echo esc_html($meta_title); ?></title>
 
   <?php wp_head(); ?>
-  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <?php if (bis_captcha_enabled()) : ?><script src="https://js.hcaptcha.com/1/api.js" async defer></script><?php endif; ?>
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -129,14 +129,14 @@
         <?php if (is_user_logged_in()) : ?>
           <li><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></li>
         <?php endif; ?>
-        <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li>
+        <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li><li><a href="<?php echo esc_url(home_url('/gallery/')); ?>">Фото / Видео</a></li>
         <li><a href="<?php echo esc_url(home_url('/vacancies/')); ?>">Вакансии</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
         <li><a href="<?php echo esc_url(home_url('/#services'));?>">Специализация</a></li>
         <li><a href="<?php echo esc_url(home_url('/#equipment'));?>">Оборудование</a></li>
         <li><a href="<?php echo esc_url(home_url('/#contact'));?>">Контакты</a></li>
         <li><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></li>
-        <li><a href="<?php echo esc_url(home_url('/#faq'));?>">F.A.Q</a></li>
+        <li><a href="<?php echo esc_url(home_url('/faq/'));?>">F.A.Q</a></li>
       </ul>
       <div class="drawer-footer">
         <p class="drawer-note">Инжиниринговая команда полного цикла — проектируем, запускаем, сопровождаем.</p>

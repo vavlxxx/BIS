@@ -342,7 +342,7 @@ function bis_register_news_meta() {
 add_action('init', 'bis_register_news_meta');
 
 function bis_register_seo_meta() {
-    foreach (array('bis_project', 'bis_service', 'bis_news', 'page') as $post_type) {
+    foreach (array('bis_project', 'bis_service', 'bis_news', 'page', 'popular_page') as $post_type) {
         register_post_meta($post_type, 'bis_seo_title', array(
             'single'            => true,
             'type'              => 'string',
@@ -353,6 +353,7 @@ function bis_register_seo_meta() {
             },
         ));
 
+        register_post_meta($post_type, 'bis_seo_keywords', array('single'=>true, 'type'=>'string', 'show_in_rest'=>true, 'sanitize_callback'=>'sanitize_textarea_field', 'auth_callback'=>function() { return current_user_can('edit_posts'); }));
         register_post_meta($post_type, 'bis_seo_description', array(
             'single'            => true,
             'type'              => 'string',
@@ -791,7 +792,7 @@ function bis_add_service_meta_boxes() {
 add_action('add_meta_boxes', 'bis_add_service_meta_boxes');
 
 function bis_add_seo_meta_boxes() {
-    foreach (array('bis_project', 'bis_service', 'bis_news', 'page') as $post_type) {
+    foreach (array('bis_project', 'bis_service', 'bis_news', 'page', 'popular_page') as $post_type) {
         add_meta_box(
             'bis_seo_meta',
             'SEO-метатеги',
@@ -881,6 +882,7 @@ function bis_seo_metabox($post) {
 
     $seo_title = get_post_meta($post->ID, 'bis_seo_title', true);
     $seo_description = get_post_meta($post->ID, 'bis_seo_description', true);
+    $seo_keywords = get_post_meta($post->ID, 'bis_seo_keywords', true);
     ?>
     <div class="bis-project-box">
         <div class="bis-project-box__header">
@@ -898,6 +900,7 @@ function bis_seo_metabox($post) {
             <div class="bis-field">
                 <label for="bis_seo_description">Meta «description»</label>
                 <textarea id="bis_seo_description" name="bis_seo_description" rows="3" placeholder="Описание для поисковых систем"><?php echo esc_textarea($seo_description); ?></textarea>
+                <label for="bis_seo_keywords">Meta «keywords»</label><textarea id="bis_seo_keywords" name="bis_seo_keywords" rows="3" placeholder="Ключевые слова через запятую; если пусто — используются метки"><?php echo esc_textarea($seo_keywords); ?></textarea>
             </div>
         </div>
     </div>
@@ -1693,7 +1696,7 @@ function bis_save_seo_meta($post_id) {
         return;
     }
 
-    if (!in_array(get_post_type($post_id), array('bis_project', 'bis_service', 'bis_news', 'page'), true) || !current_user_can('edit_post', $post_id)) {
+    if (!in_array(get_post_type($post_id), array('bis_project', 'bis_service', 'bis_news', 'page', 'popular_page'), true) || !current_user_can('edit_post', $post_id)) {
         return;
     }
 
@@ -1702,6 +1705,7 @@ function bis_save_seo_meta($post_id) {
 
     update_post_meta($post_id, 'bis_seo_title', $seo_title);
     update_post_meta($post_id, 'bis_seo_description', $seo_description);
+    if (isset($_POST['bis_seo_keywords'])) update_post_meta($post_id, 'bis_seo_keywords', sanitize_textarea_field(wp_unslash($_POST['bis_seo_keywords'])));
 }
 add_action('save_post', 'bis_save_seo_meta');
 

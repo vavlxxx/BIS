@@ -55,4 +55,5 @@ $category_link = (!empty($terms) && !is_wp_error($terms)) ? get_term_link($terms
 </main>
 
 <?php
+bis_render_keywords(get_queried_object_id());
 get_footer();

@@ -1,5 +1,9 @@
 <?php
 
+require_once get_template_directory() . '/inc/client-settings.php';
+require_once get_template_directory() . '/inc/faq.php';
+require_once get_template_directory() . '/inc/gallery.php';
+require_once get_template_directory() . '/inc/gallery-s3.php';
 require_once get_template_directory() . '/inc/performance.php';
 require_once get_template_directory() . '/inc/query-helpers.php';
 require_once get_template_directory() . '/inc/content-helpers.php';
@@ -43,7 +47,8 @@ function bis_theme_scripts() {
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'locationCookieName' => 'bis_user_location',
         'locationFallback' => bis_get_location_placeholder(),
-        'hcaptchaSiteKey' => bis_get_hcaptcha_settings()['site_key'],
+        'hcaptchaSiteKey' => bis_captcha_enabled() ? bis_get_hcaptcha_settings()['site_key'] : '',
+        'captchaEnabled' => bis_captcha_enabled(),
     ));
 
     wp_enqueue_script('bis-site-navigation', get_template_directory_uri() . '/assets/js/site-navigation.js', array(), bis_get_asset_version('assets/js/site-navigation.js'), true);
@@ -58,6 +63,7 @@ function bis_theme_scripts() {
         wp_enqueue_script('bis-site-calculators', get_template_directory_uri() . '/assets/js/site-calculators.js', array('bis-calculator-core'), bis_get_asset_version('assets/js/site-calculators.js'), true);
         $app_deps[] = 'bis-site-calculators';
     }
+    wp_enqueue_script('bis-client-features', get_template_directory_uri() . '/assets/js/client-features.js', array('bis-site-forms'), bis_get_asset_version('assets/js/client-features.js'), true);
     wp_enqueue_script('bis-site-app', get_template_directory_uri() . '/assets/js/site-app.js', $app_deps, bis_get_asset_version('assets/js/site-app.js'), true);
 
     // Enqueue Slider Script
@@ -210,7 +216,7 @@ function bis_theme_setup() {
 add_action('after_setup_theme', 'bis_theme_setup');
 
 function bis_get_seo_enabled_post_types() {
-    return array('bis_project', 'bis_service', 'bis_news', 'page');
+    return array('bis_project', 'bis_service', 'bis_news', 'page', 'popular_page');
 }
 
 function bis_get_post_seo_title($post_id) {

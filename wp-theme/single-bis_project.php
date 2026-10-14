@@ -169,18 +169,18 @@ get_header();
                         </div>
 
                         <div class="project-consultation__field">
-                            <label for="projectCompany">Компания *</label>
-                            <input type="text" id="projectCompany" name="company" required placeholder="Название компании" autocomplete="organization">
+                            <label for="projectCompany">Компания</label>
+                            <input type="text" id="projectCompany" name="company" placeholder="Название компании" autocomplete="organization">
                         </div>
 
                         <div class="project-consultation__field">
-                            <label for="projectPosition">Должность *</label>
-                            <input type="text" id="projectPosition" name="position" required placeholder="Ваша должность" autocomplete="organization-title">
+                            <label for="projectPosition">Должность</label>
+                            <input type="text" id="projectPosition" name="position" placeholder="Ваша должность" autocomplete="organization-title">
                         </div>
 
                         <div class="project-consultation__field">
-                            <label for="projectTopic">Тема вопроса *</label>
-                            <select id="projectTopic" name="topic" required>
+                            <label for="projectTopic">Тема вопроса</label>
+                            <select id="projectTopic" name="topic">
                                 <option value="">Выберите тему</option>
                                 <option value="Пусконаладка систем">Пусконаладка систем</option>
                                 <option value="Техническое обслуживание">Техническое обслуживание</option>
@@ -197,16 +197,17 @@ get_header();
                         <div class="project-consultation__field full project-consultation__consent">
                             <label>
                                 <input type="checkbox" name="privacy" required>
-                                Я соглашаюсь с обработкой персональных данных, в соответствии с Политикой конфиденциальности.
+                                Я соглашаюсь с обработкой персональных данных, в соответствии с <a href="<?php echo esc_url(bis_privacy_url()); ?>" target="_blank" rel="noopener">Политикой конфиденциальности</a>.
                             </label>
                             <label>
                                 <input type="checkbox" name="marketing">
                                 Я соглашаюсь на получение информационных рассылок и другой коммуникации от БИС.
                             </label>
                         </div>
-                        <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
+                        <?php echo bis_render_captcha(); ?>
                         <div class="project-consultation__actions full">
                             <button type="submit" class="btn btn-primary">Отправить</button>
+                            <?php bis_render_form_consent(); ?>
                         </div>
                     </form>
                 </div>
@@ -222,5 +223,6 @@ get_header();
 </main>
 
 <?php
+bis_render_keywords(get_queried_object_id());
 get_footer();
 ?>

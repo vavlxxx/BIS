@@ -47,13 +47,13 @@ $has_hero_slider = !empty($hero_images);
         <li><a href="<?php echo esc_url(home_url('/about/')); ?>">О нас</a></li>
         <li><a href="<?php echo esc_url(home_url('/services/')); ?>">Услуги</a></li>
         <li><a href="<?php echo esc_url(home_url('/projects/')); ?>">Наши проекты</a></li>
-        <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li>
+        <li><a href="<?php echo esc_url(home_url('/media/')); ?>">Медиа</a></li><li><a href="<?php echo esc_url(home_url('/gallery/')); ?>">Фото / Видео</a></li>
         <li><a href="<?php echo esc_url(home_url('/vacancies/')); ?>">Вакансии</a></li>
         <?php if (is_user_logged_in()) : ?>
           <li><a href="<?php echo esc_url(home_url('/calculators/')); ?>">Калькуляторы</a></li>
         <?php endif; ?>
         <li><a href="#contact">Контакты</a></li>
-        <li><a href="#faq">F.A.Q</a></li>
+        <li><a href="<?php echo esc_url(home_url('/faq/')); ?>">F.A.Q</a></li>
       </ul>
     </div>
   </section>
@@ -640,39 +640,6 @@ endif;
   </div>
 </div>
 
-<!-- Callback Modal -->
-<div class="popup-overlay" id="callbackOverlay">
-  <div class="popup-form">
-    <button class="popup-close" id="callbackClose">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-
-    <h2>Обратный звонок</h2>
-    <p>Оставьте свои контакты и мы перезвоним вам в течение 15 минут</p>
-
-    <form class="contact-form" id="callbackForm">
-      <div class="form-group">
-        <label for="callbackName">Имя</label>
-        <input type="text" id="callbackName" name="name" required placeholder="Ваше имя" autocomplete="name">
-      </div>
-
-      <div class="form-group">
-        <label for="callbackPhone">Телефон</label>
-        <input type="tel" id="callbackPhone" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
-      </div>
-
-      <div class="form-group">
-        <label for="callbackMessage">Сообщение (необязательно)</label>
-        <textarea id="callbackMessage" name="message" placeholder="Кратко опишите ваш вопрос"></textarea>
-      </div>
-
-      <button type="submit" class="btn btn-primary">Позвоните мне</button>
-    </form>
-  </div>
-</div>
-
 <!-- Objects Map Section -->
 <?php
 $map_projects = new WP_Query(array(
@@ -1014,7 +981,7 @@ $categories = get_terms(array(
             <div class="contact-item-content">
               <h4>Телефон</h4>
               <a class="footer-phone"  href="tel:+79264380770">+7 (926) 438-07-70</a><br>
-              <a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a>
+              <a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br><button type="button" class="callback-btn bis-callback-link">Заказать обратный звонок</button>
             </div>
           </div>
           <div class="contact-item">
@@ -1051,12 +1018,13 @@ $categories = get_terms(array(
             <label for="message">Сообщение</label>
             <textarea id="message" name="message" required placeholder="Кратко опишите ваш вопрос" autocomplete="off"></textarea>
           </div>
-          <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
+          <?php echo bis_render_captcha(); ?>
           <button type="submit" class="btn btn-primary" style="
     width: 100%;
     display: flex;
     min-width: 100%;
 ">Отправить заявку</button>
+          <?php bis_render_form_consent(); ?>
         </form>
       </div>
     </div>
@@ -1098,122 +1066,13 @@ $categories = get_terms(array(
     </div>
   </section>
 
+<section class="bis-home-gallery" id="gallery"><div class="section-header"><span class="section-badge">Фото / Видео</span><h2 class="section-title">Галерея</h2></div><div class="mw-1400px"><?php bis_render_gallery(6); ?><div class="faq-cta"><a class="btn btn-outline" href="<?php echo esc_url(home_url('/gallery/')); ?>">Вся галерея</a></div></div></section>
+
 <!-- FAQ Section -->
 <section class="faq-section" id="faq">
-  <div class="section-header">
-    <span class="section-badge">FAQ</span>
-    <h2 class="section-title">Часто задаваемые вопросы</h2>
-    <p class="section-subtitle">Ответы на самые популярные вопросы о пусконаладочных работах</p>
-  </div>
-
-  <div class="faq-container">
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Как расшифровывается аббревиатура ПНР?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <p>Пусконаладочные работы</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Пусконаладочные работы - что это?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <p>Это комплекс мероприятий по регулировке инженерных систем с целью фактического достижения проектных показателей</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Зачем нужны пусконаладочные работы?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <p>Для поддержания комфортного пребывания человека в помещениях с искусственным микроклиматом</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Сколько стоят пусконаладочные работы?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <p>7 – 10% от стоимости СМР</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Что включено в стоимость пусконаладочных работ?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <ul>
-          <li>Составление и согласование программы наладки</li>
-          <li>Проверка фактического исполнения систем проектной документации</li>
-          <li>Оформление ведомости соответствия с фотоотчетом</li>
-          <li>Проведение индивидуальных испытаний оборудования</li>
-          <li>Выполнение комплекса наладочных работ</li>
-          <li>Разработка и оформление паспортов и протоколов</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Зачем делать испытания воздуховодов на герметичность?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <p>Мы рекомендуем обязательно делать испытания воздуховодов на герметичность до возведения строительных конструкций. Это существенно сэкономит ваши нервы, деньги и время при сдаче объекта и дальнейшей эксплуатации, проверено опытом.</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>Какую информацию необходимо предоставить для расчета стоимости?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <p><strong>При наличии необходимо предоставить:</strong></p>
-        <ul>
-          <li>Аксонометрические схемы</li>
-          <li>Поэтажные планы с разводкой систем</li>
-          <li>Высоту помещений</li>
-          <li>Разрешенное время проведения работ (день или ночь)</li>
-          <li>Срок производства работ (начало-окончание)</li>
-        </ul>
-        <p>По вашему желанию данную информацию мы можем собрать самостоятельно при осмотре объекта.</p>
-        <p>Тогда от вас нам будет достаточно получить только адрес объекта и контакт ответственного инженера.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question">
-        <h3>В соответствии с какими нормативными документами выполняются работы?</h3>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-answer">
-        <ul class="pnr-standards">
-          <li>ГОСТ 34060-2017 (испытание и наладка систем вентиляции и кондиционирования воздуха)</li>
-          <li>СП 60.13330.2016 «Отопление, вентиляция и кондиционирование»</li>
-          <li>СП 73.13330.2016 «Внутренние санитарно-технические системы»</li>
-          <li>СП 7.13130.2016 «Требования пожарной безопасности»</li>
-          <li>ГОСТ Р 53300-2009 «Противодымная защита зданий»</li>
-          <li>ГОСТ 12.3.018-79 ССБТ</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="faq-cta">
-    <p>Остались вопросы?</p>
-    <a href="#contact" class="btn btn-primary">Получить консультацию</a>
-  </div>
+  <div class="section-header"><span class="section-badge">FAQ</span><h2 class="section-title">Часто задаваемые вопросы</h2><p class="section-subtitle">Ответы на самые популярные вопросы о пусконаладочных работах</p></div>
+  <?php bis_render_faq_items(bis_faq_items(8)); ?>
+  <div class="faq-cta"><a class="btn btn-outline" href="<?php echo esc_url(home_url('/faq/')); ?>">Все вопросы</a><p>Остались вопросы?</p><button type="button" class="btn btn-primary callback-btn">Получить консультацию</button></div>
 </section>
 
 <?php get_footer(); ?>

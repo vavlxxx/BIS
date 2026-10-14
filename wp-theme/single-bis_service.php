@@ -95,15 +95,7 @@ get_header();
                 </div>
             </section>
 
-            <?php if (is_array($service_tags) && !empty($service_tags) && !is_wp_error($service_tags)) : ?>
-                <section class="service-tags-section">
-                    <div class="service-tags mw-1400px" aria-label="Теги услуги">
-                        <?php foreach ($service_tags as $tag) : ?>
-                            <span class="service-tag"><?php echo esc_html($tag->name); ?></span>
-                        <?php endforeach; ?>
-                    </div>
-                </section>
-            <?php endif; ?>
+            <?php bis_render_keywords($service_id); ?>
 
             <?php
             $associated_services = bis_get_associated_services($service_id);

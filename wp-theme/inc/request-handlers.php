@@ -233,7 +233,7 @@ function bis_get_dadata_request_headers() {
 }
 
 function bis_verify_hcaptcha_response() {
-    if (!bis_is_hcaptcha_configured()) {
+    if (!bis_captcha_enabled() || !bis_is_hcaptcha_configured()) {
         return true;
     }
 
@@ -464,7 +464,7 @@ function bis_request_has_hcaptcha_token() {
 }
 
 function bis_maybe_verify_hcaptcha_response($required = false) {
-    if (!$required && !bis_request_has_hcaptcha_token()) {
+    if (!bis_captcha_enabled()) {
         return true;
     }
 
@@ -1001,9 +1001,9 @@ function bis_submit_estimate() {
             ));
         }
 
-        wp_send_json_success(array('message' => 'Request saved', 'upload_error' => $upload_error));
+        wp_send_json_success(array('message' => 'Заявка сохранена.', 'upload_error' => $upload_error));
     } else {
-        wp_send_json_error(array('message' => 'Error saving request'));
+        wp_send_json_error(array('message' => 'Не удалось сохранить заявку.'));
     }
 }
 add_action('wp_ajax_bis_submit_estimate', 'bis_submit_estimate');
@@ -1116,7 +1116,7 @@ function bis_submit_project_consultation() {
     }
 
     if (empty($name) || empty($phone) || empty($email)) {
-        wp_send_json_error(array('message' => 'Required fields missing'));
+        wp_send_json_error(array('message' => 'Заполните обязательные поля: ФИО, телефон и email.'));
     }
 
     if (!bis_is_valid_request_phone($phone)) {
@@ -1150,10 +1150,10 @@ function bis_submit_project_consultation() {
 
     if ($post_id) {
         bis_send_request_notification($post_id);
-        wp_send_json_success(array('message' => 'Request saved'));
+        wp_send_json_success(array('message' => 'Заявка сохранена.'));
     }
 
-    wp_send_json_error(array('message' => 'Error saving request'));
+    wp_send_json_error(array('message' => 'Не удалось сохранить заявку.'));
 }
 add_action('wp_ajax_bis_submit_project_consultation', 'bis_submit_project_consultation');
 add_action('wp_ajax_nopriv_bis_submit_project_consultation', 'bis_submit_project_consultation');

@@ -175,19 +175,7 @@ function initScrollEffects() {
     if (currentScroll > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
 
-    if (floatingEstimateWrapper) {
-      if (currentScroll > 400) {
-        floatingEstimateWrapper.classList.add('visible');
-      } else {
-        floatingEstimateWrapper.classList.remove('visible');
-      }
-    } else if (floatingEstimateBtn) {
-      if (currentScroll > 400) {
-        floatingEstimateBtn.classList.add('visible');
-      } else {
-        floatingEstimateBtn.classList.remove('visible');
-      }
-    }
+    if (floatingEstimateWrapper) floatingEstimateWrapper.classList.add('visible');
 
     lastScroll = currentScroll;
   });
@@ -226,11 +214,13 @@ function initFloatingSocialPanel() {
       return;
     }
 
+    try {
     if (hidden) {
-      window.localStorage.setItem(storageKey, '1');
+      window.sessionStorage.setItem(storageKey, '1');
     } else {
-      window.localStorage.removeItem(storageKey);
+      window.sessionStorage.removeItem(storageKey);
     }
+    } catch (e) {}
   };
 
   if (closeBtn) {
@@ -245,7 +235,7 @@ function initFloatingSocialPanel() {
     });
   }
 
-  setHidden(window.localStorage.getItem(storageKey) === '1' || panel.classList.contains('is-hidden'), { persist: false });
+  try { setHidden(window.sessionStorage.getItem(storageKey) === '1', { persist: false }); } catch (e) { setHidden(false, { persist: false }); }
 }
 
 // Параллакс в hero по умолчанию

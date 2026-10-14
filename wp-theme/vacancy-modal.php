@@ -51,10 +51,10 @@
           <textarea id="vacancyMessage" name="message" rows="2" placeholder="Расскажите о профильном опыте или оставьте ссылку на портфолио / HH.ru..."></textarea>
         </div>
 
-        <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
+        <?php echo bis_render_captcha(); ?>
 
         <button type="submit" class="btn btn-primary btn-block vacancy-submit-btn">Отправить отклик на вакансию</button>
-        <p class="form-consent">Нажимая на кнопку, вы даете согласие на обработку своих персональных данных и соглашаетесь с Политикой конфиденциальности сайта</p>
+        <?php bis_render_form_consent(); ?>
       </form>
     </div>
   </div>

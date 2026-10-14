@@ -44,10 +44,10 @@
               </select>
             </div>
           </div>
-          <?php echo do_shortcode('[hcaptcha auto="true" force="true"]'); ?>
+          <?php echo bis_render_captcha(); ?>
 
-          <button type="submit" class="btn btn-primary btn-block">Рассчитать смету и сроки</button>
-          <p class="form-consent">Нажимая на кнопку, вы даете согласие на обработку своих персональных данных и соглашаетесь с Политикой конфиденциальности сайта</p>
+          <button type="submit" class="btn btn-primary btn-block bis-estimate-action">Рассчитать смету и сроки</button>
+          <?php bis_render_form_consent(); ?>
         </form>
       </div>
     </div>
