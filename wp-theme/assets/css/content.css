@@ -3609,3 +3609,9 @@ button.bis-callback-link:active,
 
 #callbackOverlay .popup-form { width: min(500px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; padding: clamp(20px,4vw,48px); }
 .bis-resource-page .callback-btn, .faq-cta .callback-btn, .bis-service-message .callback-btn { border-radius: 0; }
+.faq-cta { text-align: center; margin-top: 36px; }
+.faq-cta .btn { margin: 0 auto; }
+.faq-cta .btn-outline { margin-bottom: 28px; }
+.faq-cta__more { margin-bottom: 32px; }
+.faq-cta p { margin: 0 auto 20px; }
+.faq-cta__contact p { margin-bottom: 20px; }

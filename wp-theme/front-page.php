@@ -1073,7 +1073,15 @@ $categories = get_terms(array(
 <section class="faq-section" id="faq">
   <div class="section-header"><span class="section-badge">FAQ</span><h2 class="section-title">Часто задаваемые вопросы</h2><p class="section-subtitle">Ответы на самые популярные вопросы о пусконаладочных работах</p></div>
   <?php bis_render_faq_items(bis_faq_items(8)); ?>
-  <div class="faq-cta"><a class="btn btn-outline" href="<?php echo esc_url(home_url('/faq/')); ?>">Все вопросы</a><p>Остались вопросы?</p><button type="button" class="btn btn-primary callback-btn">Получить консультацию</button></div>
+  <div class="faq-cta">
+    <div class="faq-cta__more">
+      <a class="btn btn-outline" href="<?php echo esc_url(home_url('/faq/')); ?>">Все вопросы</a>
+    </div>
+    <div class="faq-cta__contact">
+      <p>Остались вопросы?</p>
+      <button type="button" class="btn btn-primary callback-btn">Получить консультацию</button>
+    </div>
+  </div>
 </section>
 
 <?php get_footer(); ?>
