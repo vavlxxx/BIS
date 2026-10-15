@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (callback) {
     callback.setAttribute('role','dialog'); callback.setAttribute('aria-modal','true'); callback.setAttribute('aria-label','Заказать обратный звонок');
     let trigger;
-    document.querySelectorAll('.callback-btn, .callback-btn-mobile').forEach(button => button.addEventListener('click', () => { trigger = button; requestAnimationFrame(() => callback.querySelector('input')?.focus()); }));
+    document.querySelectorAll('.callback-btn, .callback-btn-mobile').forEach(button => button.addEventListener('click', (e) => { if (button.tagName === 'A') e.preventDefault(); trigger = button; requestAnimationFrame(() => callback.querySelector('input')?.focus()); }));
     callback.addEventListener('keydown', event => {
       if (event.key !== 'Tab') return;
       const items = [...callback.querySelectorAll('button, input, textarea, a[href]')].filter(el => !el.disabled && el.offsetParent !== null);

@@ -3494,8 +3494,64 @@ body.page-template-page-turnkey .popular-services-section {
 .bis-faq-detail summary:hover { color: var(--primary-dark); }
 .bis-faq-detail > div { padding: 0 1.2rem 1.2rem; line-height: 1.7; }
 .bis-faq-detail ul { padding-left: 1.5rem; }
-.bis-callback-link { border: 0; background: transparent; color: var(--primary-dark); cursor: pointer; font: inherit; text-decoration: underline; padding: .5rem 0; transition: color .3s ease; }
-.bis-callback-link:hover { color: var(--primary); }
+.bis-callback-link,
+a.bis-callback-link,
+button.bis-callback-link,
+.callback-btn.bis-callback-link {
+  display: inline-block;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--primary-dark);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0 !important;
+  margin: 0;
+  transform: none !important;
+  transition: color 0.2s ease, opacity 0.2s ease;
+  vertical-align: baseline;
+}
+.bis-callback-link:hover,
+.bis-callback-link:focus,
+.bis-callback-link:active,
+a.bis-callback-link:hover,
+a.bis-callback-link:focus,
+a.bis-callback-link:active,
+button.bis-callback-link:hover,
+button.bis-callback-link:focus,
+button.bis-callback-link:active,
+.callback-btn.bis-callback-link:hover,
+.callback-btn.bis-callback-link:focus,
+.callback-btn.bis-callback-link:active {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: var(--primary);
+  text-decoration: underline;
+  outline: none;
+}
+.footer-section .bis-callback-link {
+  color: var(--primary);
+}
+.footer-section .bis-callback-link:hover,
+.footer-section .bis-callback-link:focus {
+  color: #ffffff;
+}
+.floating-socials-panel__contacts .bis-callback-link {
+  margin-top: -2px;
+  margin-bottom: 4px;
+}
+.floating-socials-panel__contact--email {
+  margin-top: 6px;
+}
 .bis-estimate-action { display: inline-flex; align-items: center; justify-content: center; gap: .8rem; font-size: clamp(1rem, 1.1vw, 1.2rem); }
 .bis-estimate-action::after { content: '→'; font-size: 1.4em; line-height: 1; }
 .bis-estimate-action:hover::after { transform: translateX(.15em); }
@@ -3521,5 +3577,4 @@ body.page-template-page-turnkey .popular-services-section {
 @media (prefers-reduced-motion: reduce) { .bis-service-message, .bis-estimate-action::after { transition: none; } }
 
 #callbackOverlay .popup-form { width: min(500px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; padding: clamp(20px,4vw,48px); }
-.bis-callback-link { border-radius: 0; box-shadow: none; }
 .bis-resource-page .callback-btn, .faq-cta .callback-btn, .bis-service-message .callback-btn { border-radius: 0; }

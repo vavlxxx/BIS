@@ -2374,6 +2374,19 @@ select {
   font-kerning: none;
 }
 
+.footer-phones-block {
+  margin-bottom: 14px;
+}
+
+.footer-phones-block .footer-phone {
+  display: block;
+  line-height: 1.6;
+}
+
+.footer-phones-block .bis-callback-link {
+  margin-top: 4px;
+}
+
 .footer-requisites {
   display: grid;
   gap: 10px;

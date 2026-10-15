@@ -980,8 +980,9 @@ $categories = get_terms(array(
             <div class="contact-icon">📞</div>
             <div class="contact-item-content">
               <h4>Телефон</h4>
-              <a class="footer-phone"  href="tel:+79264380770">+7 (926) 438-07-70</a><br>
-              <a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br><button type="button" class="callback-btn bis-callback-link">Заказать обратный звонок</button>
+              <a class="footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a><br>
+              <a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br>
+              <a href="#callback" class="callback-btn bis-callback-link">Заказать обратный звонок</a>
             </div>
           </div>
           <div class="contact-item">

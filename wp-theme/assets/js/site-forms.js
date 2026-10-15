@@ -875,7 +875,8 @@ function initCallbackModal() {
 
   // Обработчик для всех кнопок с обратным звонком
   if (callbackButtons.length) {
-    callbackButtons.forEach(btn => btn.addEventListener('click', () => {
+    callbackButtons.forEach(btn => btn.addEventListener('click', (e) => {
+      if (e) e.preventDefault();
       callbackOverlay.classList.add('active');
       closeMenuDrawer();
     }));

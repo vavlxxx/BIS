@@ -2750,7 +2750,7 @@
 }
 
 /* Callback Button */
-.callback-btn {
+.callback-btn:not(.bis-callback-link) {
   padding: 12px 24px;
   border-radius: 12px;
   font-weight: var(--font-weight-semibold);
@@ -2767,7 +2767,7 @@
   box-shadow: 0 4px 12px rgba(112, 198, 212, 0.4);
 }
 
-.callback-btn:hover {
+.callback-btn:not(.bis-callback-link):hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(112, 198, 212, 0.5);
 }

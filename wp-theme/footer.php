@@ -96,10 +96,11 @@
       </div>
       <div class="footer-section">
         <h3>Контакты</h3>
-        <p style="display: flex; align-items: center; gap: 12px;">
+        <div class="footer-phones-block">
           <a class="footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a>
-        </p>
-        <p><a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br><button type="button" class="callback-btn bis-callback-link">Заказать обратный звонок</button></p>
+          <a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a>
+          <a href="#callback" class="callback-btn bis-callback-link">Заказать обратный звонок</a>
+        </div>
         <p><a href="mailto:office@bis-rf.ru">office@bis-rf.ru</a></p>
         <p style="display: flex; align-items: center; gap: 12px; margin-top: 20px;">
           <a href="https://t.me/+79264380770" target="_blank" rel="noopener" aria-label="Telegram" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; transition: opacity 0.3s ease;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
@@ -213,8 +214,9 @@
       <p class="floating-socials-panel__text">Выберите удобный способ связи, и мы быстро ответим.</p>
       <div class="floating-socials-panel__contacts">
         <a class="floating-socials-panel__contact footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a>
-        <a class="floating-socials-panel__contact footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a><br><button type="button" class="callback-btn bis-callback-link">Заказать обратный звонок</button>
-        <a class="floating-socials-panel__contact" href="mailto:office@bis-rf.ru">office@bis-rf.ru</a>
+        <a class="floating-socials-panel__contact footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a>
+        <a href="#callback" class="callback-btn bis-callback-link">Заказать обратный звонок</a>
+        <a class="floating-socials-panel__contact floating-socials-panel__contact--email" href="mailto:office@bis-rf.ru">office@bis-rf.ru</a>
       </div>
       <div class="floating-socials">
         <a class="floating-socials__link floating-socials__link--telegram" href="https://t.me/+79264380770" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
