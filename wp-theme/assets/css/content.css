@@ -2167,24 +2167,30 @@
   margin: 0 auto 32px;
 }
 
+.faq-item,
 .service-faq-section .faq-item {
   width: 100%;
   background: #ffffff;
   border: 1px solid var(--border);
+  border-radius: var(--radius);
   margin-bottom: 14px;
+  overflow: hidden;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+.faq-item:hover,
 .service-faq-section .faq-item:hover {
   border-color: var(--primary);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
+.faq-item.active,
 .service-faq-section .faq-item.active {
   border-color: var(--primary);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
 }
 
+.faq-question,
 .service-faq-section .faq-question {
   padding: 18px 24px;
   display: flex;
@@ -2195,10 +2201,12 @@
   transition: background-color 0.2s ease;
 }
 
+.faq-question:hover,
 .service-faq-section .faq-question:hover {
   background: var(--bg-alt);
 }
 
+.faq-question h3,
 .service-faq-section .faq-question h3 {
   font-size: 20px;
   font-weight: 600;
@@ -2208,6 +2216,7 @@
   flex: 1;
 }
 
+.faq-toggle,
 .service-faq-section .faq-toggle {
   font-size: 24px;
   line-height: 1;
@@ -2217,11 +2226,13 @@
   transition: transform 0.25s ease, color 0.25s ease;
 }
 
+.faq-item.active .faq-toggle,
 .service-faq-section .faq-item.active .faq-toggle {
   transform: rotate(45deg);
   color: var(--primary-dark);
 }
 
+.faq-answer,
 .service-faq-section .faq-answer {
   padding: 0 24px;
   overflow: hidden;
@@ -2231,11 +2242,13 @@
   color: var(--text-light);
 }
 
+.faq-item.active .faq-answer,
 .service-faq-section .faq-item.active .faq-answer {
   padding: 0 24px 22px;
   max-height: unset !important;
 }
 
+.faq-answer p,
 .service-faq-section .faq-answer p {
   font-size: inherit;
   color: inherit;
@@ -2243,10 +2256,13 @@
   margin: 0 0 1em;
 }
 
+.faq-answer p:last-child,
 .service-faq-section .faq-answer p:last-child {
   margin-bottom: 0;
 }
 
+.faq-answer ul,
+.faq-answer ol,
 .service-faq-section .faq-answer ul,
 .service-faq-section .faq-answer ol {
   margin: 0 0 1em 1.25em;
@@ -2255,30 +2271,37 @@
   line-height: inherit;
 }
 
+.faq-answer li,
 .service-faq-section .faq-answer li {
   margin-bottom: 0.4em;
 }
 
+.faq-answer li:last-child,
 .service-faq-section .faq-answer li:last-child {
   margin-bottom: 0;
 }
 
+.faq-answer a,
 .service-faq-section .faq-answer a {
   color: var(--primary-dark);
   text-decoration: underline;
   transition: color 0.2s ease;
 }
 
+.faq-answer a:hover,
 .service-faq-section .faq-answer a:hover {
   color: var(--primary);
 }
 
+.faq-answer strong,
+.faq-answer b,
 .service-faq-section .faq-answer strong,
 .service-faq-section .faq-answer b {
   font-weight: 600;
   color: var(--dark);
 }
 
+.faq-answer table,
 .service-faq-section .faq-answer table {
   width: 100%;
   border-collapse: collapse;
@@ -2286,6 +2309,8 @@
   font-size: 14px;
 }
 
+.faq-answer th,
+.faq-answer td,
 .service-faq-section .faq-answer th,
 .service-faq-section .faq-answer td {
   padding: 10px 14px;
@@ -2293,12 +2318,14 @@
   text-align: left;
 }
 
+.faq-answer th,
 .service-faq-section .faq-answer th {
   background: var(--bg-alt);
   font-weight: 600;
   color: var(--dark);
 }
 
+.faq-answer blockquote,
 .service-faq-section .faq-answer blockquote {
   margin: 1em 0;
   padding: 12px 18px;
@@ -2317,20 +2344,24 @@
     padding: 48px 20px 24px;
   }
 
+  .faq-question,
   .service-faq-section .faq-question {
     padding: 16px 18px;
   }
 
+  .faq-question h3,
   .service-faq-section .faq-question h3 {
     font-size: 15px;
     line-height: 1.4;
   }
 
+  .faq-answer,
   .service-faq-section .faq-answer {
     padding: 0 18px;
     font-size: 14px;
   }
 
+  .faq-item.active .faq-answer,
   .service-faq-section .faq-item.active .faq-answer {
     padding: 0 18px 18px;
   }
@@ -3485,7 +3516,7 @@ body.page-template-page-turnkey .popular-services-section {
 .bis-filter-tabs .btn { min-width: 0; padding: .65rem 1rem; }
 .bis-gallery-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; }
 .bis-gallery-card { min-width: 0; border: 1px solid var(--border); background: var(--bg); padding-bottom: 1rem; }
-.bis-gallery-card[hidden], .bis-faq-detail[hidden] { display: none; }
+.bis-gallery-card[hidden], .bis-faq-detail[hidden], .faq-item[hidden] { display: none !important; }
 .bis-gallery-card img, .bis-gallery-card video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--dark); }
 .bis-gallery-card h3, .bis-gallery-card > div { padding: 0 1rem; overflow-wrap: anywhere; }
 .bis-gallery-card h3 { font-size: var(--font-size-body); margin-top: 1rem; }

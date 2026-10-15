@@ -31,7 +31,16 @@ function bis_render_faq_items($items,$filters=false) {
     echo '<div class="faq-container" data-faq-list>';
     foreach ($items as $item) {
         $terms=wp_get_post_terms($item->ID,'bis_faq_category',array('fields'=>'ids'));
-        echo '<details class="bis-faq-detail" data-faq-categories="'.esc_attr(implode(',',is_array($terms)?$terms:array())).'"><summary>'.esc_html($item->post_title).'</summary><div>'.wpautop(wp_kses_post($item->post_content)).'</div></details>';
+        $cat_attr = esc_attr(implode(',',is_array($terms)?$terms:array()));
+        echo '<div class="faq-item" data-faq-categories="' . $cat_attr . '">';
+        echo '<div class="faq-question">';
+        echo '<h3>' . esc_html($item->post_title) . '</h3>';
+        echo '<span class="faq-toggle">+</span>';
+        echo '</div>';
+        echo '<div class="faq-answer">';
+        echo wpautop(wp_kses_post($item->post_content));
+        echo '</div>';
+        echo '</div>';
     }
     echo '</div>';
 }

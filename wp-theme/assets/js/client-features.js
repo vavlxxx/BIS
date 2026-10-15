@@ -37,7 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       section.querySelectorAll('[data-faq-categories]').forEach(item => {
         item.hidden = button.dataset.faqFilter !== 'all' && !item.dataset.faqCategories.split(',').includes(button.dataset.faqFilter);
-        if (item.hidden) item.open = false;
+        if (item.hidden) {
+          item.open = false;
+          if (item.classList.contains('active')) {
+            item.classList.remove('active');
+            const ans = item.querySelector('.faq-answer');
+            if (ans) {
+              ans.style.maxHeight = '0px';
+              ans.style.overflow = 'hidden';
+            }
+          }
+        }
       });
     }));
   });
