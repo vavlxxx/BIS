@@ -3,11 +3,35 @@ function add_action(...$args) {}
 function add_filter(...$args) {}
 function get_option($key,$default='') { return $GLOBALS['options'][$key] ?? $default; }
 function get_post_meta($id,$key,$single=true) { return $GLOBALS['meta'][$id][$key] ?? ''; }
+function update_post_meta($id,$key,$val) { $GLOBALS['meta'][$id][$key] = $val; }
+function delete_post_meta($id,$key) { unset($GLOBALS['meta'][$id][$key]); }
 function get_post_type($id) { return $GLOBALS['types'][$id] ?? 'bis_service'; }
 function get_the_terms($id,$tax) { return $GLOBALS['terms'][$id][$tax] ?? false; }
 function is_wp_error($v) { return $v instanceof WP_Error; }
 function sanitize_text_field($v) { return trim(strip_tags($v)); }
+function sanitize_textarea_field($v) { return trim(strip_tags($v)); }
 function wp_strip_all_tags($v) { return strip_tags($v); }
+function wp_unslash($v) { return $v; }
+function wp_get_post_parent_id($id) { return $GLOBALS['parents'][$id] ?? 0; }
+function is_singular($type = '') { return ($GLOBALS['is_singular'] ?? false) && (!$type || ($GLOBALS['singular_type'] ?? '') === $type); }
+function get_queried_object_id() { return $GLOBALS['queried_object_id'] ?? 0; }
+function esc_url($v) { return htmlspecialchars((string) $v, ENT_QUOTES); }
+function esc_attr($v) { return htmlspecialchars((string) $v, ENT_QUOTES); }
+function esc_html($v) { return htmlspecialchars((string) $v, ENT_QUOTES); }
+function esc_textarea($v) { return htmlspecialchars((string) $v, ENT_QUOTES); }
+function get_template_directory_uri() { return 'https://example.com/wp-content/themes/bis'; }
+function current_user_can($cap, $id) { return true; }
+function wp_is_post_revision($id) { return false; }
+function wp_is_post_autosave($id) { return false; }
+function wp_verify_nonce($nonce, $action) { return true; }
+function get_posts($args) {
+    $parent = (int) ($args['post_parent'] ?? 0);
+    $res = [];
+    foreach (($GLOBALS['parents'] ?? []) as $cid => $pid) {
+        if ($pid === $parent) $res[] = $cid;
+    }
+    return $res;
+}
 class WP_Error {}
 require __DIR__.'/../wp-theme/inc/client-settings.php';
 function check($condition,$message) { if (!$condition) throw new RuntimeException($message); }
@@ -21,4 +45,65 @@ $GLOBALS['meta'][12]['bis_seo_keywords']='';
 $GLOBALS['terms'][12]['bis_service_tag']=[(object)['name'=>'отопление'],(object)['name'=>'вентиляция']];
 check(bis_get_post_keywords(12)===['отопление','вентиляция'],'Tag fallback');
 check(bis_get_post_keywords(55)===[],'No invented keywords');
+
+// Service message scoping tests
+$parent_id = 100;
+$child_id = 101;
+$unrelated_id = 102;
+$GLOBALS['parents'] = [$child_id => $parent_id];
+$GLOBALS['types'] = [$parent_id => 'bis_service', $child_id => 'bis_service', $unrelated_id => 'bis_service'];
+
+// 1. Parent has message, child has none
+$GLOBALS['meta'][$parent_id]['bis_service_message'] = 'Предложение для ПНР';
+unset($GLOBALS['meta'][$child_id]['bis_service_message']);
+check(bis_get_service_message($parent_id) === 'Предложение для ПНР', 'Parent returns configured message');
+check(bis_get_service_message($child_id) === '', 'Child returns empty when it has no message');
+
+// 2. Child erroneously has the exact same message as parent (cascaded by previous bug)
+$GLOBALS['meta'][$child_id]['bis_service_message'] = 'Предложение для ПНР';
+check(bis_get_service_message($child_id) === '', 'Child suppresses inherited parent message');
+
+// 3. Child has its own distinct message
+$GLOBALS['meta'][$child_id]['bis_service_message'] = 'Предложение для Общеобменной вентиляции';
+check(bis_get_service_message($child_id) === 'Предложение для Общеобменной вентиляции', 'Child returns its own distinct message');
+
+// 4. Save isolation: saving parent ignores child post_ID
+$_POST['post_ID'] = (string) $parent_id;
+$_POST['bis_service_message_nonce'] = 'dummy';
+$_POST['bis_service_message'] = 'Обновленное предложение';
+// Simulating WordPress firing save_post_bis_service for child during wp_update_post
+bis_save_service_message($child_id);
+check($GLOBALS['meta'][$child_id]['bis_service_message'] === 'Предложение для Общеобменной вентиляции', 'Child was NOT overwritten during parent save');
+
+// 5. Saving parent cleans up child if child still had old parent message
+$GLOBALS['meta'][$child_id]['bis_service_message'] = 'Обновленное предложение';
+bis_save_service_message($parent_id);
+check($GLOBALS['meta'][$parent_id]['bis_service_message'] === 'Обновленное предложение', 'Parent updated');
+check(!isset($GLOBALS['meta'][$child_id]['bis_service_message']), 'Child with identical cloned message was cleaned up');
+
+// 6. Rendering test: buttons Telegram and Max are rendered
+$GLOBALS['is_singular'] = true;
+$GLOBALS['singular_type'] = 'bis_service';
+$GLOBALS['queried_object_id'] = $parent_id;
+ob_start();
+bis_render_service_message();
+$output = ob_get_clean();
+
+check(str_contains($output, 'class="bis-service-message"'), 'Modal aside rendered');
+check(str_contains($output, 'class="bis-service-message__actions"'), 'Actions wrapper rendered');
+check(str_contains($output, 'callback-btn'), 'Callback button rendered');
+check(str_contains($output, 'bis-service-message__social--telegram'), 'Telegram button rendered');
+check(str_contains($output, 'https://t.me/+79264380770'), 'Telegram link rendered');
+check(str_contains($output, 'telegram-white-32x32.png'), 'Telegram icon rendered');
+check(str_contains($output, 'bis-service-message__social--max'), 'Max button rendered');
+check(str_contains($output, 'https://max.ru/u/f9LHodD0cOIYdHZd-s9_nqTN9t76kGjdQxmIoxXSFGhqRnW3d4TLAMEFfVs'), 'Max link rendered');
+check(str_contains($output, 'MAX-white-32x32.png'), 'Max icon rendered');
+
+// 7. Child rendering test: child does not render modal when it has no message
+$GLOBALS['queried_object_id'] = $child_id;
+ob_start();
+bis_render_service_message();
+$child_output = ob_get_clean();
+check($child_output === '', 'Child without its own message renders nothing');
+
 echo "Client settings tests passed\n";

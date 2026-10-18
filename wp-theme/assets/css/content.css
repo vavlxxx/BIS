@@ -3596,16 +3596,24 @@ button.bis-callback-link:active,
 .bis-service-message { position: fixed; z-index: 1000; right: 1.5rem; top: 7rem; width: min(420px,calc(100vw - 32px)); padding: 2rem; background: var(--bg); color: var(--text); border-left: 4px solid var(--primary); box-shadow: 0 12px 32px color-mix(in srgb, var(--dark) 20%, transparent); transform: translateX(calc(100% + 2rem)); transition: transform .4s ease; }
 .bis-service-message.is-visible { transform: translateX(0); }
 .bis-service-message > button:first-child { position: absolute; right: .7rem; top: .5rem; border: 0; background: transparent; color: var(--text); font-size: 1.8rem; cursor: pointer; }
-.bis-service-message p { line-height: 1.65; margin-bottom: 1rem; overflow-wrap: anywhere; }
+.bis-service-message p { line-height: 1.65; margin-bottom: 1.25rem; overflow-wrap: anywhere; }
 .bis-service-message-visible .floating-estimate-wrapper { visibility: hidden; }
+.bis-service-message__actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bis-service-message .callback-btn { border-radius: 0; white-space: nowrap; }
+.bis-service-message__social { width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; text-decoration: none; transition: transform .2s ease, opacity .2s ease; }
+.bis-service-message__social:hover { transform: translateY(-2px); opacity: .92; }
+.bis-service-message__social:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.bis-service-message__social--telegram { background: #70C6D4; }
+.bis-service-message__social--max { background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); }
+.bis-service-message__social img { width: 22px; height: 22px; object-fit: contain; display: block; }
 .bis-photo-dialog { border: 0; padding: 2.5rem 1rem 1rem; background: var(--dark); max-width: 95vw; max-height: 95dvh; }
 .bis-photo-dialog::backdrop { background: color-mix(in srgb, var(--dark) 70%, transparent); }
 .bis-photo-dialog img { max-height: 80dvh; max-width: 90vw; object-fit: contain; }
 .bis-photo-dialog button { position: absolute; top: .3rem; right: 1rem; color: var(--bg); background: transparent; border: 0; font-size: 2rem; cursor: pointer; }
 .form-consent a { color: var(--primary-dark); text-decoration: underline; }
 @media (max-width: 900px) { .bis-gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
-@media (max-width: 600px) { .bis-gallery-grid { grid-template-columns: minmax(0,1fr); } .bis-service-message { right: 1rem; top: 5rem; padding: 1.5rem; } .floating-socials-panel { padding: 16px; max-height: calc(100dvh - 120px); overflow-y: auto; } }
-@media (prefers-reduced-motion: reduce) { .bis-service-message, .bis-estimate-action::after { transition: none; } }
+@media (max-width: 600px) { .bis-gallery-grid { grid-template-columns: minmax(0,1fr); } .bis-service-message { right: 1rem; top: 5rem; padding: 1.5rem; } .bis-service-message__actions { gap: 8px; } .bis-service-message__social { width: 40px; height: 40px; } .bis-service-message__social img { width: 20px; height: 20px; } .floating-socials-panel { padding: 16px; max-height: calc(100dvh - 120px); overflow-y: auto; } }
+@media (prefers-reduced-motion: reduce) { .bis-service-message, .bis-estimate-action::after, .bis-service-message__social { transition: none; } }
 
 #callbackOverlay .popup-form { width: min(500px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; padding: clamp(20px,4vw,48px); }
 .bis-resource-page .callback-btn, .faq-cta .callback-btn, .bis-service-message .callback-btn { border-radius: 0; }

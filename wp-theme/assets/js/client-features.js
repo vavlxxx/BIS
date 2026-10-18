@@ -74,8 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try { sessionStorage.setItem(key, '1'); } catch (e) {}
     }, 1200);
     const dismiss = () => { message.classList.remove('is-visible'); message.hidden = true; document.body.classList.remove('bis-service-message-visible'); };
-    message.querySelector('[data-service-message-close]').addEventListener('click', dismiss);
-    message.querySelector('.callback-btn').addEventListener('click', dismiss);
+    message.querySelectorAll('[data-service-message-close], .callback-btn, .bis-service-message__social').forEach(el => el.addEventListener('click', dismiss));
     document.addEventListener('keydown', e => { if (e.key === 'Escape') dismiss(); });
   }
   // Modal focus and keyboard return for the newly global callback form.
