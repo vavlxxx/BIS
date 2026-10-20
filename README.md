@@ -53,7 +53,7 @@ define('BIS_SMTP_PORT', 465);
 define('BIS_SMTP_SECURE', 'ssl');
 define('BIS_SMTP_USER', ''); // почта SMTP timeweb
 define('BIS_SMTP_PASS', ''); // пароль SMTP timeweb
-define('BIS_SMTP_FROM_EMAIL', 'no-reply@bis-rf.ru');
+define('BIS_SMTP_FROM_EMAIL', 'noreply@biscorp.ru');
 define('BIS_SMTP_FROM_NAME', 'БИС');
 define('BIS_SMTP_AUTH', 'true');
 ```

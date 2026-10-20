@@ -989,7 +989,7 @@ $categories = get_terms(array(
             <div class="contact-icon">✉️</div>
             <div class="contact-item-content">
               <h4>Email</h4>
-              <a href="mailto:office@bis-rf.ru">office@bis-rf.ru</a>
+              <a href="mailto:office@biscorp.ru">office@biscorp.ru</a>
             </div>
           </div>
           <div class="contact-item">

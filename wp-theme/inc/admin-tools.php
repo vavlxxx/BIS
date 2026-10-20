@@ -277,7 +277,7 @@ function bis_team_page() {
                                         </div>
                                         <div class="team-field">
                                             <label>Email</label>
-                                            <input type="email" value="<?php echo esc_attr($contact_email); ?>" data-field="contact_email" name="team_members[<?php echo esc_attr($index); ?>][contact_email]" placeholder="office@bis-rf.ru">
+                                            <input type="email" value="<?php echo esc_attr($contact_email); ?>" data-field="contact_email" name="team_members[<?php echo esc_attr($index); ?>][contact_email]" placeholder="office@biscorp.ru">
                                         </div>
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@ function bis_team_page() {
                                 </div>
                                 <div class="team-field">
                                     <label>Email</label>
-                                    <input type="email" value="" data-field="contact_email" placeholder="office@bis-rf.ru">
+                                    <input type="email" value="" data-field="contact_email" placeholder="office@biscorp.ru">
                                 </div>
                             </div>
                         </div>
@@ -699,7 +699,7 @@ function bis_get_maintenance_settings() {
         'title'   => 'Сайт временно недоступен',
         'message' => 'Сейчас на сайте идут технические работы. Мы скоро вернёмся. Спасибо за понимание!',
         'phone'   => '+7 (926) 438-07-70',
-        'email'   => 'office@bis-rf.ru',
+        'email'   => 'office@biscorp.ru',
     );
 
     $settings = get_option('bis_maintenance_settings', array());

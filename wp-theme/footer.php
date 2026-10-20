@@ -101,7 +101,7 @@
           <a class="footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a>
           <a href="#callback" class="callback-btn bis-callback-link">Заказать обратный звонок</a>
         </div>
-        <p><a href="mailto:office@bis-rf.ru">office@bis-rf.ru</a></p>
+        <p><a href="mailto:office@biscorp.ru">office@biscorp.ru</a></p>
         <p style="display: flex; align-items: center; gap: 12px; margin-top: 20px;">
           <a href="https://t.me/+79264380770" target="_blank" rel="noopener" aria-label="Telegram" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; transition: opacity 0.3s ease;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
             <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/telegram-white-32x32.png" alt="Telegram" style="width: 100%; height: 100%; object-fit: contain;">
@@ -216,7 +216,7 @@
         <a class="floating-socials-panel__contact footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a>
         <a class="floating-socials-panel__contact footer-phone" href="tel:+79169861187">+7 (916) 986-11-87</a>
         <a href="#callback" class="callback-btn bis-callback-link">Заказать обратный звонок</a>
-        <a class="floating-socials-panel__contact floating-socials-panel__contact--email" href="mailto:office@bis-rf.ru">office@bis-rf.ru</a>
+        <a class="floating-socials-panel__contact floating-socials-panel__contact--email" href="mailto:office@biscorp.ru">office@biscorp.ru</a>
       </div>
       <div class="floating-socials">
         <a class="floating-socials__link floating-socials__link--telegram" href="https://t.me/+79264380770" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
