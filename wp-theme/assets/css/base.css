@@ -50,6 +50,28 @@ html {
   scroll-behavior: smooth;
 }
 
+#services,
+#equipment,
+#experience,
+#contact,
+#tasks,
+#team,
+#gratitude {
+  scroll-margin-top: 90px;
+}
+
+@media (max-width: 600px) {
+  #services,
+  #equipment,
+  #experience,
+  #contact,
+  #tasks,
+  #team,
+  #gratitude {
+    scroll-margin-top: 75px;
+  }
+}
+
 main {
   background-color: var(--bg);
 }
@@ -1193,6 +1215,7 @@ select {
   left: 32px;
   right: 32px;
   width: auto;
+  z-index: 5;
 }
 
 .hero-nav {
@@ -1212,6 +1235,8 @@ select {
   border-bottom: 1px solid transparent;
   padding-bottom: 6px;
   transition: border-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(112, 198, 212, 0.3);
 }
 
 .hero-nav a:hover {
@@ -1223,23 +1248,27 @@ select {
   .hero-nav-rail {
     left: 24px;
     right: 24px;
+    z-index: 5;
   }
 }
 
 @media (max-width: 600px) {
   .hero-nav-rail {
     bottom: 18px;
-    left: 20px;
-    right: 20px;
+    left: 16px;
+    right: 16px;
+    z-index: 5;
   }
 
   .hero-nav {
-    gap: 12px 16px;
+    gap: 10px 14px;
     justify-content: center;
   }
 
   .hero-nav a {
     font-size: 14px;
+    display: inline-block;
+    padding: 6px 4px;
   }
 }
 

@@ -281,29 +281,102 @@ function initHeroParallax() {
 
 // Анимация счетчиков статистики
 
+function smoothScrollToY(targetY, duration) {
+  targetY = Math.max(0, Math.round(targetY));
+  const startY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+  const distance = targetY - startY;
+
+  if (Math.abs(distance) < 2) return;
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo(0, targetY);
+    return;
+  }
+
+  const scrollDuration = typeof duration === 'number' ? duration : Math.min(500, Math.max(250, Math.abs(distance) * 0.35));
+  let startTime = null;
+
+  function step(currentTime) {
+    if (startTime === null) startTime = currentTime;
+    const timeElapsed = currentTime - startTime;
+    const progress = Math.min(timeElapsed / scrollDuration, 1);
+    // easeInOutCubic
+    const ease = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    window.scrollTo(0, Math.round(startY + (distance * ease)));
+
+    if (timeElapsed < scrollDuration) {
+      window.requestAnimationFrame(step);
+    } else {
+      window.scrollTo(0, targetY);
+    }
+  }
+
+  window.requestAnimationFrame(step);
+}
+
+function scrollToElement(targetElement, hash) {
+  if (!targetElement) return;
+
+  const header = document.getElementById('header');
+  const headerHeight = header ? header.offsetHeight : 0;
+  const elementTop = targetElement.getBoundingClientRect().top;
+  const currentScroll = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+  const targetPosition = Math.max(0, elementTop + currentScroll - headerHeight);
+
+  smoothScrollToY(targetPosition);
+
+  if (hash && window.history && window.history.pushState) {
+    try {
+      window.history.pushState(null, '', hash);
+    } catch (e) {}
+  }
+}
+
 function initSmoothScroll() {
-  // Прокрутка для навигационных ссылок
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  // Прокрутка для навигационных ссылок (включая ссылки вида #id и /#id на текущей странице)
+  document.querySelectorAll('a[href^="#"], a[href*="/#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href');
+      const href = this.getAttribute('href');
+      if (!href) return;
 
-      if (targetId === '#') return;
+      const hashIndex = href.indexOf('#');
+      if (hashIndex === -1) return;
 
-      const targetElement = document.querySelector(targetId);
+      const targetId = href.substring(hashIndex);
+      if (!targetId || targetId === '#') return;
 
-      if (targetElement) {
-        const headerHeight = document.getElementById('header').offsetHeight;
-        const targetPosition = targetElement.offsetTop - headerHeight;
-
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
-        });
-
-        // Закрываем меню если оно открыто
+      if (targetId === '#home') {
+        e.preventDefault();
         closeMenuDrawer();
+        smoothScrollToY(0);
+        return;
       }
+
+      // Не перехватываем специальные модальные триггеры
+      if (this.classList.contains('callback-btn') || this.classList.contains('open-estimate-modal') || this.classList.contains('open-vacancy-modal')) {
+        return;
+      }
+
+      const isAnchorOnly = href.startsWith('#');
+      const isSamePage = isAnchorOnly || 
+        (!href.startsWith('http') && (href.startsWith('/#') || href.startsWith(window.location.pathname + '#'))) || 
+        (this.hostname === window.location.hostname && this.pathname === window.location.pathname);
+
+      if (!isSamePage) {
+        return;
+      }
+
+      try {
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          closeMenuDrawer();
+          scrollToElement(targetElement, targetId);
+        }
+      } catch (err) {}
     });
   });
 
@@ -314,12 +387,11 @@ function initSmoothScroll() {
       const isHomePage = window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.php');
       if (isHomePage) {
         e.preventDefault();
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        if (window.location.hash) {
-          history.pushState('', document.title, window.location.pathname + window.location.search);
+        smoothScrollToY(0);
+        if (window.location.hash && window.history && window.history.pushState) {
+          try {
+            history.pushState('', document.title, window.location.pathname + window.location.search);
+          } catch (err) {}
         }
         closeMenuDrawer();
       }
@@ -331,12 +403,21 @@ function initSmoothScroll() {
   if (homeLink) {
     homeLink.addEventListener('click', function (e) {
       e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      smoothScrollToY(0);
       closeMenuDrawer();
     });
+  }
+
+  // При загрузке страницы с хэшем (#services, #equipment и т.д.) плавно докручиваем с учетом шапки
+  if (window.location.hash) {
+    try {
+      const initialTarget = document.querySelector(window.location.hash);
+      if (initialTarget) {
+        window.setTimeout(() => {
+          scrollToElement(initialTarget);
+        }, 300);
+      }
+    } catch (e) {}
   }
 }
 

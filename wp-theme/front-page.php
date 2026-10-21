@@ -37,7 +37,6 @@ $has_hero_slider = !empty($hero_images);
       <div class="hero-cta">
         <button class="btn btn-primary open-estimate-modal">Рассчитать смету и сроки</button>
       </div>
-      </div>
     </div>
     <div class="hero-nav-rail">
       <ul class="hero-nav">
