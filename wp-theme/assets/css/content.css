@@ -3532,7 +3532,12 @@ body.page-template-page-turnkey .popular-services-section {
 }
 
 /* Client changes, October 2026: resource pages and contact interactions. */
-.bis-resource-page { padding: clamp(110px, 12vw, 180px) clamp(16px, 4vw, 48px) clamp(40px, 5vw, 80px); }
+.bis-resource-page { padding: clamp(80px, 7vw, 120px) clamp(16px, 4vw, 48px) clamp(40px, 5vw, 80px); }
+.bis-resource-page .breadcrumbs-section {
+  padding: 0;
+  margin-bottom: 1.5rem;
+  background: transparent;
+}
 .bis-resource-page .section-header { margin-bottom: 2rem; }
 .bis-home-gallery { padding: clamp(40px, 5vw, 80px) clamp(16px, 4vw, 48px); }
 .bis-filter-tabs { display: flex; flex-wrap: wrap; gap: .7rem; margin-bottom: 2rem; }

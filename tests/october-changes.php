@@ -106,4 +106,22 @@ bis_render_service_message();
 $child_output = ob_get_clean();
 check($child_output === '', 'Child without its own message renders nothing');
 
+// 8. Breadcrumbs on resource pages (gallery, faq, generic page)
+$gallery_code = file_get_contents(__DIR__ . '/../wp-theme/page-gallery.php');
+check(str_contains($gallery_code, '<section class="breadcrumbs-section">'), 'Gallery has breadcrumbs section');
+check(str_contains($gallery_code, 'class="project-breadcrumbs mw-1400px"'), 'Gallery has standard project breadcrumbs markup');
+check(str_contains($gallery_code, 'home_url(\'/\')'), 'Gallery breadcrumb links to home');
+
+$faq_code = file_get_contents(__DIR__ . '/../wp-theme/page-faq.php');
+check(str_contains($faq_code, '<section class="breadcrumbs-section">'), 'FAQ has breadcrumbs section');
+check(str_contains($faq_code, 'class="project-breadcrumbs mw-1400px"'), 'FAQ has standard project breadcrumbs markup');
+check(str_contains($faq_code, 'home_url(\'/\')'), 'FAQ breadcrumb links to home');
+
+$page_code = file_get_contents(__DIR__ . '/../wp-theme/page.php');
+check(str_contains($page_code, '<section class="breadcrumbs-section">'), 'Generic page has breadcrumbs section');
+check(str_contains($page_code, 'class="project-breadcrumbs mw-1400px"'), 'Generic page has standard project breadcrumbs markup');
+
+$content_css = file_get_contents(__DIR__ . '/../wp-theme/assets/css/content.css');
+check(str_contains($content_css, '.bis-resource-page .breadcrumbs-section'), 'CSS styles breadcrumbs inside resource pages without padding conflict');
+
 echo "Client settings tests passed\n";
