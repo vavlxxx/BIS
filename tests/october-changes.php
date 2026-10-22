@@ -123,5 +123,12 @@ check(str_contains($page_code, 'class="project-breadcrumbs mw-1400px"'), 'Generi
 
 $content_css = file_get_contents(__DIR__ . '/../wp-theme/assets/css/content.css');
 check(str_contains($content_css, '.bis-resource-page .breadcrumbs-section'), 'CSS styles breadcrumbs inside resource pages without padding conflict');
+check(str_contains($content_css, '.team-slider > .team-slider__controls') && str_contains($content_css, 'justify-content: space-between'), 'Team navigation buttons are separated to both sides on mobile');
+
+$front_css = file_get_contents(__DIR__ . '/../wp-theme/assets/css/front-page.css');
+check(str_contains($front_css, '.objects-slider-nav .slider-prev') && str_contains($front_css, 'border-radius: 50%'), 'Objects slider navigation buttons are circular');
+check(str_contains($front_css, '.objects-slider-dots') && str_contains($front_css, 'border-radius: 999px'), 'Objects slider dots have rounded capsule container');
+check(str_contains($front_css, '.objects-slider-dots .slider-dot') && str_contains($front_css, 'border-radius: 50%'), 'Objects slider dots are circular');
+check(str_contains($front_css, 'left: -21px;') && str_contains($front_css, 'right: -21px;'), 'Desktop slider arrows are centered on block borders');
 
 echo "Client settings tests passed\n";

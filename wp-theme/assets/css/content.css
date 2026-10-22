@@ -1483,6 +1483,15 @@
   .team-slider > .team-slider__controls {
     top: 408px;
     left: 22px;
+    right: 22px;
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .team-slider > .team-slider__controls .team-nav {
+    pointer-events: auto;
   }
 
   .team-modal {
@@ -1514,6 +1523,7 @@
   .team-slider > .team-slider__controls {
     top: 408px;
     left: 18px;
+    right: 18px;
   }
 
   .team-contact-card {
@@ -1871,18 +1881,24 @@
     z-index: 4;
   }
 
+  .services-slider-shell .services-slider-nav .slider-prev,
+  .equipment-park .equipment-slider-nav .slider-prev,
+  .experience-slider-shell .experience-slider-nav .slider-prev,
   .services-slider-nav .slider-prev,
   .equipment-slider-nav .slider-prev,
   .experience-slider-nav .slider-prev,
   .gratitude-prev {
-    left: 10px;
+    left: calc(54px - 19px);
   }
 
+  .services-slider-shell .services-slider-nav .slider-next,
+  .equipment-park .equipment-slider-nav .slider-next,
+  .experience-slider-shell .experience-slider-nav .slider-next,
   .services-slider-nav .slider-next,
   .equipment-slider-nav .slider-next,
   .experience-slider-nav .slider-next,
   .gratitude-next {
-    right: 10px;
+    right: calc(54px - 19px);
   }
 
   .services-slider-nav .slider-dots,
@@ -2621,11 +2637,11 @@
   }
 
   .services-catalog--related .services-slider-nav .slider-prev {
-    left: 18px;
+    left: -21px;
   }
 
   .services-catalog--related .services-slider-nav .slider-next {
-    right: 18px;
+    right: -21px;
   }
 
   .services-catalog--related .services-slider-nav .slider-dots {
@@ -2645,6 +2661,26 @@
 }
 
 @media (max-width: 480px) {
+  .services-slider-shell .services-slider-nav .slider-prev,
+  .equipment-park .equipment-slider-nav .slider-prev,
+  .experience-slider-shell .experience-slider-nav .slider-prev,
+  .services-slider-nav .slider-prev,
+  .equipment-slider-nav .slider-prev,
+  .experience-slider-nav .slider-prev,
+  .gratitude-prev {
+    left: calc(50px - 20px);
+  }
+
+  .services-slider-shell .services-slider-nav .slider-next,
+  .equipment-park .equipment-slider-nav .slider-next,
+  .experience-slider-shell .experience-slider-nav .slider-next,
+  .services-slider-nav .slider-next,
+  .equipment-slider-nav .slider-next,
+  .experience-slider-nav .slider-next,
+  .gratitude-next {
+    right: calc(50px - 20px);
+  }
+
   .services-catalog--related.slider-enabled .services-catalog__grid {
     padding: 30px 50px 64px;
   }
