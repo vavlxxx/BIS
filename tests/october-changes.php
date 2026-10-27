@@ -131,4 +131,9 @@ check(str_contains($front_css, '.objects-slider-dots') && str_contains($front_cs
 check(str_contains($front_css, '.objects-slider-dots .slider-dot') && str_contains($front_css, 'border-radius: 50%'), 'Objects slider dots are circular');
 check(str_contains($front_css, 'left: -21px;') && str_contains($front_css, 'right: -21px;'), 'Desktop slider arrows are centered on block borders');
 
+$base_css = file_get_contents(__DIR__ . '/../wp-theme/assets/css/base.css');
+check(str_contains($base_css, 'min-height: 100dvh;'), 'Hero has dynamic viewport height support');
+check(str_contains($base_css, '@media (max-width: 900px)') && str_contains($base_css, 'flex-direction: column;'), 'Hero switches to vertical flex column on mobile/tablet');
+check(!preg_match('/^\s*bottom:\s*18px;/m', $base_css), 'Hero navigation rail is no longer absolutely pinned to bottom on mobile');
+
 echo "Client settings tests passed\n";
