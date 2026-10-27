@@ -136,4 +136,9 @@ check(str_contains($base_css, 'min-height: 100dvh;'), 'Hero has dynamic viewport
 check(str_contains($base_css, '@media (max-width: 900px)') && str_contains($base_css, 'flex-direction: column;'), 'Hero switches to vertical flex column on mobile/tablet');
 check(!preg_match('/^\s*bottom:\s*18px;/m', $base_css), 'Hero navigation rail is no longer absolutely pinned to bottom on mobile');
 
+$about_php = file_get_contents(__DIR__ . '/../wp-theme/page-about.php');
+check(str_contains($about_php, '<span class="about-econ-card__num">1 год</span>'), 'About page displays payback period 1 year');
+check(str_contains($about_php, 'Срок окупаемости ПНР — 1 год. Дальше — чистая экономия каждый год всего срока службы здания.'), 'About page description updated with 1 year payback');
+check(!str_contains($about_php, '1 500 руб/м²'), 'Cost per square meter removed from about page economics');
+
 echo "Client settings tests passed\n";

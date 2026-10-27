@@ -243,13 +243,13 @@ $banner_image = bis_get_page_banner_image_url($page_id);
                     <article class="about-econ-card">
                         <div class="about-econ-card__top">
                             <div class="about-econ-card__metric">
-                                <span class="about-econ-card__num">1,2 года</span>
+                                <span class="about-econ-card__num">1 год</span>
                                 <span class="about-econ-card__period">окупаемость</span>
                             </div>
                         </div>
                         <h4 class="about-econ-card__title">Быстрый срок окупаемости ПНР</h4>
                         <p class="about-econ-card__desc">
-                            Срок окупаемости ПНР: при стоимости ПНР ~1 500 руб/м² — 1,2 года. Дальше — чистая экономия каждый год всего срока службы здания.
+                            Срок окупаемости ПНР — 1 год. Дальше — чистая экономия каждый год всего срока службы здания.
                         </p>
                         <div class="about-econ-card__footer">
                             <span class="about-econ-card__highlight">Дальше — чистая экономия каждый год</span>
