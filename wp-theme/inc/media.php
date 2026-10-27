@@ -113,3 +113,74 @@ function bis_replace_image_extension($url, $extension) {
 function bis_get_webp_image_url($url) {
     return bis_replace_image_extension($url, 'webp');
 }
+
+/**
+ * Site Icon and Favicon handling with automatic cache-busting.
+ * Ensures any updated site icon in General Settings updates for all users immediately.
+ */
+function bis_get_site_icon_version() {
+    $site_icon_id = (int) get_option('site_icon');
+    if ($site_icon_id) {
+        $mod_time = function_exists('get_post_modified_time') ? get_post_modified_time('U', true, $site_icon_id) : 0;
+        return $mod_time ? (string) $mod_time : (string) $site_icon_id;
+    }
+    return function_exists('bis_get_asset_version') ? bis_get_asset_version('assets/img/LOGOLOGO11.ico') : '1.0';
+}
+
+function bis_render_site_favicon() {
+    if (function_exists('has_site_icon') && has_site_icon()) {
+        $ver = bis_get_site_icon_version();
+        $icon_32 = get_site_icon_url(32);
+        if ($icon_32) {
+            $icon_32_ver = add_query_arg('v', $ver, $icon_32);
+            echo '<link rel="icon" href="' . esc_url($icon_32_ver) . '" sizes="32x32" />' . "\n";
+            echo '<link rel="shortcut icon" href="' . esc_url($icon_32_ver) . '" />' . "\n";
+        }
+        return;
+    }
+
+    $fallback_url = get_template_directory_uri() . '/assets/img/LOGOLOGO11.ico';
+    $ver = function_exists('bis_get_asset_version') ? bis_get_asset_version('assets/img/LOGOLOGO11.ico') : '1.0';
+    $fallback_url = add_query_arg('v', $ver, $fallback_url);
+    echo '<link rel="icon" type="image/x-icon" href="' . esc_url($fallback_url) . '" />' . "\n";
+    echo '<link rel="shortcut icon" type="image/x-icon" href="' . esc_url($fallback_url) . '" />' . "\n";
+}
+
+function bis_filter_site_icon_url($url, $size = 512, $blog_id = 0) {
+    if (!$url) {
+        return $url;
+    }
+    if (strpos($url, 'v=') !== false) {
+        return $url;
+    }
+    $ver = bis_get_site_icon_version();
+    if ($ver) {
+        return add_query_arg('v', $ver, $url);
+    }
+    return $url;
+}
+add_filter('get_site_icon_url', 'bis_filter_site_icon_url', 10, 3);
+
+function bis_filter_site_icon_meta_tags($meta_tags) {
+    if (!is_array($meta_tags) || empty($meta_tags)) {
+        return $meta_tags;
+    }
+    $ver = bis_get_site_icon_version();
+    if (!$ver) {
+        return $meta_tags;
+    }
+    foreach ($meta_tags as &$tag) {
+        $tag = preg_replace_callback('/(href|content)=([\'"])(.*?)\2/', function($m) use ($ver) {
+            $attr = $m[1];
+            $quote = $m[2];
+            $url = $m[3];
+            if (strpos($url, 'v=') === false) {
+                $url = add_query_arg('v', $ver, $url);
+            }
+            return $attr . '=' . $quote . esc_url($url) . $quote;
+        }, $tag);
+    }
+    return $meta_tags;
+}
+add_filter('site_icon_meta_tags', 'bis_filter_site_icon_meta_tags', 10, 1);
+

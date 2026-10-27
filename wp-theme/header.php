@@ -9,7 +9,7 @@
   ?>
   <meta name="title" content="<?php echo esc_attr($meta_title); ?>">
   <meta name="description" content="<?php echo esc_attr($document_description); ?>">
-  <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/LOGOLOGO11.ico">
+  <?php bis_render_site_favicon(); ?>
   <title><?php echo esc_html($meta_title); ?></title>
 
   <?php wp_head(); ?>
