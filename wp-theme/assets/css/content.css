@@ -3687,3 +3687,294 @@ button.bis-callback-link:active,
 .faq-cta__more { margin-bottom: 32px; }
 .faq-cta p { margin: 0 auto 20px; }
 .faq-cta__contact p { margin-bottom: 20px; }
+
+/* ==========================================================================
+   Video Business Card (Видео визитка)
+   ========================================================================== */
+
+.video-card-container {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  z-index: 1000;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.video-card-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.video-card-bottom-right {
+  bottom: 30px;
+  right: 30px;
+}
+
+.video-card-bottom-left {
+  bottom: 30px;
+  left: 30px;
+}
+
+.video-card-top-right {
+  top: 30px;
+  right: 30px;
+}
+
+.video-card-top-left {
+  top: 30px;
+  left: 30px;
+}
+
+.video-card-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.video-card-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.video-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.video-card-container:hover .video-card-overlay {
+  opacity: 1;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease;
+}
+
+.video-card-container:hover .play-button {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.video-card-info {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  min-width: 200px;
+}
+
+.video-card-info,
+.video-card-container:hover .video-card-info {
+  display: none;
+}
+
+.video-card-container:hover .video-card-info {
+  opacity: 1;
+  bottom: -50px;
+}
+
+.video-card-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.video-card-info p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.video-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  animation: fadeIn 0.3s ease;
+}
+
+.video-modal-content {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.video-modal-content video {
+  width: 100%;
+  height: auto;
+  max-height: calc(90vh - 96px);
+  object-fit: contain;
+}
+
+.video-modal-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.video-modal__book-btn {
+  min-width: 220px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 9999px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 28px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.video-modal__book-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.video-modal-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  border: 0;
+  background: transparent;
+  line-height: 1;
+}
+
+.video-modal-close:hover {
+  color: #ccc;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-card-container {
+    width: 80px;
+    height: 80px;
+  }
+
+  .video-card-bottom-right {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .video-card-bottom-left {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .video-card-top-right {
+    top: 20px;
+    right: 20px;
+  }
+
+  .video-card-top-left {
+    top: 20px;
+    left: 20px;
+  }
+
+  .play-button svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .video-card-info {
+    min-width: 150px;
+    padding: 8px 12px;
+  }
+
+  .video-card-info h3 {
+    font-size: 12px;
+  }
+
+  .video-card-info p {
+    font-size: 10px;
+  }
+
+  .video-modal-content {
+    width: 94%;
+    gap: 14px;
+  }
+
+  .video-modal-content video {
+    max-height: calc(90vh - 82px);
+  }
+
+  .video-modal__book-btn {
+    width: 100%;
+    max-width: 340px;
+    padding: 14px 20px;
+    letter-spacing: 1px;
+  }
+}
+
+body.bis-has-video-card-bottom-right .floating-estimate-wrapper {
+  bottom: 160px;
+}
+
+@media (max-width: 768px) {
+  body.bis-has-video-card-bottom-right .floating-estimate-wrapper {
+    bottom: 110px;
+  }
+}
+

@@ -18,6 +18,7 @@ if (is_file($hierarchy_repair_file)) {
     require_once $hierarchy_repair_file;
 }
 require_once get_template_directory() . '/inc/class-popular-pages.php';
+require_once get_template_directory() . '/inc/video-card.php';
 
 function bis_theme_scripts() {
     // Enqueue Google Fonts
