@@ -149,4 +149,7 @@ check(str_contains($map_js, 'removeAds') && str_contains($map_js, 'MutationObser
 $functions_php = file_get_contents(__DIR__ . '/../wp-theme/functions.php');
 check(str_contains($functions_php, 'BIS_YANDEX_MAPS_API_KEY') && str_contains($functions_php, '&apikey='), 'Functions supports custom Yandex Maps API key');
 
+$front_php = file_get_contents(__DIR__ . '/../wp-theme/front-page.php');
+check(str_contains($front_php, 'Обычный технадзор контролирует только процесс и документацию. «БИС — Баланс Инженерных Систем» контролирует конечный инженерный результат'), 'Front page supervision subtitle updated');
+
 echo "Client settings tests passed\n";
