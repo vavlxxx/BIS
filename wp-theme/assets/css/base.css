@@ -2298,6 +2298,43 @@ select {
   border-radius: 24px;
 }
 
+/* Suppress ad banners on contact Yandex Map */
+#yandex-map [class*="-ad-"],
+#yandex-map [class*="--ad"],
+#yandex-map [class*="-ad_"],
+#yandex-map [class*="b-ad"],
+#yandex-map [class*="ad_banner"],
+#yandex-map [class*="copyrights-promo"],
+#yandex-map [class*="promo-banner"],
+#yandex-map [class*="direct-banner"],
+#yandex-map [class*="direct-advert"],
+#yandex-map [class*="ymaps-"][class*="ad"],
+.yandex-map [class*="-ad-"],
+.yandex-map [class*="--ad"],
+.yandex-map [class*="-ad_"],
+.yandex-map [class*="b-ad"],
+.yandex-map [class*="ad_banner"],
+.yandex-map [class*="copyrights-promo"],
+.yandex-map [class*="promo-banner"],
+.yandex-map [class*="direct-banner"],
+.yandex-map [class*="direct-advert"],
+.yandex-map [class*="ymaps-"][class*="ad"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+}
+
+#yandex-map iframe,
+.yandex-map iframe {
+  width: 100% !important;
+  height: calc(100% + 56px) !important;
+  margin-bottom: -56px !important;
+}
+
 .yandex-map {
   position: relative;
   min-height: 400px;
