@@ -55,72 +55,12 @@ function initLazyYandexMap() {
   const mapRoot = document.querySelector('[data-yandex-map]');
   if (!mapRoot || mapRoot.dataset.mapInitialized === 'true') return;
 
+  const scriptSrc = mapRoot.dataset.mapScriptSrc;
   const interactiveContainer = mapRoot.querySelector('.yandex-map__interactive');
-  if (!interactiveContainer) return;
+
+  if (!scriptSrc || !interactiveContainer) return;
 
   let mapRequested = false;
-
-  const initNativeMap = () => {
-    try {
-      // Office coordinates: г. Москва, Таможенный проезд, 6с9
-      const officeCoords = [55.751665, 37.679484];
-      const mapCenter = [55.753776, 37.671575];
-
-      const contactMap = new ymaps.Map(interactiveContainer, {
-        center: mapCenter,
-        zoom: 14,
-        controls: ['zoomControl', 'fullscreenControl']
-      }, {
-        suppressMapOpenBlock: true,
-        searchControlProvider: 'yandex#search'
-      });
-
-      contactMap.behaviors.enable('scrollZoom');
-
-      const placemark = new ymaps.Placemark(officeCoords, {
-        hintContent: 'БИС — Баланс Инженерных Систем (г. Москва, проезд Таможенный д.6, стр.9)',
-        balloonContent: '<div style="font-family: \'Inter\', -apple-system, sans-serif; color: #111827; padding: 6px 8px; max-width: 260px;">' +
-          '<strong style="font-size: 14px; font-weight: 700; color: #167b88; display: block; margin-bottom: 4px;">БИС — Баланс Инженерных Систем</strong>' +
-          '<span style="font-size: 13px; color: #374151; display: block; line-height: 1.4;">г. Москва, проезд Таможенный д.6, стр.9</span>' +
-          '</div>'
-      }, {
-        preset: 'islands#blueDotIconWithCaption'
-      });
-
-      contactMap.geoObjects.add(placemark);
-      mapRoot.classList.add('is-loaded');
-
-      // Suppress any ad banners dynamically
-      const removeAds = () => {
-        try {
-          const ads = mapRoot.querySelectorAll(
-            '[class*="-ad-"], [class*="--ad"], [class*="-ad_"], [class*="b-ad"], [class*="ad_banner"], [class*="copyrights-promo"], [class*="promo-banner"], [class*="direct-banner"], [class*="direct-advert"], [class*="ymaps-"][class*="ad"]'
-          );
-          ads.forEach(el => {
-            el.style.setProperty('display', 'none', 'important');
-            el.style.setProperty('height', '0', 'important');
-          });
-
-          mapRoot.querySelectorAll('*').forEach(el => {
-            if (el.children.length === 0 && (el.textContent || '').trim().toUpperCase() === 'РЕКЛАМА') {
-              const adCard = el.closest('[class*="ymaps-2-1"]') || el.parentElement?.parentElement;
-              if (adCard && adCard !== interactiveContainer) {
-                adCard.style.setProperty('display', 'none', 'important');
-                adCard.style.setProperty('height', '0', 'important');
-              }
-            }
-          });
-        } catch (e) {}
-      };
-
-      if ('MutationObserver' in window) {
-        new MutationObserver(removeAds).observe(interactiveContainer, { childList: true, subtree: true });
-      }
-      removeAds();
-    } catch (err) {
-      console.error('Error initializing contact Yandex Map:', err);
-    }
-  };
 
   const loadMap = () => {
     if (mapRequested) return;
@@ -128,24 +68,19 @@ function initLazyYandexMap() {
     mapRequested = true;
     mapRoot.dataset.mapInitialized = 'true';
 
-    if (typeof ymaps !== 'undefined') {
-      ymaps.ready(initNativeMap);
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU';
-      script.async = true;
-      script.charset = 'utf-8';
-      script.onload = () => {
-        if (typeof ymaps !== 'undefined') {
-          ymaps.ready(initNativeMap);
-        }
-      };
-      script.onerror = () => {
-        mapRequested = false;
-        mapRoot.dataset.mapInitialized = 'false';
-      };
-      document.head.appendChild(script);
-    }
+    const script = document.createElement('script');
+    script.src = scriptSrc;
+    script.async = true;
+    script.charset = 'utf-8';
+    script.onload = () => {
+      mapRoot.classList.add('is-loaded');
+    };
+    script.onerror = () => {
+      mapRequested = false;
+      mapRoot.dataset.mapInitialized = 'false';
+    };
+
+    interactiveContainer.appendChild(script);
   };
 
   if (!('IntersectionObserver' in window)) {

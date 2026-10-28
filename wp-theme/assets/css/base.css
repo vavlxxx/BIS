@@ -2329,10 +2329,13 @@ select {
 }
 
 #yandex-map iframe,
-.yandex-map iframe {
+.yandex-map iframe,
+.yandex-map__interactive iframe {
+  display: block !important;
   width: 100% !important;
   height: calc(100% + 56px) !important;
   margin-bottom: -56px !important;
+  border: 0 !important;
 }
 
 .yandex-map {
@@ -2344,9 +2347,7 @@ select {
 }
 
 .yandex-map__static,
-.yandex-map__interactive,
-.yandex-map__interactive > div,
-.yandex-map__interactive ymaps {
+.yandex-map__interactive {
   width: 100%;
   height: 100%;
 }
