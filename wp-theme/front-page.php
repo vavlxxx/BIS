@@ -1036,7 +1036,6 @@ $categories = get_terms(array(
         id="yandex-map"
         class="yandex-map"
         data-yandex-map
-        data-map-script-src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A7972908992b0111eaafc38990b26b0c1dbbd437ee1e3b769e14322fe175cdfff&amp;id=yandex-map-live&amp;lang=ru_RU&amp;scroll=true"
       >
         <div class="yandex-map__static">
           <img

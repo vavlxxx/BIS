@@ -153,10 +153,13 @@ $front_php = file_get_contents(__DIR__ . '/../wp-theme/front-page.php');
 check(str_contains($front_php, 'Обычный технадзор контролирует только процесс и документацию. «БИС — Баланс Инженерных Систем» контролирует конечный инженерный результат'), 'Front page supervision subtitle updated');
 
 $site_app_js = file_get_contents(__DIR__ . '/../wp-theme/assets/js/site-app.js');
-check(str_contains($site_app_js, 'initLazyYandexMap') && str_contains($site_app_js, 'data-yandex-map'), 'Site app initializes lazy Yandex Map for contacts');
+check(str_contains($site_app_js, 'ymaps.Map') && str_contains($site_app_js, '55.751665') && str_contains($site_app_js, '37.679484'), 'Site app initializes native Yandex Map for contacts with exact office coordinates');
+check(str_contains($site_app_js, 'balloonPanelMaxMapArea: 0'), 'Site app disables mobile drawer panel for clean map view');
+check(str_contains($site_app_js, 'MutationObserver') && str_contains($site_app_js, 'removeAds'), 'Site app includes ad suppressor for contact Yandex Map');
 
 check(str_contains($base_css, '#yandex-map [class*="-ad-"]') && str_contains($base_css, 'display: none !important;'), 'Base CSS suppresses contact Yandex Map ad banners');
-check(str_contains($base_css, 'height: calc(100% + 56px)') && str_contains($base_css, 'margin-bottom: -56px'), 'Base CSS clips bottom ad bar from constructor iframe');
 check(!str_contains($base_css, '.yandex-map__interactive ymaps'), 'Base CSS does not force 100% width/height on inner ymaps elements');
+
+check(!str_contains($front_php, 'data-map-script-src'), 'Front page contact map does not load constructor iframe script');
 
 echo "Client settings tests passed\n";
