@@ -57,6 +57,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enable scroll zoom by default as requested
     map.behaviors.enable('scrollZoom');
 
+    // Suppress ad banners injected by free API
+    const removeAds = () => {
+      try {
+        const adElements = mapContainer.querySelectorAll(
+          '[class*="-ad-"], [class*="--ad"], [class*="-ad_"], [class*="b-ad"], [class*="ad_banner"], [class*="copyrights-promo"], [class*="promo-banner"], [class*="direct-banner"], [class*="ymaps-"][class*="ad"]'
+        );
+        adElements.forEach(el => {
+          el.style.setProperty('display', 'none', 'important');
+          el.style.setProperty('height', '0', 'important');
+        });
+
+        // Search for ad labels (e.g. "РЕКЛАМА")
+        mapContainer.querySelectorAll('*').forEach(el => {
+          if (el.children.length === 0 && (el.textContent || '').trim().toUpperCase() === 'РЕКЛАМА') {
+            const adCard = el.closest('[class*="ymaps-2-1"]') || el.parentElement?.parentElement;
+            if (adCard && adCard !== mapContainer) {
+              adCard.style.setProperty('display', 'none', 'important');
+              adCard.style.setProperty('height', '0', 'important');
+            }
+          }
+        });
+      } catch (e) {}
+    };
+
+    if ('MutationObserver' in window) {
+      const adObserver = new MutationObserver(removeAds);
+      adObserver.observe(mapContainer, { childList: true, subtree: true });
+    }
+    removeAds();
+
     // Dynamic marker scaling based on zoom level (adds objects-map--zoom-X class to container)
     const updateMarkerScaling = () => {
       const zoom = map.getZoom();

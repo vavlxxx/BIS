@@ -3429,6 +3429,25 @@
   height: 100%;
 }
 
+/* Hide Yandex Maps advertisement banners on free tier */
+#objects-yandex-map [class*="-ad-"],
+#objects-yandex-map [class*="--ad"],
+#objects-yandex-map [class*="-ad_"],
+#objects-yandex-map [class*="b-ad"],
+#objects-yandex-map [class*="ad_banner"],
+#objects-yandex-map [class*="copyrights-promo"],
+#objects-yandex-map [class*="promo-banner"],
+#objects-yandex-map [class*="direct-banner"],
+#objects-yandex-map [class*="ymaps-"][class*="ad"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+}
+
 @media (max-width: 768px) {
   .objects-yandex-map {
     height: 400px;

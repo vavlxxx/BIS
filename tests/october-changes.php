@@ -141,4 +141,12 @@ check(str_contains($about_php, '<span class="about-econ-card__num">1 год</spa
 check(str_contains($about_php, 'Срок окупаемости ПНР — 1 год. Дальше — чистая экономия каждый год всего срока службы здания.'), 'About page description updated with 1 year payback');
 check(!str_contains($about_php, '1 500 руб/м²'), 'Cost per square meter removed from about page economics');
 
+check(str_contains($front_css, '#objects-yandex-map [class*="-ad-"]') && str_contains($front_css, 'display: none !important;'), 'CSS suppresses Yandex Maps ad banners');
+
+$map_js = file_get_contents(__DIR__ . '/../wp-theme/assets/js/objects-map.js');
+check(str_contains($map_js, 'removeAds') && str_contains($map_js, 'MutationObserver'), 'Map JS includes ad suppressor with MutationObserver');
+
+$functions_php = file_get_contents(__DIR__ . '/../wp-theme/functions.php');
+check(str_contains($functions_php, 'BIS_YANDEX_MAPS_API_KEY') && str_contains($functions_php, '&apikey='), 'Functions supports custom Yandex Maps API key');
+
 echo "Client settings tests passed\n";
