@@ -103,7 +103,7 @@ function bis_video_card_admin_page() {
     ?>
     <div class="wrap">
         <h1>Настройки видео визитки</h1>
-        <p>Видео визитка будет отображаться только на главной странице сайта</p>
+        <p>Видео визитка будет отображаться на главной странице и странице «О компании»</p>
 
         <form method="post" action="">
             <?php wp_nonce_field('bis_video_card_settings_save', 'bis_video_card_nonce'); ?>
@@ -113,7 +113,7 @@ function bis_video_card_admin_page() {
                     <td>
                         <label>
                             <input type="checkbox" name="enabled" value="1" <?php checked(!empty($video_card_data['enabled']), true); ?> />
-                            Показывать видео визитку на главной странице
+                            Показывать видео визитку на главной странице и странице «О компании»
                         </label>
                     </td>
                 </tr>
@@ -162,8 +162,12 @@ function bis_video_card_admin_page() {
     <?php
 }
 
+function bis_video_card_is_allowed_page() {
+    return is_front_page() || is_page('about') || is_page_template('page-about.php');
+}
+
 function bis_display_video_card() {
-    if (!is_front_page()) {
+    if (!bis_video_card_is_allowed_page()) {
         return;
     }
 
@@ -223,7 +227,7 @@ function bis_display_video_card() {
 add_action('wp_footer', 'bis_display_video_card');
 
 function bis_video_card_enqueue_scripts() {
-    if (!is_front_page()) {
+    if (!bis_video_card_is_allowed_page()) {
         return;
     }
 
@@ -243,7 +247,7 @@ function bis_video_card_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'bis_video_card_enqueue_scripts');
 
 function bis_video_card_body_class($classes) {
-    if (!is_front_page()) {
+    if (!bis_video_card_is_allowed_page()) {
         return $classes;
     }
 

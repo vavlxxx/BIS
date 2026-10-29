@@ -64,6 +64,14 @@ if (!function_exists('is_front_page')) {
     }
 }
 
+function is_page($slug) {
+    return ($GLOBALS['page_slug'] ?? '') === $slug;
+}
+
+function is_page_template($template) {
+    return ($GLOBALS['page_template'] ?? '') === $template;
+}
+
 if (!function_exists('current_user_can')) {
     function current_user_can($cap) {
         return !empty($GLOBALS['current_user_can']);
@@ -300,5 +308,37 @@ test_assert(str_contains($video_card_js, 'data-video-card-contact'), 'video-card
 
 $video_card_admin_js = file_get_contents(__DIR__ . '/../wp-theme/assets/js/video-card-admin.js');
 test_assert(str_contains($video_card_admin_js, 'wp.media'), 'video-card-admin.js uses wp.media');
+
+// About works both by canonical slug and by assigned template.
+$GLOBALS['is_front_page'] = false;
+foreach ([['about', ''], ['company', 'page-about.php']] as [$slug, $template]) {
+    $GLOBALS['page_slug'] = $slug;
+    $GLOBALS['page_template'] = $template;
+    ob_start();
+    bis_display_video_card();
+    $about_html = ob_get_clean();
+    test_assert(str_contains($about_html, 'id="videoCard"'), 'About renders video circle');
+    test_assert(str_contains($about_html, 'id="videoModal"'), 'About renders player modal');
+    test_assert(in_array('bis-has-video-card-bottom-right', bis_video_card_body_class([]), true), 'About offsets floating controls');
+    $GLOBALS['scripts'] = [];
+    bis_video_card_enqueue_scripts();
+    test_assert(isset($GLOBALS['scripts']['bis-video-card-script']), 'About loads video interaction script');
+
+    $GLOBALS['options']['video_card_data']['enabled'] = 0;
+    ob_start();
+    bis_display_video_card();
+    test_assert(ob_get_clean() === '', 'Disabled About video stays hidden');
+    test_assert(bis_video_card_body_class([]) === [], 'Disabled About video adds no layout offset');
+    $GLOBALS['scripts'] = [];
+    bis_video_card_enqueue_scripts();
+    test_assert($GLOBALS['scripts'] === [], 'Disabled About video loads no script');
+    $GLOBALS['options']['video_card_data']['enabled'] = 1;
+}
+$GLOBALS['page_slug'] = 'contacts';
+$GLOBALS['page_template'] = '';
+test_assert(bis_video_card_body_class([]) === [], 'Other pages add no video offset');
+$GLOBALS['scripts'] = [];
+bis_video_card_enqueue_scripts();
+test_assert($GLOBALS['scripts'] === [], 'Other pages load no video script');
 
 echo "Video card tests passed\n";
