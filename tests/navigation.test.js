@@ -100,3 +100,54 @@ test('smooth scroll handles anchor links, excludes external pages, and accounts 
   vm.runInContext('smoothScrollToY', context)(500);
   assert.equal(scrolledTo.y, 500, 'Reduced motion should jump directly to target');
 });
+
+function floatingPanelFixture({ height = 800, closed = false } = {}) {
+  const classes = new Set();
+  const events = {};
+  const clicks = {};
+  const panel = {
+    classList: { toggle(name, on) { if (on) classes.add(name); else classes.delete(name); } },
+    querySelector: () => ({ addEventListener: (_, fn) => { clicks.close = fn; } })
+  };
+  const open = { hidden: true, addEventListener: (_, fn) => { clicks.open = fn; } };
+  const window = {
+    innerHeight: height, scrollY: 0,
+    addEventListener: (name, fn) => { events[name] = fn; },
+    sessionStorage: {
+      getItem: () => closed ? '1' : null,
+      setItem: () => { closed = true; }, removeItem: () => { closed = false; }
+    }
+  };
+  const context = vm.createContext({ window, document: {
+    querySelector: selector => selector === '[data-floating-social-panel]' ? panel : open
+  }});
+  vm.runInContext(fs.readFileSync('wp-theme/assets/js/site-navigation.js', 'utf8'), context);
+  vm.runInContext('initFloatingSocialPanel()', context);
+  return { window, open, clicks, hidden: () => classes.has('is-hidden'), scroll(y) { window.scrollY = y; events.scroll(); } };
+}
+
+test('contacts start collapsed and expand at the reference scroll threshold', () => {
+  for (const [height, threshold] of [[1000, 420], [600, 330]]) {
+    const f = floatingPanelFixture({ height });
+    assert.equal(f.hidden(), true);
+    assert.equal(f.open.hidden, false);
+    f.scroll(threshold);
+    assert.equal(f.hidden(), true);
+    f.scroll(threshold + 1);
+    assert.equal(f.hidden(), false);
+    assert.equal(f.open.hidden, true);
+    f.clicks.close();
+    f.scroll(threshold + 100);
+    assert.equal(f.hidden(), true, 'manual close prevents automatic reopening');
+    f.clicks.open();
+    assert.equal(f.hidden(), false);
+  }
+});
+
+test('contacts can open before scrolling and respect a saved manual close', () => {
+  const f = floatingPanelFixture({ closed: true });
+  f.scroll(500);
+  assert.equal(f.hidden(), true);
+  f.clicks.open();
+  assert.equal(f.hidden(), false);
+});
