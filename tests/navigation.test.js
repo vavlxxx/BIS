@@ -138,22 +138,29 @@ test('contacts start collapsed and expand at the reference scroll threshold', ()
     assert.equal(f.open.hidden, true);
     f.clicks.close();
     f.scroll(threshold + 100);
-    assert.equal(f.hidden(), false, 'scroll reopens contacts after manual close');
+    assert.equal(f.hidden(), true, 'manual close prevents reopening on this page');
     f.clicks.close();
     assert.equal(f.hidden(), true);
     f.scroll(threshold + 200);
-    assert.equal(f.hidden(), false, 'reopening works repeatedly');
+    assert.equal(f.hidden(), true, 'further scrolling respects manual close');
     f.clicks.open();
     assert.equal(f.hidden(), false);
   }
 });
 
-test('contacts ignore saved close state on every new page', () => {
-  const f = floatingPanelFixture({ closed: true });
-  assert.equal(f.hidden(), true);
-  f.clicks.open();
-  assert.equal(f.hidden(), false);
-  f.clicks.close();
-  f.scroll(500);
-  assert.equal(f.hidden(), false);
+test('manual dismissal lasts only for the current page and allows manual reopening', () => {
+  const firstPage = floatingPanelFixture();
+  firstPage.clicks.close();
+  firstPage.scroll(500);
+  assert.equal(firstPage.hidden(), true);
+  firstPage.clicks.open();
+  assert.equal(firstPage.hidden(), false);
+  firstPage.clicks.close();
+  firstPage.scroll(600);
+  assert.equal(firstPage.hidden(), true);
+
+  const nextPage = floatingPanelFixture({ closed: true });
+  assert.equal(nextPage.hidden(), true);
+  nextPage.scroll(500);
+  assert.equal(nextPage.hidden(), false, 'new page auto-opens regardless of old session state');
 });

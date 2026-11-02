@@ -202,6 +202,8 @@ function initFloatingSocialPanel() {
 
   const closeBtn = panel.querySelector('[data-floating-social-close]');
   const openBtn = document.querySelector('[data-floating-social-open]');
+  // A manual dismissal applies only to this page load.
+  let dismissed = false;
   const setHidden = (hidden) => {
     panel.classList.toggle('is-hidden', hidden);
     if (openBtn) {
@@ -211,6 +213,7 @@ function initFloatingSocialPanel() {
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
+      dismissed = true;
       setHidden(true);
     });
   }
@@ -225,7 +228,7 @@ function initFloatingSocialPanel() {
   setHidden(true);
   window.addEventListener('scroll', () => {
     const activationPoint = Math.min(window.innerHeight * 0.55, 420);
-    if (window.scrollY > activationPoint) {
+    if (!dismissed && window.scrollY > activationPoint) {
       setHidden(false);
     }
   }, { passive: true });
