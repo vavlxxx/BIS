@@ -138,16 +138,22 @@ test('contacts start collapsed and expand at the reference scroll threshold', ()
     assert.equal(f.open.hidden, true);
     f.clicks.close();
     f.scroll(threshold + 100);
-    assert.equal(f.hidden(), true, 'manual close prevents automatic reopening');
+    assert.equal(f.hidden(), false, 'scroll reopens contacts after manual close');
+    f.clicks.close();
+    assert.equal(f.hidden(), true);
+    f.scroll(threshold + 200);
+    assert.equal(f.hidden(), false, 'reopening works repeatedly');
     f.clicks.open();
     assert.equal(f.hidden(), false);
   }
 });
 
-test('contacts can open before scrolling and respect a saved manual close', () => {
+test('contacts ignore saved close state on every new page', () => {
   const f = floatingPanelFixture({ closed: true });
-  f.scroll(500);
   assert.equal(f.hidden(), true);
   f.clicks.open();
+  assert.equal(f.hidden(), false);
+  f.clicks.close();
+  f.scroll(500);
   assert.equal(f.hidden(), false);
 });

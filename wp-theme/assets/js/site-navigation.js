@@ -202,51 +202,31 @@ function initFloatingSocialPanel() {
 
   const closeBtn = panel.querySelector('[data-floating-social-close]');
   const openBtn = document.querySelector('[data-floating-social-open]');
-  const storageKey = 'bisFloatingSocialPanelClosed';
-  let autoOpened = false;
-  let manuallyControlled = false;
-  try { manuallyControlled = window.sessionStorage.getItem(storageKey) === '1'; } catch (e) {}
-
-  const setHidden = (hidden, { persist = true } = {}) => {
+  const setHidden = (hidden) => {
     panel.classList.toggle('is-hidden', hidden);
     if (openBtn) {
       openBtn.hidden = !hidden;
     }
-
-    if (!persist) {
-      return;
-    }
-
-    try {
-    if (hidden) {
-      window.sessionStorage.setItem(storageKey, '1');
-    } else {
-      window.sessionStorage.removeItem(storageKey);
-    }
-    } catch (e) {}
   };
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      manuallyControlled = true;
       setHidden(true);
     });
   }
 
   if (openBtn) {
     openBtn.addEventListener('click', () => {
-      manuallyControlled = true;
       setHidden(false);
     });
   }
 
   // Keep the phone visible from the first paint; reveal contacts after scrolling.
-  setHidden(true, { persist: false });
+  setHidden(true);
   window.addEventListener('scroll', () => {
     const activationPoint = Math.min(window.innerHeight * 0.55, 420);
-    if (!autoOpened && !manuallyControlled && window.scrollY > activationPoint) {
-      autoOpened = true;
-      setHidden(false, { persist: false });
+    if (window.scrollY > activationPoint) {
+      setHidden(false);
     }
   }, { passive: true });
 }
