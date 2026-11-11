@@ -10,10 +10,21 @@ $has_hero_slider = !empty($hero_images);
   <!-- Hero Section -->
   <section class="hero <?php echo $has_hero_slider ? 'hero--with-slider' : 'hero--parallax'; ?>" id="home" <?php if (count($hero_screens) > 1) : ?>data-hero-carousel role="region" aria-roledescription="карусель" aria-label="О компании"<?php endif; ?>>
     <?php if ($has_hero_slider) : ?>
-      <div class="hero-slider">
+      <div class="hero-slider" aria-hidden="true">
         <?php foreach ($hero_images as $index => $image) : ?>
-          <div class="hero-slide <?php echo $index === 0 ? 'active' : ''; ?>">
-            <img src="<?php echo esc_url($image ?: get_template_directory_uri() . '/assets/img/layers/layer2.webp'); ?>" alt="" decoding="async" fetchpriority="<?php echo $index === 0 ? 'high' : 'low'; ?>">
+          <div class="hero-slide <?php echo $index === 0 ? 'active' : ''; ?> <?php echo $image === '' ? 'hero-slide--parallax' : ''; ?>">
+            <?php if ($image !== '') : ?>
+              <img src="<?php echo esc_url($image); ?>" alt="" decoding="async" fetchpriority="<?php echo $index === 0 ? 'high' : 'low'; ?>">
+            <?php else : ?>
+              <div class="hero-parallax">
+                <div class="parallax-layer parallax-layer--back" data-speed="0.12">
+                  <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/layers/layer2.webp" alt="" decoding="async">
+                </div>
+                <div class="parallax-layer parallax-layer--front" data-speed="0.2">
+                  <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/layers/layer1.webp" alt="" decoding="async">
+                </div>
+              </div>
+            <?php endif; ?>
           </div>
         <?php endforeach; ?>
       </div>
@@ -50,12 +61,9 @@ $has_hero_slider = !empty($hero_images);
       </div>
       <?php if (count($hero_screens) > 1) : ?>
       <div class="hero-controls" aria-label="Управление слайдами">
-        <button type="button" data-hero-prev aria-label="Предыдущий слайд">←</button>
         <?php foreach ($hero_screens as $index => $slide) : ?>
           <button type="button" class="hero-dot" data-hero-dot="<?php echo (int) $index; ?>" aria-label="Слайд <?php echo (int) ($index + 1); ?>" aria-pressed="<?php echo $index === 0 ? 'true' : 'false'; ?>"></button>
         <?php endforeach; ?>
-        <button type="button" data-hero-next aria-label="Следующий слайд">→</button>
-        <button type="button" data-hero-pause aria-label="Автопрокрутка" aria-pressed="false">Пауза</button>
       </div>
       <?php endif; ?>
     </div>

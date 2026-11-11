@@ -4,10 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const slides = Array.from(root.querySelectorAll('[data-hero-screen]'));
     const images = Array.from(root.querySelectorAll('.hero-slide'));
     const dots = Array.from(root.querySelectorAll('[data-hero-dot]'));
-    const pauseButton = root.querySelector('[data-hero-pause]');
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let current = 0;
-    let paused = motion.matches;
     let timer;
     let hovered = false;
     const show = (index) => {
@@ -23,23 +21,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const schedule = () => {
         clearInterval(timer);
-        pauseButton.setAttribute('aria-pressed', String(paused));
-        pauseButton.textContent = paused ? 'Продолжить' : 'Пауза';
-        if (!paused && !hovered && !document.hidden && !root.contains(document.activeElement)) {
+        if (!motion.matches && !hovered && !document.hidden && !root.contains(document.activeElement)) {
             timer = setInterval(() => show(current + 1), 7000);
         }
     };
     const navigate = (index) => { show(index); schedule(); };
-    root.querySelector('[data-hero-prev]').addEventListener('click', () => navigate(current - 1));
-    root.querySelector('[data-hero-next]').addEventListener('click', () => navigate(current + 1));
     dots.forEach((dot, i) => dot.addEventListener('click', () => navigate(i)));
-    pauseButton.addEventListener('click', () => { paused = !paused; schedule(); });
     root.addEventListener('mouseenter', () => { hovered = true; schedule(); });
     root.addEventListener('mouseleave', () => { hovered = false; schedule(); });
     root.addEventListener('focusin', schedule);
     root.addEventListener('focusout', () => setTimeout(schedule, 0));
     document.addEventListener('visibilitychange', schedule);
-    motion.addEventListener('change', () => { paused = motion.matches; schedule(); });
+    motion.addEventListener('change', schedule);
     let startX = null;
     let startY = null;
     root.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });

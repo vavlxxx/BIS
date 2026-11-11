@@ -243,7 +243,7 @@ function initHeroParallax() {
   if (prefersReducedMotion) return;
 
   const hero = document.querySelector('.hero');
-  const layers = Array.from(parallax.querySelectorAll('[data-speed]'));
+  const layers = Array.from(document.querySelectorAll('.hero-parallax [data-speed]'));
   if (!layers.length) return;
 
   let ticking = false;

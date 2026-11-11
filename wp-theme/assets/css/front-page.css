@@ -3727,11 +3727,38 @@
 .hero-screens { display: grid; }
 .hero-screen { grid-area: 1 / 1; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; min-width: 0; }
 .hero-screen.active { visibility: visible; opacity: 1; pointer-events: auto; }
-.hero-screen__title { overflow-wrap: anywhere; }
-.hero-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 32px; }
-.hero-controls button { color: var(--bg); background: transparent; border: 1px solid var(--primary); min-width: 44px; min-height: 44px; padding: 8px 12px; cursor: pointer; transition: background 0.3s ease; }
-.hero-controls button:hover, .hero-controls button:focus-visible { background: var(--primary-dark); }
-.hero-controls .hero-dot { min-width: 24px; min-height: 44px; padding: 0; border: 0; position: relative; }
-.hero-dot::after { content: ''; display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); margin: auto; transition: background 0.3s ease; }
-.hero-dot[aria-pressed="true"]::after { background: var(--primary); }
+.hero .hero-screen__title {
+  display: block;
+  color: var(--bg);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  letter-spacing: -1px;
+  min-height: 90px;
+  max-width: 1200px;
+  margin: 0 0 24px;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+.hero-slide--parallax::after { display: none; }
+.hero-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; margin-top: 32px; }
+.hero-controls .hero-dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--bg);
+  cursor: pointer;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-controls .hero-dot:hover, .hero-controls .hero-dot:focus-visible { background: transparent; }
+.hero-controls .hero-dot:focus-visible { outline: 2px solid var(--primary); outline-offset: -6px; }
+.hero-dot::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); opacity: 0.7; transition: background 0.3s ease, transform 0.3s ease, opacity 0.3s ease; }
+.hero-dot[aria-pressed="true"]::after, .hero-dot:hover::after, .hero-dot:focus-visible::after { background: var(--primary); opacity: 1; transform: scale(1.3); }
+@media (max-width: 600px) { .hero .hero-screen__title { min-height: 0; letter-spacing: -0.5px; } }
 @media (prefers-reduced-motion: reduce) { .hero-screen, .hero-slide { transition: none; } }
