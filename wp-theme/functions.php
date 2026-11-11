@@ -7,6 +7,7 @@ require_once get_template_directory() . '/inc/gallery-s3.php';
 require_once get_template_directory() . '/inc/performance.php';
 require_once get_template_directory() . '/inc/query-helpers.php';
 require_once get_template_directory() . '/inc/content-helpers.php';
+require_once get_template_directory() . '/inc/hero-slider.php';
 require_once get_template_directory() . '/inc/admin-tools.php';
 require_once get_template_directory() . '/inc/request-handlers.php';
 require_once get_template_directory() . '/inc/media.php';

@@ -31,15 +31,15 @@ function bis_admin_scripts($hook) {
     if ('toplevel_page_bis-hero-slider' === $hook) {
         wp_enqueue_media();
         wp_enqueue_script('jquery-ui-sortable');
-        wp_enqueue_script('bis-admin-script', get_template_directory_uri() . '/assets/js/admin-script.js', array('jquery', 'jquery-ui-sortable'), '1.0', true);
-        wp_enqueue_style('bis-admin-style', get_template_directory_uri() . '/assets/css/admin-style.css', array(), '1.0');
+        wp_enqueue_script('bis-admin-script', get_template_directory_uri() . '/assets/js/admin-script.js', array('jquery', 'jquery-ui-sortable'), bis_get_asset_version('assets/js/admin-script.js'), true);
+        wp_enqueue_style('bis-admin-style', get_template_directory_uri() . '/assets/css/admin-style.css', array(), bis_get_asset_version('assets/css/admin-style.css'));
         return;
     }
 
     if ('toplevel_page_bis-team' === $hook) {
         wp_enqueue_media();
         wp_enqueue_script('jquery-ui-sortable');
-        wp_enqueue_script('bis-team-admin', get_template_directory_uri() . '/assets/js/admin-team.js', array('jquery', 'jquery-ui-sortable'), '1.0', true);
+        wp_enqueue_script('bis-team-admin', get_template_directory_uri() . '/assets/js/admin-team.js', array('jquery', 'jquery-ui-sortable'), bis_get_asset_version('assets/js/admin-script.js'), true);
         wp_enqueue_style('bis-team-admin', get_template_directory_uri() . '/assets/css/admin-team.css', array(), '1.0');
         return;
     }
@@ -102,38 +102,25 @@ function bis_admin_scripts($hook) {
 add_action('admin_enqueue_scripts', 'bis_admin_scripts');
 
 function bis_hero_slider_page() {
-    if (isset($_POST['bis_hero_slider_save']) && check_admin_referer('bis_hero_slider_nonce')) {
-        $images = isset($_POST['hero_images']) ? array_map('esc_url_raw', $_POST['hero_images']) : array();
-        update_option('bis_hero_slider_images', $images);
+    if (!current_user_can('manage_options')) return;
+    if (isset($_POST['bis_hero_slider_save'])) {
+        check_admin_referer('bis_hero_slider_nonce');
+        update_option('bis_hero_slides', bis_hero_normalize_slides(wp_unslash($_POST['hero_slides'] ?? array())));
         echo '<div class="updated"><p>Настройки сохранены.</p></div>';
     }
-
-    $images = get_option('bis_hero_slider_images', array());
+    $slides = bis_get_hero_slides();
+    if (!$slides) $slides = array(bis_hero_default_slide());
     ?>
     <div class="wrap">
-        <h1>Настройки слайдера Hero</h1>
-        <form method="post">
+        <h1>Слайдер первого экрана</h1>
+        <form method="post" id="hero-slider-form">
             <?php wp_nonce_field('bis_hero_slider_nonce'); ?>
-            <div id="hero-slider-images-container">
-                <ul id="hero-slider-list" class="hero-slider-list">
-                    <?php if (!empty($images)) : ?>
-                        <?php foreach ($images as $image) : ?>
-                            <li class="hero-slider-item">
-                                <div class="image-preview" style="background-image: url('<?php echo esc_url($image); ?>');"></div>
-                                <input type="hidden" name="hero_images[]" value="<?php echo esc_url($image); ?>">
-                                <button type="button" class="button remove-image">Удалить</button>
-                                <span class="dashicons dashicons-move handle"></span>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </ul>
-            </div>
-            <p>
-                <button type="button" class="button" id="add-hero-image">Добавить изображение</button>
-            </p>
-            <p class="submit">
-                <input type="submit" name="bis_hero_slider_save" class="button button-primary" value="Сохранить изменения">
-            </p>
+            <ul id="hero-slider-list" class="hero-slider-list">
+                <?php foreach ($slides as $index => $slide) bis_render_hero_admin_slide($slide, $index); ?>
+            </ul>
+            <template id="hero-slide-template"><?php bis_render_hero_admin_slide(array_fill_keys(array('image','title','text','button','url'), ''), 0); ?></template>
+            <p><button type="button" class="button" id="add-hero-image">Добавить слайд</button></p>
+            <p class="submit"><input type="submit" name="bis_hero_slider_save" class="button button-primary" value="Сохранить изменения"></p>
         </form>
     </div>
     <?php

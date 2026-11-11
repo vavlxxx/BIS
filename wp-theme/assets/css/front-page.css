@@ -3721,3 +3721,17 @@
     margin-top: 32px;
   }
 }
+
+/* Editable first-screen carousel. Shared grid reserves space for the longest screen. */
+.hero-content--screens { width: 100%; padding-bottom: 48px; }
+.hero-screens { display: grid; }
+.hero-screen { grid-area: 1 / 1; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; min-width: 0; }
+.hero-screen.active { visibility: visible; opacity: 1; pointer-events: auto; }
+.hero-screen__title { overflow-wrap: anywhere; }
+.hero-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 32px; }
+.hero-controls button { color: var(--bg); background: transparent; border: 1px solid var(--primary); min-width: 44px; min-height: 44px; padding: 8px 12px; cursor: pointer; transition: background 0.3s ease; }
+.hero-controls button:hover, .hero-controls button:focus-visible { background: var(--primary-dark); }
+.hero-controls .hero-dot { min-width: 24px; min-height: 44px; padding: 0; border: 0; position: relative; }
+.hero-dot::after { content: ''; display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); margin: auto; transition: background 0.3s ease; }
+.hero-dot[aria-pressed="true"]::after { background: var(--primary); }
+@media (prefers-reduced-motion: reduce) { .hero-screen, .hero-slide { transition: none; } }

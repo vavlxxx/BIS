@@ -3,16 +3,17 @@
 Template Name: Главная
 */
 get_header();
-$hero_images = get_option('bis_hero_slider_images', array());
+$hero_screens = bis_get_hero_slides();
+$hero_images = array_column($hero_screens, 'image');
 $has_hero_slider = !empty($hero_images);
 ?>
   <!-- Hero Section -->
-  <section class="hero <?php echo $has_hero_slider ? 'hero--with-slider' : 'hero--parallax'; ?>" id="home">
+  <section class="hero <?php echo $has_hero_slider ? 'hero--with-slider' : 'hero--parallax'; ?>" id="home" <?php if (count($hero_screens) > 1) : ?>data-hero-carousel role="region" aria-roledescription="карусель" aria-label="О компании"<?php endif; ?>>
     <?php if ($has_hero_slider) : ?>
       <div class="hero-slider">
         <?php foreach ($hero_images as $index => $image) : ?>
           <div class="hero-slide <?php echo $index === 0 ? 'active' : ''; ?>">
-            <img src="<?php echo esc_url($image); ?>" alt="" decoding="async" fetchpriority="<?php echo $index === 0 ? 'high' : 'low'; ?>">
+            <img src="<?php echo esc_url($image ?: get_template_directory_uri() . '/assets/img/layers/layer2.webp'); ?>" alt="" decoding="async" fetchpriority="<?php echo $index === 0 ? 'high' : 'low'; ?>">
           </div>
         <?php endforeach; ?>
       </div>
@@ -27,6 +28,38 @@ $has_hero_slider = !empty($hero_images);
       </div>
     <?php endif; ?>
     <div class="grid-pattern"></div>
+    <?php if ($has_hero_slider) : ?>
+    <div class="hero-content hero-content--screens">
+      <div class="hero-screens">
+      <?php foreach ($hero_screens as $index => $slide) : ?>
+        <div class="hero-screen <?php echo $index === 0 ? 'active' : ''; ?>" data-hero-screen aria-hidden="<?php echo $index === 0 ? 'false' : 'true'; ?>" <?php echo $index === 0 ? '' : 'inert'; ?>>
+          <?php $heading = $index === 0 ? 'h1' : 'h2'; ?>
+          <<?php echo $heading; ?> class="typing-title hero-screen__title"><?php echo esc_html($slide['title']); ?></<?php echo $heading; ?>>
+          <p class="hero-subtitle"><?php echo esc_html($slide['text']); ?></p>
+          <?php if ($slide['button'] !== '') : ?>
+          <div class="hero-cta">
+            <?php if ($slide['url'] !== '') : ?>
+              <a class="btn btn-primary" href="<?php echo esc_url($slide['url']); ?>"><?php echo esc_html($slide['button']); ?></a>
+            <?php else : ?>
+              <button class="btn btn-primary open-estimate-modal" type="button"><?php echo esc_html($slide['button']); ?></button>
+            <?php endif; ?>
+          </div>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+      </div>
+      <?php if (count($hero_screens) > 1) : ?>
+      <div class="hero-controls" aria-label="Управление слайдами">
+        <button type="button" data-hero-prev aria-label="Предыдущий слайд">←</button>
+        <?php foreach ($hero_screens as $index => $slide) : ?>
+          <button type="button" class="hero-dot" data-hero-dot="<?php echo (int) $index; ?>" aria-label="Слайд <?php echo (int) ($index + 1); ?>" aria-pressed="<?php echo $index === 0 ? 'true' : 'false'; ?>"></button>
+        <?php endforeach; ?>
+        <button type="button" data-hero-next aria-label="Следующий слайд">→</button>
+        <button type="button" data-hero-pause aria-label="Автопрокрутка" aria-pressed="false">Пауза</button>
+      </div>
+      <?php endif; ?>
+    </div>
+    <?php else : ?>
     <div class="hero-content">
       <h1 class="typing-title">
         <span class="typing-text">БИС — </span><span class="cursor">|</span>
@@ -38,6 +71,7 @@ $has_hero_slider = !empty($hero_images);
         <button class="btn btn-primary open-estimate-modal">Рассчитать смету и сроки</button>
       </div>
     </div>
+    <?php endif; ?>
     <div class="hero-nav-rail">
       <ul class="hero-nav">
         <li><a href="#services">Специализация</a></li>

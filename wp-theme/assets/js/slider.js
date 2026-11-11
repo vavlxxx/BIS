@@ -1,15 +1,56 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const slides = document.querySelectorAll('.hero-slide');
-    if (slides.length <= 1) return;
-
-    let currentSlide = 0;
-    const slideInterval = 10000; // 10 seconds
-
-    function nextSlide() {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }
-
-    setInterval(nextSlide, slideInterval);
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.querySelector('[data-hero-carousel]');
+    if (!root) return;
+    const slides = Array.from(root.querySelectorAll('[data-hero-screen]'));
+    const images = Array.from(root.querySelectorAll('.hero-slide'));
+    const dots = Array.from(root.querySelectorAll('[data-hero-dot]'));
+    const pauseButton = root.querySelector('[data-hero-pause]');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let current = 0;
+    let paused = motion.matches;
+    let timer;
+    let hovered = false;
+    const show = (index) => {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+            const active = i === current;
+            slide.classList.toggle('active', active);
+            slide.setAttribute('aria-hidden', String(!active));
+            slide.inert = !active;
+            images[i].classList.toggle('active', active);
+            dots[i].setAttribute('aria-pressed', String(active));
+        });
+    };
+    const schedule = () => {
+        clearInterval(timer);
+        pauseButton.setAttribute('aria-pressed', String(paused));
+        pauseButton.textContent = paused ? 'Продолжить' : 'Пауза';
+        if (!paused && !hovered && !document.hidden && !root.contains(document.activeElement)) {
+            timer = setInterval(() => show(current + 1), 7000);
+        }
+    };
+    const navigate = (index) => { show(index); schedule(); };
+    root.querySelector('[data-hero-prev]').addEventListener('click', () => navigate(current - 1));
+    root.querySelector('[data-hero-next]').addEventListener('click', () => navigate(current + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => navigate(i)));
+    pauseButton.addEventListener('click', () => { paused = !paused; schedule(); });
+    root.addEventListener('mouseenter', () => { hovered = true; schedule(); });
+    root.addEventListener('mouseleave', () => { hovered = false; schedule(); });
+    root.addEventListener('focusin', schedule);
+    root.addEventListener('focusout', () => setTimeout(schedule, 0));
+    document.addEventListener('visibilitychange', schedule);
+    motion.addEventListener('change', () => { paused = motion.matches; schedule(); });
+    let startX = null;
+    let startY = null;
+    root.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
+    root.addEventListener('touchcancel', () => { startX = null; }, { passive: true });
+    root.addEventListener('touchend', e => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) navigate(current + (dx < 0 ? 1 : -1));
+        startX = null;
+    }, { passive: true });
+    show(0);
+    schedule();
 });

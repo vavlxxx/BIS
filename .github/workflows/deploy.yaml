@@ -50,6 +50,11 @@ jobs:
           php tests/service-tags.php
           node --test tests/service-tags.test.js
 
+      - name: Test editable hero slider
+        run: |
+          php tests/hero-slider.php
+          node --test tests/hero-slider.test.js
+
       - name: Test object carousel content and images
         run: php tests/object-carousel.php
 

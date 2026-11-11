@@ -1,41 +1,26 @@
-jQuery(document).ready(function ($) {
-    // Initialize Sortable
-    $('#hero-slider-list').sortable({
-        handle: '.handle',
-        placeholder: 'ui-state-highlight'
-    });
-
-    // Add Image
-    $('#add-hero-image').on('click', function (e) {
-        e.preventDefault();
-        var image_frame;
-        if (image_frame) {
-            image_frame.open();
-            return;
-        }
-        image_frame = wp.media({
-            title: 'Выберите изображение для слайдера',
-            multiple: false,
-            library: {
-                type: 'image'
-            }
+jQuery(function ($) {
+    const list = $('#hero-slider-list');
+    const renumber = () => list.children('li').each(function (index) {
+        $(this).find('[data-hero-field]').each(function () {
+            this.name = `hero_slides[${index}][${this.dataset.heroField}]`;
         });
-        image_frame.on('select', function () {
-            var selection = image_frame.state().get('selection').first().toJSON();
-            var image_url = selection.url;
-            var html = '<li class="hero-slider-item">';
-            html += '<div class="image-preview" style="background-image: url(' + image_url + ');"></div>';
-            html += '<input type="hidden" name="hero_images[]" value="' + image_url + '">';
-            html += '<button type="button" class="button remove-image">Удалить</button>';
-            html += '<span class="dashicons dashicons-move handle"></span>';
-            html += '</li>';
-            $('#hero-slider-list').append(html);
-        });
-        image_frame.open();
     });
-
-    // Remove Image
-    $('#hero-slider-list').on('click', '.remove-image', function () {
-        $(this).closest('li').remove();
+    list.sortable({ handle: '.handle', placeholder: 'ui-state-highlight', update: renumber });
+    $('#hero-slider-form').on('submit', renumber);
+    $('#add-hero-image').on('click', function () {
+        if (list.children().length >= 12) return;
+        list.append(document.querySelector('#hero-slide-template').content.cloneNode(true));
+        renumber();
+    });
+    list.on('click', '.remove-image', function () { $(this).closest('li').remove(); renumber(); });
+    list.on('click', '.choose-hero-image', function () {
+        const card = $(this).closest('li');
+        const frame = wp.media({ title: 'Фон слайда', multiple: false, library: { type: 'image' } });
+        frame.on('select', function () {
+            const image = frame.state().get('selection').first().toJSON();
+            card.find('[data-hero-field="image"]').val(image.url);
+            card.find('.image-preview').css('background-image', `url("${image.url.replace(/["\\]/g, '\\$&')}")`);
+        });
+        frame.open();
     });
 });
