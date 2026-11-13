@@ -29,8 +29,9 @@ function bis_privacy_url() {
     return $url ?: home_url('/privacy-policy/');
 }
 function bis_render_form_consent() {
-    echo '<p class="form-consent">Нажимая на кнопку, вы даете согласие на обработку своих персональных данных и соглашаетесь с <a href="'.esc_url(bis_privacy_url()).'" target="_blank" rel="noopener">Политикой конфиденциальности сайта</a></p>';
+    echo '<div class="form-consent"><label class="form-consent__label"><input type="checkbox" name="privacy" value="1" required><span>Я даю согласие на обработку персональных данных и соглашаюсь с <a href="'.esc_url(bis_privacy_url()).'" target="_blank" rel="noopener">Политикой конфиденциальности сайта</a>.</span></label></div>';
 }
+
 function bis_client_general_settings() {
     register_setting('general', 'bis_home_keywords', array('sanitize_callback'=>'sanitize_textarea_field'));
     register_setting('general', 'bis_captcha_enabled', array('sanitize_callback'=>function($v) { return $v === '1' ? '1' : '0'; }));

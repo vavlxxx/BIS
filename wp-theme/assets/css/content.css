@@ -3978,3 +3978,9 @@ body.bis-has-video-card-bottom-right .floating-estimate-wrapper {
   }
 }
 
+
+/* Explicit, unchecked consent shared by all lead forms. */
+.form-consent__label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; text-align: left; font-weight: 400; }
+.form-consent__label input[type="checkbox"] { appearance: auto; flex: 0 0 18px; width: 18px; height: 18px; min-height: 0; margin: 2px 0 0; padding: 0; accent-color: var(--primary-dark); cursor: pointer; }
+.form-consent__label input[type="checkbox"]:focus-visible { outline: 2px solid var(--primary-dark); outline-offset: 3px; }
+.form-consent__label span { flex: 1; min-width: 0; }

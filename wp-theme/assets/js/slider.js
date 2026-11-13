@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const images = Array.from(root.querySelectorAll('.hero-slide'));
     const dots = Array.from(root.querySelectorAll('[data-hero-dot]'));
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const configuredInterval = Number(root.getAttribute('data-hero-interval'));
+    const interval = configuredInterval > 0 ? Math.max(3000, Math.min(60000, configuredInterval)) : 7000;
     let current = 0;
     let timer;
     let hovered = false;
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const schedule = () => {
         clearInterval(timer);
         if (!motion.matches && !hovered && !document.hidden && !root.contains(document.activeElement)) {
-            timer = setInterval(() => show(current + 1), 7000);
+            timer = setInterval(() => show(current + 1), interval);
         }
     };
     const navigate = (index) => { show(index); schedule(); };

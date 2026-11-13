@@ -8,7 +8,7 @@ $hero_images = array_column($hero_screens, 'image');
 $has_hero_slider = !empty($hero_images);
 ?>
   <!-- Hero Section -->
-  <section class="hero <?php echo $has_hero_slider ? 'hero--with-slider' : 'hero--parallax'; ?>" id="home" <?php if (count($hero_screens) > 1) : ?>data-hero-carousel role="region" aria-roledescription="карусель" aria-label="О компании"<?php endif; ?>>
+  <section class="hero <?php echo $has_hero_slider ? 'hero--with-slider' : 'hero--parallax'; ?>" id="home" <?php if (count($hero_screens) > 1) : ?>data-hero-carousel data-hero-interval="<?php echo (int) (bis_hero_interval_seconds() * 1000); ?>" role="region" aria-roledescription="карусель" aria-label="О компании"<?php endif; ?>>
     <?php if ($has_hero_slider) : ?>
       <div class="hero-slider" aria-hidden="true">
         <?php foreach ($hero_images as $index => $image) : ?>
@@ -45,12 +45,14 @@ $has_hero_slider = !empty($hero_images);
       <?php foreach ($hero_screens as $index => $slide) : ?>
         <div class="hero-screen <?php echo $index === 0 ? 'active' : ''; ?>" data-hero-screen aria-hidden="<?php echo $index === 0 ? 'false' : 'true'; ?>" <?php echo $index === 0 ? '' : 'inert'; ?>>
           <?php $heading = $index === 0 ? 'h1' : 'h2'; ?>
+          <?php if ($slide['title'] !== '') : ?>
           <<?php echo $heading; ?> class="typing-title hero-screen__title"><?php echo esc_html($slide['title']); ?></<?php echo $heading; ?>>
+          <?php endif; ?>
           <p class="hero-subtitle"><?php echo esc_html($slide['text']); ?></p>
           <?php if ($slide['button'] !== '') : ?>
           <div class="hero-cta">
             <?php if ($slide['url'] !== '') : ?>
-              <a class="btn btn-primary" href="<?php echo esc_url($slide['url']); ?>"><?php echo esc_html($slide['button']); ?></a>
+              <a class="btn btn-primary" href="<?php echo esc_url($slide['url']); ?>" <?php if ($slide['new_tab']) : ?>target="_blank" rel="noopener noreferrer"<?php endif; ?>><?php echo esc_html($slide['button']); ?></a>
             <?php else : ?>
               <button class="btn btn-primary open-estimate-modal" type="button"><?php echo esc_html($slide['button']); ?></button>
             <?php endif; ?>
@@ -303,19 +305,19 @@ $has_hero_slider = !empty($hero_images);
           <span class="stat-label">реализованных проектов</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">15 тыс</span>
+          <span class="stat-value">15 тыс.</span>
           <span class="stat-label">общеобменных систем обследовано и налажено</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">6 тыс</span>
+          <span class="stat-value">6 тыс.</span>
           <span class="stat-label">противодымных систем обследовано и налажено</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">200 тыс</span>
+          <span class="stat-value">200 тыс.</span>
           <span class="stat-label">регулирующих устройств и балансиров</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">25 тыс</span>
+          <span class="stat-value">25 тыс.</span>
           <span class="stat-label">индивидуальных испытаний</span>
         </div>
         <div class="stat-item">
@@ -323,11 +325,11 @@ $has_hero_slider = !empty($hero_images);
           <span class="stat-label">ИТП и хладоцентров</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">100 тыс</span>
+          <span class="stat-value">100 тыс.</span>
           <span class="stat-label">м.п. воздуховодов проверено на герметичность</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">80%</span>
+          <span class="stat-value">90%</span>
           <span class="stat-label">клиентов возвращаются повторно</span>
         </div>
       </div>

@@ -18,4 +18,14 @@ check($slides[0]['url'] === '', 'Unsafe links removed');
 check(count(bis_hero_normalize_slides(array_fill(0, 20, bis_hero_default_slide()))) === 12, 'Slide count capped');
 $options['bis_hero_slides'] = array();
 check(bis_get_hero_slides() === array(), 'Cleared new configuration does not revive legacy images');
+$options['bis_hero_slides'] = array(
+    array('title'=>'', 'text'=>'Description without title', 'hidden'=>'1', 'new_tab'=>'1'),
+    array('title'=>'', 'image'=>'https://example.com/no-title.jpg'),
+);
+check(count(bis_get_hero_slides()) === 1, 'Hidden slide excluded from frontend');
+$admin_slides = bis_get_hero_slides(true);
+check(count($admin_slides) === 2 && $admin_slides[0]['hidden'] && $admin_slides[0]['new_tab'], 'Hidden and target settings retained for admin');
+check(bis_get_hero_slides()[0]['title'] === '', 'Image-only slide retains optional title');
+$options['bis_hero_interval'] = 12;
+check(bis_hero_interval_seconds() === 12 && bis_hero_interval_seconds(1) === 3 && bis_hero_interval_seconds(100) === 60, 'Configured interval has safe bounds');
 echo "Hero slider tests passed\n";

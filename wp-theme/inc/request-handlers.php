@@ -843,7 +843,15 @@ function bis_send_request_notification($post_id) {
     return wp_mail($recipients, $subject, $message, $headers, $attachments);
 }
 
+function bis_require_request_consent() {
+    $consent = $_POST['privacy'] ?? null;
+    if (!is_string($consent) || !in_array($consent, array('1', 'on'), true)) {
+        wp_send_json_error(array('message' => 'Подтвердите согласие на обработку персональных данных.'));
+    }
+}
+
 function bis_submit_general_request() {
+    bis_require_request_consent();
     $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
     $raw_email = isset($_POST['email']) ? wp_unslash($_POST['email']) : '';
@@ -852,6 +860,7 @@ function bis_submit_general_request() {
     $service = isset($_POST['service']) ? sanitize_text_field(wp_unslash($_POST['service'])) : '';
     $request_type = isset($_POST['request_type']) ? sanitize_key(wp_unslash($_POST['request_type'])) : 'contact';
     $location_meta = bis_get_request_location_meta_input();
+    $location_meta['bis_privacy'] = '1';
 
     if (!in_array($request_type, array('contact', 'order', 'callback', 'exit_intent'), true)) {
         $request_type = 'contact';
@@ -924,6 +933,8 @@ function bis_submit_estimate() {
         wp_send_json_error(array('message' => 'Размер данных формы превышает лимит сервера. Уменьшите файл или увеличьте `post_max_size` и `upload_max_filesize`.'));
     }
 
+    bis_require_request_consent();
+
     $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
     $raw_email = isset($_POST['email']) ? wp_unslash($_POST['email']) : '';
@@ -931,6 +942,7 @@ function bis_submit_estimate() {
     $messenger = isset($_POST['messenger']) ? bis_normalize_request_messenger(sanitize_text_field(wp_unslash($_POST['messenger']))) : '';
     $comment = isset($_POST['comment']) ? sanitize_textarea_field(wp_unslash($_POST['comment'])) : '';
     $location_meta = bis_get_request_location_meta_input();
+    $location_meta['bis_privacy'] = '1';
     $hcaptcha_check = bis_maybe_verify_hcaptcha_response(true);
 
     if (is_wp_error($hcaptcha_check)) {
@@ -1015,6 +1027,8 @@ function bis_submit_vacancy() {
         wp_send_json_error(array('message' => 'Размер данных формы превышает лимит сервера. Уменьшите файл резюме.'));
     }
 
+    bis_require_request_consent();
+
     $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
     $raw_email = isset($_POST['email']) ? wp_unslash($_POST['email']) : '';
@@ -1024,6 +1038,7 @@ function bis_submit_vacancy() {
         : 'Вакансии в БИС';
     $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
     $location_meta = bis_get_request_location_meta_input();
+    $location_meta['bis_privacy'] = '1';
     $hcaptcha_check = bis_maybe_verify_hcaptcha_response(true);
 
     if (is_wp_error($hcaptcha_check)) {
@@ -1098,6 +1113,7 @@ add_action('wp_ajax_nopriv_bis_submit_vacancy', 'bis_submit_vacancy');
 
 // AJAX Handler for Project Consultation Form
 function bis_submit_project_consultation() {
+    bis_require_request_consent();
     $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
     $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
@@ -1106,9 +1122,10 @@ function bis_submit_project_consultation() {
     $topic = isset($_POST['topic']) ? sanitize_text_field(wp_unslash($_POST['topic'])) : '';
     $details = isset($_POST['details']) ? sanitize_textarea_field(wp_unslash($_POST['details'])) : '';
     $project_id = isset($_POST['project_id']) ? intval($_POST['project_id']) : 0;
-    $privacy = isset($_POST['privacy']) ? '1' : '0';
+    $privacy = '1';
     $marketing = isset($_POST['marketing']) ? '1' : '0';
     $location_meta = bis_get_request_location_meta_input();
+    $location_meta['bis_privacy'] = '1';
     $hcaptcha_check = bis_maybe_verify_hcaptcha_response(true);
 
     if (is_wp_error($hcaptcha_check)) {

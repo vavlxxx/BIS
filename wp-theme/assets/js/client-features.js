@@ -2,6 +2,15 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('form.contact-form, #projectConsultationForm, #turnkeyCalcForm').forEach(form => {
     form.noValidate = true;
+    // Preserve custom field validation, but require explicit consent before any AJAX handler.
+    form.addEventListener('submit', event => {
+      const consent = form.querySelector('input[type="checkbox"][name="privacy"][required]');
+      if (consent && !consent.checked) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        consent.reportValidity();
+      }
+    }, true);
     form.querySelectorAll('input:not([type="hidden"]), textarea, select').forEach(field => {
       field.addEventListener('blur', () => validateField(field));
       field.addEventListener('input', () => { if (field.getAttribute('aria-invalid') === 'true') validateField(field); });

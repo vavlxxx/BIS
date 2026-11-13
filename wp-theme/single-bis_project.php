@@ -195,10 +195,7 @@ get_header();
                         </div>
 
                         <div class="project-consultation__field full project-consultation__consent">
-                            <label>
-                                <input type="checkbox" name="privacy" required>
-                                Я соглашаюсь с обработкой персональных данных, в соответствии с <a href="<?php echo esc_url(bis_privacy_url()); ?>" target="_blank" rel="noopener">Политикой конфиденциальности</a>.
-                            </label>
+                            <?php bis_render_form_consent(); ?>
                             <label>
                                 <input type="checkbox" name="marketing">
                                 Я соглашаюсь на получение информационных рассылок и другой коммуникации от БИС.
@@ -207,7 +204,6 @@ get_header();
                         <?php echo bis_render_captcha(); ?>
                         <div class="project-consultation__actions full">
                             <button type="submit" class="btn btn-primary">Отправить</button>
-                            <?php bis_render_form_consent(); ?>
                         </div>
                     </form>
                 </div>

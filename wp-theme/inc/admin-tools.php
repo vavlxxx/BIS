@@ -106,15 +106,17 @@ function bis_hero_slider_page() {
     if (isset($_POST['bis_hero_slider_save'])) {
         check_admin_referer('bis_hero_slider_nonce');
         update_option('bis_hero_slides', bis_hero_normalize_slides(wp_unslash($_POST['hero_slides'] ?? array())));
+        update_option('bis_hero_interval', bis_hero_interval_seconds($_POST['hero_interval'] ?? 7));
         echo '<div class="updated"><p>Настройки сохранены.</p></div>';
     }
-    $slides = bis_get_hero_slides();
+    $slides = bis_get_hero_slides(true);
     if (!$slides) $slides = array(bis_hero_default_slide());
     ?>
     <div class="wrap">
         <h1>Слайдер первого экрана</h1>
         <form method="post" id="hero-slider-form">
             <?php wp_nonce_field('bis_hero_slider_nonce'); ?>
+            <p><label>Интервал переключения слайдов, секунд <input type="number" name="hero_interval" min="3" max="60" value="<?php echo (int) bis_hero_interval_seconds(); ?>" required></label> <span class="description">От 3 до 60 секунд.</span></p>
             <ul id="hero-slider-list" class="hero-slider-list">
                 <?php foreach ($slides as $index => $slide) bis_render_hero_admin_slide($slide, $index); ?>
             </ul>

@@ -29,14 +29,27 @@ function wp_send_json_success($d) { throw new JsonResponse(true,$d); }
 function bis_captcha_enabled() { return false; }
 require __DIR__.'/../wp-theme/inc/request-handlers.php';
 function submit($handler,$data) { $_POST=$data; unset($GLOBALS['request'],$GLOBALS['mail']);try {$handler();}catch(JsonResponse $e){return $e;}throw new Exception('No response'); }
-$r=submit('bis_submit_general_request',array('request_type'=>'callback','name'=>'Проверка','phone'=>'+7 (926) 438-07-70'));
+$r=submit('bis_submit_general_request',array('privacy'=>'1','request_type'=>'callback','name'=>'Проверка','phone'=>'+7 (926) 438-07-70'));
 if (!$r->success || $GLOBALS['request']['post_type']!=='bis_request' || $GLOBALS['request']['meta_input']['bis_request_type']!=='callback' || count($GLOBALS['mail'])!==5) throw new Exception('Callback must save and notify');
 foreach (array('','7926438077','792643807700') as $phone) {
- $r=submit('bis_submit_general_request',array('request_type'=>'callback','name'=>'Проверка','phone'=>$phone));
+ $r=submit('bis_submit_general_request',array('privacy'=>'1','request_type'=>'callback','name'=>'Проверка','phone'=>$phone));
  if ($r->success || isset($GLOBALS['request']) || isset($GLOBALS['mail'])) throw new Exception('Invalid phone must not save or notify');
 }
-$r=submit('bis_submit_general_request',array('request_type'=>'callback','name'=>'','phone'=>'79264380770'));
+$r=submit('bis_submit_general_request',array('privacy'=>'1','request_type'=>'callback','name'=>'','phone'=>'79264380770'));
 if ($r->success || isset($GLOBALS['request'])) throw new Exception('Missing name accepted');
 $r=submit('bis_submit_project_consultation',array('name'=>'Проверка','phone'=>'79264380770','email'=>'test@example.invalid','privacy'=>'1'));
 if (!$r->success || $GLOBALS['request']['meta_input']['bis_company']!=='' || $GLOBALS['request']['meta_input']['bis_position']!=='' || $GLOBALS['request']['meta_input']['bis_topic']!=='') throw new Exception('Optional project fields rejected');
 echo "Request form validation, persistence and mail tests passed\n";
+
+// Every endpoint rejects absent/false consent before storing data or sending email.
+foreach (array('bis_submit_general_request','bis_submit_estimate','bis_submit_vacancy','bis_submit_project_consultation') as $handler) {
+    foreach (array(null, '', '0', 'false', array('1')) as $consent) {
+        $data = array('name'=>'Проверка','phone'=>'79264380770','email'=>'test@example.invalid');
+        if ($consent !== null) $data['privacy'] = $consent;
+        $r = submit($handler, $data);
+        if ($r->success || isset($GLOBALS['request']) || isset($GLOBALS['mail']) || !str_contains($r->data['message'], 'согласие')) throw new Exception('Missing consent accepted: '.$handler);
+    }
+    $r = submit($handler, array('name'=>'Проверка','phone'=>'79264380770','email'=>'test@example.invalid','privacy'=>'1','request_type'=>'callback'));
+    if (!$r->success || $GLOBALS['request']['meta_input']['bis_privacy'] !== '1') throw new Exception('Consenting request rejected or not recorded: '.$handler);
+}
+echo "All submission endpoints enforce explicit consent\n";
