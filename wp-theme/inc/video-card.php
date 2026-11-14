@@ -163,6 +163,11 @@ function bis_video_card_admin_page() {
 }
 
 function bis_video_card_is_allowed_page() {
+    // The calculator rewrite may retain the front-page query flags.
+    if (bis_is_calculators_page()) {
+        return false;
+    }
+
     return is_front_page() || is_page('about') || is_page_template('page-about.php');
 }
 

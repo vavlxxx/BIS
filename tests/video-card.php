@@ -72,6 +72,10 @@ function is_page_template($template) {
     return ($GLOBALS['page_template'] ?? '') === $template;
 }
 
+function bis_is_calculators_page() {
+    return !empty($GLOBALS['is_calculators_page']);
+}
+
 if (!function_exists('current_user_can')) {
     function current_user_can($cap) {
         return !empty($GLOBALS['current_user_can']);
@@ -340,5 +344,16 @@ test_assert(bis_video_card_body_class([]) === [], 'Other pages add no video offs
 $GLOBALS['scripts'] = [];
 bis_video_card_enqueue_scripts();
 test_assert($GLOBALS['scripts'] === [], 'Other pages load no video script');
+
+// The calculator rewrite can leave WordPress reporting the front-page query.
+$GLOBALS['is_front_page'] = true;
+$GLOBALS['is_calculators_page'] = true;
+ob_start();
+bis_display_video_card();
+test_assert(ob_get_clean() === '', 'Calculators never render the video circle or modal');
+test_assert(bis_video_card_body_class([]) === [], 'Calculators add no video layout offset');
+$GLOBALS['scripts'] = [];
+bis_video_card_enqueue_scripts();
+test_assert($GLOBALS['scripts'] === [], 'Calculators load no video script');
 
 echo "Video card tests passed\n";

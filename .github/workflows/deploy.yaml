@@ -58,6 +58,9 @@ jobs:
       - name: Test object carousel content and images
         run: php tests/object-carousel.php
 
+      - name: Test video card visibility
+        run: php tests/video-card.php
+
   deploy:
     needs: verify
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
