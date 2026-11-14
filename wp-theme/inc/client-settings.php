@@ -60,38 +60,8 @@ function bis_get_service_message($post_id = 0) {
         return '';
     }
 
-    $message = trim((string) get_post_meta($post_id, 'bis_service_message', true));
-    if ($message === '') {
-        return '';
-    }
-
-    // Guard against cascade copy: a service must not display an inherited ancestor's message
-    $parent_id = function_exists('wp_get_post_parent_id') ? (int) wp_get_post_parent_id($post_id) : 0;
-    if (!$parent_id && function_exists('get_post')) {
-        $post_obj = get_post($post_id);
-        if ($post_obj instanceof WP_Post) {
-            $parent_id = (int) $post_obj->post_parent;
-        }
-    }
-
-    $visited = array($post_id => true);
-    while ($parent_id > 0 && !isset($visited[$parent_id])) {
-        $visited[$parent_id] = true;
-        $parent_message = trim((string) get_post_meta($parent_id, 'bis_service_message', true));
-        if ($parent_message !== '' && $message === $parent_message) {
-            return '';
-        }
-        $next_parent = function_exists('wp_get_post_parent_id') ? (int) wp_get_post_parent_id($parent_id) : 0;
-        if (!$next_parent && function_exists('get_post')) {
-            $parent_obj = get_post($parent_id);
-            if ($parent_obj instanceof WP_Post) {
-                $next_parent = (int) $parent_obj->post_parent;
-            }
-        }
-        $parent_id = $next_parent;
-    }
-
-    return $message;
+    // Each service owns its field; identical text on other pages is allowed.
+    return trim((string) get_post_meta($post_id, 'bis_service_message', true));
 }
 
 function bis_service_message_box() {
@@ -121,24 +91,7 @@ function bis_save_service_message($id) {
         update_post_meta($id, 'bis_service_message', $message);
     }
 
-    // Clean up any child services that erroneously inherited a previous copy
-    if (function_exists('get_posts')) {
-        $children = get_posts(array(
-            'post_type'      => 'bis_service',
-            'post_parent'    => $id,
-            'posts_per_page' => -1,
-            'fields'         => 'ids',
-            'post_status'    => array('publish', 'draft', 'pending', 'future', 'private'),
-        ));
-        if (is_array($children)) {
-            foreach ($children as $child_id) {
-                $child_msg = trim((string) get_post_meta($child_id, 'bis_service_message', true));
-                if ($child_msg !== '' && $child_msg === $message) {
-                    delete_post_meta($child_id, 'bis_service_message');
-                }
-            }
-        }
-    }
+
 }
 add_action('save_post_bis_service', 'bis_save_service_message');
 

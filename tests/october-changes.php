@@ -59,9 +59,9 @@ unset($GLOBALS['meta'][$child_id]['bis_service_message']);
 check(bis_get_service_message($parent_id) === 'Предложение для ПНР', 'Parent returns configured message');
 check(bis_get_service_message($child_id) === '', 'Child returns empty when it has no message');
 
-// 2. Child erroneously has the exact same message as parent (cascaded by previous bug)
+// 2. Identical calls to action are valid independent content on different services.
 $GLOBALS['meta'][$child_id]['bis_service_message'] = 'Предложение для ПНР';
-check(bis_get_service_message($child_id) === '', 'Child suppresses inherited parent message');
+check(bis_get_service_message($child_id) === 'Предложение для ПНР', 'Child displays its own message even when identical to parent');
 
 // 3. Child has its own distinct message
 $GLOBALS['meta'][$child_id]['bis_service_message'] = 'Предложение для Общеобменной вентиляции';
@@ -75,11 +75,11 @@ $_POST['bis_service_message'] = 'Обновленное предложение';
 bis_save_service_message($child_id);
 check($GLOBALS['meta'][$child_id]['bis_service_message'] === 'Предложение для Общеобменной вентиляции', 'Child was NOT overwritten during parent save');
 
-// 5. Saving parent cleans up child if child still had old parent message
+// 5. Saving a parent must preserve an identical message explicitly saved on its child.
 $GLOBALS['meta'][$child_id]['bis_service_message'] = 'Обновленное предложение';
 bis_save_service_message($parent_id);
 check($GLOBALS['meta'][$parent_id]['bis_service_message'] === 'Обновленное предложение', 'Parent updated');
-check(!isset($GLOBALS['meta'][$child_id]['bis_service_message']), 'Child with identical cloned message was cleaned up');
+check($GLOBALS['meta'][$child_id]['bis_service_message'] === 'Обновленное предложение', 'Parent save preserves identical child message');
 
 // 6. Rendering test: buttons Telegram and Max are rendered
 $GLOBALS['is_singular'] = true;
@@ -99,7 +99,20 @@ check(str_contains($output, 'bis-service-message__social--max'), 'Max button ren
 check(str_contains($output, 'https://max.ru/u/f9LHodD0cOIYdHZd-s9_nqTN9t76kGjdQxmIoxXSFGhqRnW3d4TLAMEFfVs'), 'Max link rendered');
 check(str_contains($output, 'MAX-white-32x32.png'), 'Max icon rendered');
 
-// 7. Child rendering test: child does not render modal when it has no message
+// 7. Each page renders and scopes its own popup, even when its text is repeated.
+$GLOBALS['queried_object_id'] = $child_id;
+ob_start();
+bis_render_service_message();
+$identical_child_output = ob_get_clean();
+check(str_contains($identical_child_output, 'data-service-message="101"'), 'Identical child popup has independent page identifier');
+check(str_contains($identical_child_output, 'Обновленное предложение'), 'Identical child text is rendered');
+$_POST['post_ID'] = (string) $child_id;
+$_POST['bis_service_message'] = " \n ";
+bis_save_service_message($child_id);
+check(bis_get_service_message($child_id) === '', 'Explicit clearing disables only this page');
+check(bis_get_service_message($parent_id) === 'Обновленное предложение', 'Clearing child does not affect parent');
+
+// 8. Child with no configured message never inherits its parent message.
 $GLOBALS['queried_object_id'] = $child_id;
 ob_start();
 bis_render_service_message();
