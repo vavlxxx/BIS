@@ -1020,7 +1020,7 @@ $categories = get_terms(array(
         <p>Для нас нет неразрешимых задач, мы не боимся трудностей, решение неординарных технических задач - наша работа поэтому если в Вашей деятельности возникли технические задачи мы обязательно постараемся помочь!</p>
         <div class="contact-details">
           <div class="contact-item">
-            <div class="contact-icon">📞</div>
+            <div class="contact-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 4.5C5 3.67 5.67 3 6.5 3h2.1c.67 0 1.26.44 1.44 1.08l.76 2.66a1.5 1.5 0 0 1-.39 1.47L9.1 9.52a11.2 11.2 0 0 0 5.38 5.38l1.31-1.31a1.5 1.5 0 0 1 1.47-.39l2.66.76A1.5 1.5 0 0 1 21 15.4v2.1c0 .83-.67 1.5-1.5 1.5H18C10.82 19 5 13.18 5 6V4.5Z"/><path d="M15.5 4.25c2.35.55 4.2 2.4 4.75 4.75M15.75 7.5c.92.32 1.43.83 1.75 1.75"/></svg></div>
             <div class="contact-item-content">
               <h4>Телефон</h4>
               <a class="footer-phone" href="tel:+79264380770">+7 (926) 438-07-70</a><br>
@@ -1029,14 +1029,14 @@ $categories = get_terms(array(
             </div>
           </div>
           <div class="contact-item">
-            <div class="contact-icon">✉️</div>
+            <div class="contact-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="5" width="18" height="14"/><path d="m3 5 9 7 9-7"/></svg></div>
             <div class="contact-item-content">
               <h4>Email</h4>
               <a href="mailto:office@biscorp.ru">office@biscorp.ru</a>
             </div>
           </div>
           <div class="contact-item">
-            <div class="contact-icon">📍</div>
+            <div class="contact-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
             <div class="contact-item-content">
               <h4>Адрес</h4>
               <p>г. Москва, проезд Таможенный д.6, стр.9</p>

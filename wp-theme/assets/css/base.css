@@ -1994,7 +1994,14 @@ select {
   justify-content: center;
   font-size: var(--font-heading);
   flex-shrink: 0;
+  color: var(--primary-dark);
 }
+
+.contact-icon svg {
+  display: block;
+  flex-shrink: 0;
+}
+
 
 .contact-item-content h4 {
   font-size: var(--font-size-body);
