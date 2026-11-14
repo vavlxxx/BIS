@@ -7,6 +7,7 @@ Original PDFs are never overwritten. The watermark changes the public copies onl
 import argparse
 import io
 import json
+import math
 import re
 import zipfile
 from pathlib import Path
@@ -14,6 +15,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen.canvas import Canvas
+from reportlab.pdfbase.pdfmetrics import stringWidth
 
 FILES = {
     1: '01-mchs-license.pdf',
@@ -53,12 +55,26 @@ def prepare(archive, output):
                 layer = io.BytesIO()
                 canvas = Canvas(layer, pagesize=(width, height))
                 canvas.saveState()
-                canvas.setFillColorRGB(0.20, 0.25, 0.28)
-                canvas.setFillAlpha(0.13)
+                # Repeating diagonal pattern, matching the previous certificate treatment.
+                # Rebuild from source PDFs so no previous watermark is layered underneath.
+                canvas.setFillColorRGB(0.20, 0.20, 0.20)
+                canvas.setFillAlpha(0.38)
                 canvas.translate(width / 2, height / 2)
-                canvas.rotate(35)
-                canvas.setFont('Helvetica-Bold', min(width, height) * 0.105)
-                canvas.drawCentredString(0, 0, 'biscorp.ru')
+                canvas.rotate(45)
+                size = min(width, height) * 0.075
+                canvas.setFont('Helvetica', size)
+                step_x = stringWidth('biscorp.ru', 'Helvetica', size) + size * 0.75
+                step_y = size * 2
+                extent = math.hypot(width, height)
+                row = 0
+                y = -extent
+                while y <= extent:
+                    x = -extent + (step_x / 2 if row % 2 else 0)
+                    while x <= extent:
+                        canvas.drawString(x, y, 'biscorp.ru')
+                        x += step_x
+                    y += step_y
+                    row += 1
                 canvas.restoreState()
                 canvas.save()
                 page.merge_page(PdfReader(layer).pages[0])
@@ -67,7 +83,7 @@ def prepare(archive, output):
             with target.open('wb') as stream:
                 writer.write(stream)
             check = PdfReader(target)
-            if len(check.pages) != len(reader.pages) or any('biscorp.ru' not in (page.extract_text() or '') for page in check.pages):
+            if len(check.pages) != len(reader.pages) or any((page.extract_text() or '').count('biscorp.ru') < 10 for page in check.pages):
                 raise ValueError(f'Watermark validation failed for {target}')
             manifest.append({'number': number, 'label': documents[number], 'file': FILES[number], 'pages': len(check.pages)})
     return manifest

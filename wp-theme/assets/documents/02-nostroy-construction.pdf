@@ -23,14 +23,10 @@ endobj
 /Font <<
 /F1 13 0 R
 /F1-0 41 0 R
-/F1-1 45 0 R
-/F1-2 49 0 R
-/F1-3 53 0 R
+/F1-1 44 0 R
+/F1-2 47 0 R
+/F1-3 50 0 R
 /F2 20 0 R
-/F2-0 42 0 R
-/F2-1 46 0 R
-/F2-2 50 0 R
-/F2-3 54 0 R
 /F3 27 0 R
 >>
 /XObject <<
@@ -43,7 +39,7 @@ endobj
 >>
 /ExtGState <<
 /gRLs0 <<
-/ca 0.13
+/ca 0.38
 >>
 >>
 >>
@@ -61,14 +57,10 @@ endobj
 /Font <<
 /F1 13 0 R
 /F1-0 41 0 R
-/F1-1 45 0 R
-/F1-2 49 0 R
-/F1-3 53 0 R
+/F1-1 44 0 R
+/F1-2 47 0 R
+/F1-3 50 0 R
 /F2 20 0 R
-/F2-0 42 0 R
-/F2-1 46 0 R
-/F2-2 50 0 R
-/F2-3 54 0 R
 /F3 27 0 R
 >>
 /XObject <<
@@ -81,14 +73,14 @@ endobj
 >>
 /ExtGState <<
 /gRLs0 <<
-/ca 0.13
+/ca 0.38
 >>
 >>
 >>
 >>
 endobj
 5 0 obj
-[ 43 0 R 44 0 R ]
+[ 42 0 R 43 0 R ]
 endobj
 6 0 obj
 <<
@@ -101,14 +93,10 @@ endobj
 /Font <<
 /F1 13 0 R
 /F1-0 41 0 R
-/F1-1 45 0 R
-/F1-2 49 0 R
-/F1-3 53 0 R
+/F1-1 44 0 R
+/F1-2 47 0 R
+/F1-3 50 0 R
 /F2 20 0 R
-/F2-0 42 0 R
-/F2-1 46 0 R
-/F2-2 50 0 R
-/F2-3 54 0 R
 /F3 27 0 R
 >>
 /XObject <<
@@ -121,14 +109,14 @@ endobj
 >>
 /ExtGState <<
 /gRLs0 <<
-/ca 0.13
+/ca 0.38
 >>
 >>
 >>
 >>
 endobj
 7 0 obj
-[ 47 0 R 48 0 R ]
+[ 45 0 R 46 0 R ]
 endobj
 8 0 obj
 <<
@@ -141,14 +129,10 @@ endobj
 /Font <<
 /F1 13 0 R
 /F1-0 41 0 R
-/F1-1 45 0 R
-/F1-2 49 0 R
-/F1-3 53 0 R
+/F1-1 44 0 R
+/F1-2 47 0 R
+/F1-3 50 0 R
 /F2 20 0 R
-/F2-0 42 0 R
-/F2-1 46 0 R
-/F2-2 50 0 R
-/F2-3 54 0 R
 /F3 27 0 R
 >>
 /XObject <<
@@ -161,14 +145,14 @@ endobj
 >>
 /ExtGState <<
 /gRLs0 <<
-/ca 0.13
+/ca 0.38
 >>
 >>
 >>
 >>
 endobj
 9 0 obj
-[ 51 0 R 52 0 R ]
+[ 48 0 R 49 0 R ]
 endobj
 10 0 obj
 <<
@@ -181,14 +165,10 @@ endobj
 /Font <<
 /F1 13 0 R
 /F1-0 41 0 R
-/F1-1 45 0 R
-/F1-2 49 0 R
-/F1-3 53 0 R
+/F1-1 44 0 R
+/F1-2 47 0 R
+/F1-3 50 0 R
 /F2 20 0 R
-/F2-0 42 0 R
-/F2-1 46 0 R
-/F2-2 50 0 R
-/F2-3 54 0 R
 /F3 27 0 R
 >>
 /XObject <<
@@ -201,14 +181,14 @@ endobj
 >>
 /ExtGState <<
 /gRLs0 <<
-/ca 0.13
+/ca 0.38
 >>
 >>
 >>
 >>
 endobj
 11 0 obj
-[ 55 0 R 56 0 R ]
+[ 51 0 R 52 0 R ]
 endobj
 12 0 obj
 [ /ImageB /ImageC /ImageI /PDF /Text ]
@@ -6067,15 +6047,6 @@ endobj
 endobj
 42 0 obj
 <<
-/BaseFont /Helvetica-Bold
-/Encoding /WinAnsiEncoding
-/Name /F2
-/Subtype /Type1
-/Type /Font
->>
-endobj
-43 0 obj
-<<
 /Length 9250
 >>
 stream
@@ -6225,9 +6196,9 @@ Q
 
 endstream
 endobj
-44 0 obj
+43 0 obj
 <<
-/Length 246
+/Length 12707
 >>
 stream
 q
@@ -6240,15 +6211,1090 @@ BT
 14.4 TL
 ET
 q
-0.2 0.25 0.28 rg
+0.2 0.2 0.2 rg
 /gRLs0 gs
-0.819152 0.573576 -0.573576 0.819152 297.64 420.945 cm
+0.707107 0.707107 -0.707107 0.707107 297.64 420.945 cm
 BT
-/F2-0 62.5044 Tf
-75.00528 TL
+/F1-0 44.646 Tf
+53.5752 TL
 ET
 BT
-1 0 0 1 -152.8233 0 Tm
+1 0 0 1 -1031.085 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 1022.631 Tm
 (biscorp\056ru) Tj
 T*
 ET
@@ -6257,7 +7303,7 @@ Q
 
 endstream
 endobj
-45 0 obj
+44 0 obj
 <<
 /BaseFont /Helvetica
 /Encoding /WinAnsiEncoding
@@ -6266,16 +7312,7 @@ endobj
 /Type /Font
 >>
 endobj
-46 0 obj
-<<
-/BaseFont /Helvetica-Bold
-/Encoding /WinAnsiEncoding
-/Name /F2
-/Subtype /Type1
-/Type /Font
->>
-endobj
-47 0 obj
+45 0 obj
 <<
 /Length 15173
 >>
@@ -6608,9 +7645,9 @@ Q
 
 endstream
 endobj
-48 0 obj
+46 0 obj
 <<
-/Length 246
+/Length 12707
 >>
 stream
 q
@@ -6623,15 +7660,1090 @@ BT
 14.4 TL
 ET
 q
-0.2 0.25 0.28 rg
+0.2 0.2 0.2 rg
 /gRLs0 gs
-0.819152 0.573576 -0.573576 0.819152 297.64 420.945 cm
+0.707107 0.707107 -0.707107 0.707107 297.64 420.945 cm
 BT
-/F2-1 62.5044 Tf
-75.00528 TL
+/F1-1 44.646 Tf
+53.5752 TL
 ET
 BT
-1 0 0 1 -152.8233 0 Tm
+1 0 0 1 -1031.085 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 1022.631 Tm
 (biscorp\056ru) Tj
 T*
 ET
@@ -6640,7 +8752,7 @@ Q
 
 endstream
 endobj
-49 0 obj
+47 0 obj
 <<
 /BaseFont /Helvetica
 /Encoding /WinAnsiEncoding
@@ -6649,16 +8761,7 @@ endobj
 /Type /Font
 >>
 endobj
-50 0 obj
-<<
-/BaseFont /Helvetica-Bold
-/Encoding /WinAnsiEncoding
-/Name /F2
-/Subtype /Type1
-/Type /Font
->>
-endobj
-51 0 obj
+48 0 obj
 <<
 /Length 17092
 >>
@@ -7032,9 +9135,9 @@ Q
 
 endstream
 endobj
-52 0 obj
+49 0 obj
 <<
-/Length 246
+/Length 12707
 >>
 stream
 q
@@ -7047,15 +9150,1090 @@ BT
 14.4 TL
 ET
 q
-0.2 0.25 0.28 rg
+0.2 0.2 0.2 rg
 /gRLs0 gs
-0.819152 0.573576 -0.573576 0.819152 297.64 420.945 cm
+0.707107 0.707107 -0.707107 0.707107 297.64 420.945 cm
 BT
-/F2-2 62.5044 Tf
-75.00528 TL
+/F1-2 44.646 Tf
+53.5752 TL
 ET
 BT
-1 0 0 1 -152.8233 0 Tm
+1 0 0 1 -1031.085 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 1022.631 Tm
 (biscorp\056ru) Tj
 T*
 ET
@@ -7064,7 +10242,7 @@ Q
 
 endstream
 endobj
-53 0 obj
+50 0 obj
 <<
 /BaseFont /Helvetica
 /Encoding /WinAnsiEncoding
@@ -7073,16 +10251,7 @@ endobj
 /Type /Font
 >>
 endobj
-54 0 obj
-<<
-/BaseFont /Helvetica-Bold
-/Encoding /WinAnsiEncoding
-/Name /F2
-/Subtype /Type1
-/Type /Font
->>
-endobj
-55 0 obj
+51 0 obj
 <<
 /Length 17479
 >>
@@ -7462,9 +10631,9 @@ Q
 
 endstream
 endobj
-56 0 obj
+52 0 obj
 <<
-/Length 246
+/Length 12707
 >>
 stream
 q
@@ -7477,15 +10646,1090 @@ BT
 14.4 TL
 ET
 q
-0.2 0.25 0.28 rg
+0.2 0.2 0.2 rg
 /gRLs0 gs
-0.819152 0.573576 -0.573576 0.819152 297.64 420.945 cm
+0.707107 0.707107 -0.707107 0.707107 297.64 420.945 cm
 BT
-/F2-3 62.5044 Tf
-75.00528 TL
+/F1-3 44.646 Tf
+53.5752 TL
 ET
 BT
-1 0 0 1 -152.8233 0 Tm
+1 0 0 1 -1031.085 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -1031.085 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -941.7934 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -852.5014 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -763.2094 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -673.9174 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -584.6254 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -495.3334 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -406.0414 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -316.7494 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -227.4574 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 -138.1654 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 -48.87337 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 40.41863 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 129.7106 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 219.0026 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 308.2946 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 397.5866 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 486.8786 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 576.1706 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 665.4626 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 754.7546 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 844.0466 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -1031.085 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -801.6049 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -572.1245 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -342.6441 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -113.1636 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 116.3168 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 345.7973 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 575.2777 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 804.7581 933.3386 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -916.3452 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -686.8647 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -457.3843 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 -227.9038 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 1.576605 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 231.057 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 460.5375 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 690.0179 1022.631 Tm
+(biscorp\056ru) Tj
+T*
+ET
+BT
+1 0 0 1 919.4984 1022.631 Tm
 (biscorp\056ru) Tj
 T*
 ET
@@ -7495,71 +11739,67 @@ Q
 endstream
 endobj
 xref
-0 57
+0 53
 0000000000 65535 f 
 0000000015 00000 n 
 0000000080 00000 n 
 0000000126 00000 n 
-0000000542 00000 n 
-0000000943 00000 n 
-0000000976 00000 n 
-0000001377 00000 n 
-0000001410 00000 n 
-0000001811 00000 n 
-0000001844 00000 n 
-0000002247 00000 n 
-0000002281 00000 n 
-0000002336 00000 n 
-0000002483 00000 n 
-0000038155 00000 n 
-0000038225 00000 n 
-0000038426 00000 n 
-0000517528 00000 n 
-0000523118 00000 n 
-0000523515 00000 n 
-0000523667 00000 n 
-0000559407 00000 n 
-0000559477 00000 n 
-0000559684 00000 n 
-0001044173 00000 n 
-0001049763 00000 n 
-0001050160 00000 n 
-0001050314 00000 n 
-0001078873 00000 n 
-0001078943 00000 n 
-0001079157 00000 n 
-0001479355 00000 n 
-0001483899 00000 n 
-0001484296 00000 n 
-0001488656 00000 n 
-0001499381 00000 n 
-0001499703 00000 n 
-0001501722 00000 n 
-0001503063 00000 n 
-0001588119 00000 n 
-0001588723 00000 n 
-0001588831 00000 n 
-0001588944 00000 n 
-0001598247 00000 n 
-0001598545 00000 n 
-0001598653 00000 n 
-0001598766 00000 n 
-0001613993 00000 n 
-0001614291 00000 n 
-0001614399 00000 n 
-0001614512 00000 n 
-0001631658 00000 n 
-0001631956 00000 n 
-0001632064 00000 n 
-0001632177 00000 n 
-0001649710 00000 n 
+0000000490 00000 n 
+0000000839 00000 n 
+0000000872 00000 n 
+0000001221 00000 n 
+0000001254 00000 n 
+0000001603 00000 n 
+0000001636 00000 n 
+0000001987 00000 n 
+0000002021 00000 n 
+0000002076 00000 n 
+0000002223 00000 n 
+0000037895 00000 n 
+0000037965 00000 n 
+0000038166 00000 n 
+0000517268 00000 n 
+0000522858 00000 n 
+0000523255 00000 n 
+0000523407 00000 n 
+0000559147 00000 n 
+0000559217 00000 n 
+0000559424 00000 n 
+0001043913 00000 n 
+0001049503 00000 n 
+0001049900 00000 n 
+0001050054 00000 n 
+0001078613 00000 n 
+0001078683 00000 n 
+0001078897 00000 n 
+0001479095 00000 n 
+0001483639 00000 n 
+0001484036 00000 n 
+0001488396 00000 n 
+0001499121 00000 n 
+0001499443 00000 n 
+0001501462 00000 n 
+0001502803 00000 n 
+0001587859 00000 n 
+0001588463 00000 n 
+0001588571 00000 n 
+0001597874 00000 n 
+0001610635 00000 n 
+0001610743 00000 n 
+0001625970 00000 n 
+0001638731 00000 n 
+0001638839 00000 n 
+0001655985 00000 n 
+0001668746 00000 n 
+0001668854 00000 n 
+0001686387 00000 n 
 trailer
 <<
-/Size 57
+/Size 53
 /Root 1 0 R
 /Info 40 0 R
 /ID [ (\0414X\020\013\173\020\310\001\331\046D\245\254\261i) (\0414X\020\013\173\020\310\001\331\046D\245\254\261i) ]
 >>
 startxref
-1650008
+1699148
 %%EOF

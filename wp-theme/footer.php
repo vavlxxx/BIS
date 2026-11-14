@@ -116,7 +116,7 @@
         <ul class="document-links">
           <?php foreach ($documents as $document) : ?>
             <li>
-              <a href="<?php echo esc_url(get_template_directory_uri() . '/assets/documents/' . rawurlencode($document['file'])); ?>" target="_blank" rel="noopener">
+              <a href="<?php echo esc_url(add_query_arg('ver', bis_get_asset_version('assets/documents/' . $document['file']), get_template_directory_uri() . '/assets/documents/' . rawurlencode($document['file']))); ?>" target="_blank" rel="noopener">
                 <span class="document-icon" aria-hidden="true">
                   <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13.5 1H4C2.89543 1 2 1.89543 2 3V23C2 24.1046 2.89543 25 4 25H18C19.1046 25 20 24.1046 20 23V7.5L13.5 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
