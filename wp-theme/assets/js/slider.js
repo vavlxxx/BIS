@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const interval = configuredInterval > 0 ? Math.max(3000, Math.min(60000, configuredInterval)) : 7000;
     let current = 0;
     let timer;
-    let hovered = false;
     const show = (index) => {
         current = (index + slides.length) % slides.length;
         slides.forEach((slide, i) => {
@@ -23,14 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const schedule = () => {
         clearInterval(timer);
-        if (!motion.matches && !hovered && !document.hidden && !root.contains(document.activeElement)) {
+        if (!motion.matches && !document.hidden && !root.contains(document.activeElement)) {
             timer = setInterval(() => show(current + 1), interval);
         }
     };
     const navigate = (index) => { show(index); schedule(); };
     dots.forEach((dot, i) => dot.addEventListener('click', () => navigate(i)));
-    root.addEventListener('mouseenter', () => { hovered = true; schedule(); });
-    root.addEventListener('mouseleave', () => { hovered = false; schedule(); });
     root.addEventListener('focusin', schedule);
     root.addEventListener('focusout', () => setTimeout(schedule, 0));
     document.addEventListener('visibilitychange', schedule);

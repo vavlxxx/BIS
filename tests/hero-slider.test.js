@@ -28,11 +28,18 @@ test('hero navigation wraps, selects dots and hides inactive screen controls',()
     assert.equal(f.dots[1].attrs['aria-pressed'],'true');
     assert.equal(f.screens[0].inert,true);
 });
-test('hero autoplay pauses for pointer, hidden page and reduced motion without extra controls',()=>{
+test('hero autoplay continues with the pointer over the slider',()=>{
+    const f=fixture();
+    f.root.events.mouseenter?.();
+    assert.equal(typeof f.tick(),'function');
+    f.tick()();
+    assert.equal(f.screens[1].inert,false);
+    f.root.events.mouseleave?.();
+    assert.equal(typeof f.tick(),'function');
+});
+test('hero autoplay pauses for hidden page and reduced motion',()=>{
     const f=fixture();
     f.tick()();assert.equal(f.screens[1].inert,false);
-    f.root.events.mouseenter();assert.equal(f.tick(),null);
-    f.root.events.mouseleave();assert.equal(typeof f.tick(),'function');
     f.doc.hidden=true;f.doc.visibilitychange();assert.equal(f.tick(),null);
     assert.equal(fixture(true).tick(),null);
 });
