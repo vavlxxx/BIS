@@ -29,7 +29,7 @@ if (!$banner_subtitle) {
     $banner_subtitle = 'Приглашаем инженеров в команду профессионалов.';
 }
 
-$banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
+$banner_image = bis_get_page_banner_image_url($page_id, 'bis-banner', 'assets/img/banners/vacancies.webp');
 ?>
 
 <main class="vacancies-page">

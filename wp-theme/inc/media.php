@@ -58,13 +58,21 @@ function bis_get_post_thumbnail_optimized_url($post_id, $size = 'large') {
     return $image ? $image : '';
 }
 
-function bis_get_page_banner_image_url($page_id, $size = 'bis-banner') {
+function bis_get_page_banner_image_url($page_id, $size = 'bis-banner', $fallback_asset = '') {
     $banner_image = get_post_meta($page_id, 'bis_page_banner_image', true);
     if (!empty($banner_image)) {
-        return bis_get_optimized_image_url($banner_image, $size);
+        $image = bis_get_optimized_image_url($banner_image, $size);
+    } else {
+        $image = bis_get_post_thumbnail_optimized_url($page_id, $size);
     }
 
-    return bis_get_post_thumbnail_optimized_url($page_id, $size);
+    // Replace the original demo placeholder only when this page supplies a default.
+    // A real image chosen in the editor always takes precedence.
+    if ($fallback_asset && (!$image || preg_match('~/placeholder600x400(?:-\d+x\d+)?\.(?:png|webp)(?:[?#]|$)~i', $image))) {
+        return get_template_directory_uri() . '/' . ltrim($fallback_asset, '/');
+    }
+
+    return $image;
 }
 
 function bis_replace_image_extension($url, $extension) {

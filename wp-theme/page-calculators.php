@@ -35,7 +35,7 @@ if (!$banner_subtitle) {
     $banner_subtitle = 'Профессиональный комплекс онлайн-расчетов противодымной вентиляции, подпора воздуха и проверки герметичности воздуховодов по нормативам ГОСТ и АВОК.';
 }
 
-$banner_image = $page_id ? bis_get_page_banner_image_url($page_id) : '';
+$banner_image = bis_get_page_banner_image_url($page_id, 'bis-banner', 'assets/img/banners/calculators.webp');
 ?>
 
 <main class="calculators-page">
