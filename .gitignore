@@ -5,3 +5,11 @@ wp-theme/assets/documents/*
 .agents
 calculators/
 files/
+
+# Public watermarked certificate set maintained with the footer.
+!wp-theme/assets/documents/01-mchs-license.pdf
+!wp-theme/assets/documents/02-nostroy-construction.pdf
+!wp-theme/assets/documents/03-nopriz-design.pdf
+!wp-theme/assets/documents/04-laboratory-gost-17025.pdf
+!wp-theme/assets/documents/05-cleanrooms-iso-14644.pdf
+!wp-theme/assets/documents/06-quality-iso-9001.pdf
