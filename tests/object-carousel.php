@@ -24,13 +24,16 @@ $dom = new DOMDocument();
 libxml_use_internal_errors(true);
 $dom->loadHTML('<?xml encoding="UTF-8">' . $html);
 $xpath = new DOMXPath($dom);
-$cards = $xpath->query('//article[contains(@class, "object-card")]');
+$cards = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " object-card ")]');
 check($cards->length === 12, 'All 12 object types must render.');
 check($xpath->query('//h2[@id="objects-title"]')->item(0)->textContent === 'Объекты, на которых мы работаем', 'Keep the original heading.');
 check($xpath->query('//*[@id="objects-track"]')->length === 1, 'The carousel track needs a unique ID.');
 
 $hashes = array();
 foreach ($cards as $card) {
+    check($card->tagName === 'div' && $card->getAttribute('role') === 'group', 'Slides must use a container that permits the group role.');
+    check($card->getAttribute('aria-roledescription') === 'слайд', 'Keep the accessible slide description.');
+    check($card->getAttribute('aria-label') === (count($hashes) + 1) . ' из 12', 'Each slide needs its position in the carousel.');
     check($xpath->query('.//h3', $card)->length === 1, 'Each card has a title.');
     $image = $xpath->query('.//img', $card)->item(0);
     check($image !== null, 'Each card has a photograph.');

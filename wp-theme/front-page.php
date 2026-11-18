@@ -201,7 +201,7 @@ $has_hero_slider = !empty($hero_images);
     <div class="objects-slider-wrapper">
       <div class="objects-grid" id="objects-track" tabindex="0" role="group" aria-roledescription="карусель" aria-label="Типы объектов">
         <?php foreach ($object_types as $index => $object_type) : ?>
-        <article class="object-card" role="group" aria-roledescription="слайд" aria-label="<?php echo esc_attr(($index + 1) . ' из ' . count($object_types)); ?>">
+        <div class="object-card" role="group" aria-roledescription="слайд" aria-label="<?php echo esc_attr(($index + 1) . ' из ' . count($object_types)); ?>">
           <img class="object-card__image"
                src="<?php echo esc_url($object_image_base . $object_type[0] . '.webp'); ?>"
                srcset="<?php echo esc_attr($object_image_base . $object_type[0] . '-480.webp'); ?> 480w, <?php echo esc_attr($object_image_base . $object_type[0] . '.webp'); ?> 960w"
@@ -211,7 +211,7 @@ $has_hero_slider = !empty($hero_images);
             <h3><?php echo esc_html($object_type[1]); ?></h3>
             <p><?php echo esc_html($object_type[2]); ?></p>
           </div>
-        </article>
+        </div>
         <?php endforeach; ?>
       </div>
 
