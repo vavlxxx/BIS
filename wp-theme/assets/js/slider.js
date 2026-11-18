@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const schedule = () => {
         clearInterval(timer);
-        if (!motion.matches && !document.hidden && !root.contains(document.activeElement)) {
+        // A selected dot retains focus after a click; it must not stop rotation.
+        const contentFocused = root.contains(document.activeElement) && !dots.includes(document.activeElement);
+        if (!motion.matches && !document.hidden && !contentFocused) {
             timer = setInterval(() => show(current + 1), interval);
         }
     };

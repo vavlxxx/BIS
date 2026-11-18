@@ -10,7 +10,7 @@ function fixture(reduced = false, interval = null) {
     root.attrs['data-hero-interval'] = interval;
     const selectors = {'[data-hero-screen]':screens,'.hero-slide':images,'[data-hero-dot]':dots};
     root.querySelectorAll = s => selectors[s];
-    root.contains = () => false;
+    root.contains = node => dots.includes(node) || screens.includes(node);
     let tick, delay;
     const doc = { hidden:false, querySelector:()=>root, addEventListener(k,fn) { if(k==='DOMContentLoaded') this.start=fn; else this[k]=fn; } };
     vm.runInNewContext(fs.readFileSync('wp-theme/assets/js/slider.js','utf8'), {document:doc,window:{matchMedia:()=>({matches:reduced,addEventListener(){}})},setInterval(fn,ms){tick=fn;delay=ms;return 1;},clearInterval(){tick=null;},setTimeout:fn=>fn()});
@@ -35,6 +35,31 @@ test('hero autoplay continues with the pointer over the slider',()=>{
     f.tick()();
     assert.equal(f.screens[1].inert,false);
     f.root.events.mouseleave?.();
+    assert.equal(typeof f.tick(),'function');
+});
+test('selecting a focused dot restarts autoplay after the full interval',()=>{
+    const f=fixture(false, 6000);
+    f.doc.activeElement=f.dots[2];
+    f.root.events.focusin();
+    f.dots[2].events.click();
+    assert.equal(f.screens[2].inert,false);
+    assert.equal(typeof f.tick(),'function');
+    assert.equal(f.delay(),6000);
+    f.tick()();
+    assert.equal(f.screens[0].inert,false);
+    // Clicking the already selected dot must also keep rotation running.
+    f.doc.activeElement=f.dots[0];
+    f.dots[0].events.click();
+    f.tick()();
+    assert.equal(f.screens[1].inert,false);
+});
+test('hero still pauses while interacting with the slide content',()=>{
+    const f=fixture();
+    f.doc.activeElement=f.screens[0];
+    f.root.events.focusin();
+    assert.equal(f.tick(),null);
+    f.doc.activeElement=null;
+    f.root.events.focusout();
     assert.equal(typeof f.tick(),'function');
 });
 test('hero autoplay pauses for hidden page and reduced motion',()=>{

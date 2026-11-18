@@ -581,8 +581,8 @@
   z-index: 4;
 }
 
-.objects-slider-nav .slider-prev { left: -21px; }
-.objects-slider-nav .slider-next { right: -21px; }
+.objects-slider-nav .slider-prev { left: 0; }
+.objects-slider-nav .slider-next { right: 0; }
 
 .objects-slider-nav .slider-prev:hover,
 .objects-slider-nav .slider-next:hover {
@@ -668,20 +668,8 @@
 @media (max-width: 640px) {
   .objects-section { padding: 1.5rem 1.25rem 3rem; }
   .objects-section .section-header { margin-bottom: 1.75rem; }
-  .objects-slider-wrapper { padding: 0 0 4rem; }
+  .objects-slider-wrapper { padding: 0 1.75rem 3.5rem; }
   .objects-grid { --objects-visible: 1; --objects-gap: 1rem; }
-  .objects-slider-nav .slider-prev,
-  .objects-slider-nav .slider-next {
-    top: auto;
-    bottom: 0;
-    transform: none;
-  }
-  .objects-slider-nav .slider-prev:hover,
-  .objects-slider-nav .slider-next:hover,
-  .objects-slider-nav .slider-prev:disabled,
-  .objects-slider-nav .slider-next:disabled,
-  .objects-slider-nav .slider-prev:disabled:hover,
-  .objects-slider-nav .slider-next:disabled:hover { transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1427,6 +1415,12 @@
     width: 20px;
     height: 20px;
   }
+}
+
+/* Keep mobile equipment arrows outside the text column. */
+@media (max-width: 768px) {
+  .equipment-section .equipment-park .equipment-slider-nav .slider-prev { left: 8px; }
+  .equipment-section .equipment-park .equipment-slider-nav .slider-next { right: 8px; }
 }
 
 /* Experience Section */
@@ -3724,8 +3718,26 @@
 
 /* Editable first-screen carousel. Shared grid reserves space for the longest screen. */
 .hero-content--screens { width: 100%; padding-bottom: 48px; }
-.hero-screens { display: grid; }
-.hero-screen { grid-area: 1 / 1; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; min-width: 0; }
+.hero-screens {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  row-gap: 24px;
+}
+.hero-screen {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  display: grid;
+  grid-template-rows: subgrid;
+  align-items: start;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  min-width: 0;
+}
+.hero-screen > .hero-screen__title { grid-row: 1; }
+.hero-screen > .hero-subtitle { grid-row: 2; margin: 0; }
+.hero-screen > .hero-cta { grid-row: 3; margin: 16px 0 0; }
 .hero-screen.active { visibility: visible; opacity: 1; pointer-events: auto; }
 .hero .hero-screen__title {
   display: block;
@@ -3736,7 +3748,7 @@
   letter-spacing: -1px;
   min-height: 90px;
   max-width: 1200px;
-  margin: 0 0 24px;
+  margin: 0;
   overflow-wrap: break-word;
   text-wrap: balance;
 }
