@@ -139,7 +139,7 @@
         <li><a href="<?php echo esc_url(home_url('/faq/'));?>">F.A.Q</a></li>
       </ul>
       <div class="drawer-footer">
-        <p class="drawer-note">Инжиниринговая команда полного цикла — проектируем, запускаем, сопровождаем.</p>
+        <p class="drawer-note">Инжиниринговая команда полного цикла — запускаем, обслуживаем, сопровождаем.</p>
       </div>
     </aside>
   </div>
